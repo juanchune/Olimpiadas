@@ -1,0 +1,71 @@
+Index: Mostrar paquetes de viajes aleatorios.
+      : Nombre
+      : Descripcion
+      : Tipo de producto
+      : Precio
+      : Duracion
+      : Boton que lleva a la pagina especifica del producto.
+
+Navegador:
+    Admin:
+         : Boton Agregar producto
+         : Boton con bandeja de usuario
+         : Logo
+
+    Usuario:
+        Sin Sesión: 
+            :Logo
+            :Inicio
+            :Sobre Nosotros
+            :Productos
+            :Boton Registrarse
+            :Boton Iniciar Sesion
+
+        Sesion Iniciada:
+            :Logo
+            :Inicio
+            :Sobre Nosotros
+            :Productos
+            :Carrito de compras
+            :Bandeja de usuario:
+                  Datos
+                  :Nombre
+                  :Email
+              :Boton Cerrar Sesion
+
+Navegador Lateral(solo admin):
+      :hipervinculos:
+                :Interfaz de agregar
+                :Consultar productos(capacidad de eliminar y modificar)
+                :Consultar pedidos
+                      :Pendientes (capacidad para rechazarlos, aprobarlos y entregarlos)
+                      :Entregados(Historicos)
+                      :Rechazados
+                :Ventas
+                      :Reservas pagas
+                          Datos
+                          :ID Compra
+                          :DNI del comprador
+                          :Fecha de la venta
+                          :Monto total
+                          :Forma de pago
+                          :Estado de debito:(Pago-Inpago)
+                      :Reservas pendientes de pago
+                          Datos
+                            :ID Compra
+                            :DNI del comprador
+                            :Fecha de la venta
+                            :Monto total
+                            :Monto pago
+                            :Cuotas totales
+                            :Estado de debito:(Pago-Inpago)
+                            :Factura mensual
+
+<!--Datos-->
+
+
+
+
+
+
+
