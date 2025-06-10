@@ -83,7 +83,8 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
 
     <?php endif;
 else: ?>
- <link rel="stylesheet" href="/Olimpiadas/Truway/css/navegador.css">
+//Navegador para usuarios sin sesión
+<link rel="stylesheet" href="/Olimpiadas/Truway/css/navegador.css">
 <nav>
             <div class="cont-logo-nombre">
                 <div class="cont-img">
