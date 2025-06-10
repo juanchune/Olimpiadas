@@ -8,7 +8,7 @@ include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.
             <div class="cont-logo">
                 <div class="logo-titulo">
                     <div class="cont-img">
-                        <img class="img-logo" src="./css/recursos/Logo-2 1.png">
+                        <img class="img-logo" src="/Olimpiadas/truway/css/recursos/Logo-2 1.png">
                     </div>
                         <h2>Truway</h2>
                 </div>
