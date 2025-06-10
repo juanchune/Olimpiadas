@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'Noto_Sans';
+  src: url('./tipografias/Noto_Sans/NotoSans-VariableFont_wdth\,wght.ttf') format('truetype');
+}
+
+
+@font-face {
+  font-family: 'Mulish';
+  src: url('./tipografias/Mulish/Mulish-VariableFont_wght.ttf') format('truetype');
+}

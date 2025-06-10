@@ -1,0 +1,47 @@
+:root {
+    /* === Fondo === */
+    --fondo--50: #FDFDFD;
+    
+      /* === Primario === */
+    --primario-50: #7ab9ff;
+
+      /* === Secundario === */
+    --secundario-50:#5862ec;
+
+    /* === Terciario === */
+    --terciario-50: #000037;
+    
+    /* === Negros === */
+    --negro-50: #dddddd;
+    --negro-100: #bbbbbb;
+    --negro-200: #9a9a9a;
+    --negro-300: #787878;
+    --negro-400: #565656;
+    --negro-500: #343434;
+    --negro-600: #2a2a2a;
+    --negro-700: #1f1f1f;
+    --negro-800: #151515;
+    --negro-900: #0c0c0c;
+  
+    /* === Blancos === */
+    --blanco-50: #ffffff;
+    --blanco-100: #f4f4f4;
+    --blanco-200: #e9e9e9;
+    --blanco-300: #dedede;
+    --blanco-400: #d3d3d3;
+    --blanco-500: #c8c8c8;
+    --blanco-600: #afafaf;
+    --blanco-700: #969696;
+    --blanco-800: #7d7d7d;
+    --blanco-900: #646464;
+  
+    /* === Éxito === */
+    --exito-500: #579717;
+
+    /* === Advertencia === */
+    --advertencia-50: #FAD606;
+  
+    /* === Error === */
+    --error-50: #BB1D1D;
+  }
+  

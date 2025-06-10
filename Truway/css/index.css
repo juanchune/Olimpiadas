@@ -1,0 +1,256 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Mulish;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--blanco-50);
+}
+
+main{
+    padding: 0 2rem;
+}
+
+.svg-icon{
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+
+.svg-icon .icon{
+    color: var(--blanco-50);
+}
+
+header{
+    width: 100%;
+    height: 80vh;
+    border-radius: 3.125rem;
+    background-image: url('../css/recursos/header-2.jpg'); /* Ruta de la imagen */
+    background-size: cover;        /* Para que cubra todo */
+    background-position: center;   /* Centrada */
+    background-repeat: no-repeat;
+    position: relative;
+    display: flex;
+    padding-top: 5rem;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+    margin-bottom: 5rem;
+}
+
+header .capa-oscura{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 50%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+header .contenido{
+    height: auto;
+    z-index: 10;
+}
+
+.contenido .titulo{
+    color: var(--blanco-50);
+    font-family: Noto_Sans;
+    font-size: 7rem;
+}
+
+.contenido .descripcion{
+    color: var(--blanco-50);
+    font-family: Mulish;
+    font-size: 1.5rem;
+}
+
+
+/* POR QUE ELEGIRNOS */
+
+.por-que-elegirnos{
+    border-bottom: 1px solid var(--terciario-50);
+    border-top: 1px solid var(--terciario-50);
+    padding: 2rem 0;
+    margin-bottom: 5rem;
+}
+
+.beneficios-grid{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 2rem;
+}
+
+.beneficio{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.beneficio .svg-icon{
+    width: 5rem;
+    height: 5rem;
+}
+
+.beneficio .svg-icon .icon{
+    color: var(--terciario-50);
+}
+
+.beneficio h3{
+    height: 3rem;
+    text-align: center;
+    color: var(--terciario-50);
+    font-family:Noto_Sans;
+    font-family: 1.25rem;
+}
+
+.beneficio p{
+    text-align: center;
+    color: var(--Negros-700);
+    font-family:Mulish;
+    font-family: 1rem;
+}
+
+/* NUESTRAS PROPUESTAS */
+
+.nuestras-propuestas{
+    margin-bottom: 5rem;
+}
+
+.nuestras-propuestas h2{
+    font-size: 1.8rem;
+    font-family: Noto_Sans;
+    color: var(--terciario-50);
+    margin-bottom: 1rem;
+}
+
+.nuestras-propuestas .productos-grid{
+    width: 100%;
+    height: auto;
+    padding: 1rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 24.5rem);
+    justify-content: space-between;
+    row-gap: 1.8rem;
+}
+
+.productos-grid .producto{
+    width: 100%;
+    height: auto;
+    background-color: var(--blanco-50);
+    border: 1px solid var(--terciario-50);
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    overflow: hidden;
+    padding: .8rem;
+    border-radius: 1.9rem;
+}
+
+.producto .nombre-producto{
+    color: var(--terciario-50);
+    font-family: Noto_Sans;
+    font-size: 1.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;         /* Futuro soporte estandar */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.producto .svg-icon{
+    width: 1.8rem;
+    height: 1.8rem;
+}
+
+.producto .svg-icon .icon{
+    color: var(--blanco-50);
+}
+
+.cont-categoria-precio{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cont-categoria-precio .categoria{
+    max-width: 40%;
+    width: auto;
+    background-color: var(--secundario-50);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    border-radius: 1.25rem;
+    padding: .2rem .5rem;
+}
+
+.categoria span{
+    color: var(--blanco-50);
+    font-family: Mulish;
+    font-size: .8rem;
+}
+
+.cont-categoria-precio .precio{
+    max-width: 60%;
+    width: auto;
+    align-items: center;
+    font-family: Noto_Sans;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--terciario-50);
+    text-overflow: ellipsis;
+    text-align: end;
+}
+
+.producto .descripcion-producto{
+    text-align:start;
+    font-size: .9rem;
+    color: var(--terciario-50);
+}
+
+.cont-tiempo-btn{
+    display: flex;
+    justify-content: space-between;
+}
+
+.cont-tiempo-btn .cont-tiempo{
+    display: flex;
+    gap: .5rem;
+    align-items: center;
+}
+
+.cont-tiempo .tiempo{
+    font-size: .9rem;
+    font-weight: 500;
+    color: var(--Negros-700);
+}
+
+.cont-tiempo .svg-icon{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.cont-tiempo-btn .btn-ver-mas{
+    all: unset;
+    padding: .3rem 1.2rem;
+    background-color: var(--blanco-50);
+    font-size: 1rem;
+    border-radius: 1.25rem;
+    color: var(--terciario-50);
+    cursor: pointer;
+    transition: .6s ease;
+    border: 1px solid var(--terciario-50);
+}
+
+.btn-ver-mas:hover{
+    background-color: var(--secundario-50);
+    color: var(--blanco-50);
+}

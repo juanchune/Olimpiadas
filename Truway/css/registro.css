@@ -1,0 +1,140 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Mulish;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--secundario-50);
+}
+
+main{
+    background-color: var(--terciario-50);
+    width: 50%;
+    height: 100vh;
+    border-radius: 0 3rem 3rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem 5rem 0;
+}
+
+.logo-titulo{
+    width: auto;
+    height: auto;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-titulo .cont-img{
+    width: 5rem;
+    height: 5rem;
+    overflow: hidden;
+}
+
+.logo-titulo .cont-img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.logo-titulo .titulo{
+    color: var(--blanco-50);
+    font-size: 5rem;
+    font-family: Noto_Sans;
+    font-weight: 800;
+}
+
+.cont-formulario-subtitulo{
+    color: var(--blanco-50);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cont-formulario{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap:1rem;
+}
+
+.cont-formulario .cont-input{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cont-formulario .cont-input.doble{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 1rem;
+}
+
+.cont-formulario .cont-input.doble.telefono{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+}
+
+.cont-formulario .input{
+    all: unset;
+    padding: .3rem 1rem;
+    background-color: var(--blanco-50);
+    border-radius: 1.25rem;
+    color: var(--negro-700);
+    font-family: Mulish;
+    font-size: 1rem;
+}
+
+.cont-formulario .lbl{
+    color: var(--blanco-50);
+    font-family: Noto_Sans;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.cont-btn-link{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.cont-btn-link .btn-enviar{
+    all: unset;
+    width: 30%;
+    background-color: var(--blanco-50);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: .3rem 1rem;
+    border-radius: 1.25rem;
+    font-weight: 500;
+    color: var(--terciario-50);
+    cursor: pointer;
+    transition: .6s ease;
+}
+
+.cont-btn-link a{
+    text-decoration: none;
+    color: var(--secundario-50);
+}
+
+.btn-enviar:hover{
+    background-color: var(--secundario-50);
+    border: 1px solid var(--blanco-50);
+    color: var(--blanco-50);
+}
+
+.mensaje{
+    color: var(--error-50);
+    font-size: 1rem;
+    font-weight: 600;
+}

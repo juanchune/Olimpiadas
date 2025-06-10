@@ -1,11 +1,11 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . 'php/componentes/header.php';
+include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.php';
+include('conexion.php');
 
 
 if(     // Verificar si los campos del formulario están definidos
         isset($_POST['nombre']) && 
         isset($_POST['apellido']) && 
-        isset($_POST['nombreDeUsuario']) &&
         isset($_POST['email']) &&
         isset($_POST['contrasena']) &&
         isset($_POST['telefono'])&&
@@ -15,12 +15,12 @@ if(     // Verificar si los campos del formulario están definidos
         // Obtener los datos del formulario
         $nombre = $_POST['nombre']; 
         $apellido = $_POST['apellido']; 
-        $nombreDeUsuario = $_POST['nombreDeUsuario']; 
         $email = $_POST['email']; 
         $contrasena = $_POST['contrasena']; 
         $telefono = $_POST['telefono']; 
         $sexo = $_POST['sexo']; 
         $fecha_nacimiento = $_POST['fecha_nacimiento']; 
+        $prefijo = $_POST['prefijo'];
 
         //Encriptar la contraseña
         $contrasena_MD5 = md5($contrasena); 
@@ -31,59 +31,129 @@ if(     // Verificar si los campos del formulario están definidos
 
         // Si el email ya está registrado, mostrar un mensaje de error
         if (mysqli_num_rows($consulta1) > 0) {
-                $mensaje = "El email ya está registrado. <a href='register.php'>Vuelve</a> y usa otro.";
-            } else {
-            $sql = "INSERT INTO usuarios (nombre, apellido, email, contrasena, telefono, sexo, fecha_nacimiento) VALUES ('$nombre', '$apellido', '$email', '$contrasena_MD5', '$telefono', '$sexo', '$fecha_nacimiento')";
-            $result = mysqli_query($conexion, $sql);
-            if ($result) {
-                $mensaje = "Registro exitoso. Redirigiendo al login...";
-                header("Refresh:2; url=ingreso.php");
-                exit;
-            } else {
-                $mensaje = "Error al registrar usuario.";
-            }
-            echo $mensaje;
+                $mensaje = "El email ya está registrado. <a href='registro.php'>Vuelve</a> y usa otro.";
+        } else {
+        $sql = "INSERT INTO usuarios (nombre, apellido, email, contrasena, sexo, fecha_nacimiento, telefono) VALUES ('$nombre', '$apellido', '$email', '$contrasena_MD5', '$sexo', '$fecha_nacimiento', '$telefono')";
+        $result = mysqli_query($conexion, $sql);
+        if ($result) {
+            $mensaje = "Registro exitoso. Redirigiendo al login...";
+            header("Refresh:2; url=../general/ingreso.php");
+            exit;
+        } else {
+            $mensaje = "Error al registrar usuario.";
+        }
+        echo $mensaje;
         }
     }
 ?>
-<link rel="stylesheet" href="style.css">
-<h2>Registro de Usuario</h2>
-<form method="POST" action="registro.php">
-    <div class="">
-        <label for="nombre" class="form-label">Nombre</label>
-        <input type="text" class="" id="nombre" name="nombre" required>
-    </div>
-    <div class="">
-        <label for="apellido" class="form-label">Apellido</label>
-        <input type="text" class="" id="apellido" name="apellido" required>
-    </div>
-    <div class="">
-    </div>
-    <div class="">
-        <label for="email" class="form-label">email Electrónico</label>
-        <input type="email" class="" id="email" name="email" required>
-    </div>
-    <div class="">
-        <label for="contrasena" class="form-label">Contraseña</label>
-        <input type="password" class="" id="contrasena" name="contrasena" required>
-    </div>
-    <div class="">
-        <label for="telefono" class="form-label">Teléfono</label>
-        <input type="tel" class="" id="telefono" name="telefono">
-    </div>
-    <div class="">
-        <label for="sexo" class="form-label">Sexo</label>
-        <select class="form-select" id="sexo" name='sexo' required>
-            <option value="" disabled selected>Seleccione una opción</option>
-            <option value='Masculino'>Masculino</option>
-            <option value='Femenino'>Femenino</option>
-            <option value='Otro'>Otro</option>
-        </select>
-    </div>
-    <div class=''>
-        <label for='fecha_nacimiento' class='form-label'>Fecha de Nacimiento</label>
-        <input type='date' class='' id='fecha_nacimiento' name='fecha_nacimiento' required>
-    </div>
-    <button type="submit" class="btn btn-primary">Registrar</button>
-</form>
+<link rel="stylesheet" href="/Olimpiadas/truway/css/registro.css">
+<section class="logo-titulo">
+            <div class="cont-img">
+                <img src="./css/recursos/Logo-2 1.png">
+            </div>
+            <h2 class="titulo">Truway</h2>
+        </section>
+        <div class="cont-formulario-subtitulo">
+        <h2>Registrarse</h2>
+        <form class="cont-formulario" method="post" action="registro.php">
+            <div class="cont-input doble nombre-apellido">
+                <div class="cont-input">
+                    <label class="lbl" name="nombre">Nombre</label>
+                    <input class="input" type="text" name="nombre" id="nombre" maxlength="50" required>
+                </div>
+                <div class="cont-input">
+                    <label class="lbl" name="apellido">Apellido</label>
+                    <input class="input" type="text" name="apellido" id="apellido" maxlength="50" required>
+                </div>
+            </div>
+            <div class="cont-input doble">
+                <div class="cont-input">
+                        <label class="lbl" for="sexo">Sexo</label>
+                            <select class="input" id="sexo" name="sexo">
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="femenino">Femenino</option>
+                                <option value="masculino">Masculino</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                </div>
+                <div class=cont-input>
+                    <label class="lbl" for="fecha-nacimiento">Fecha de nacimiento</label>
+                    <input class="input" type="date" name="fecha_Nacimiento" id="fecha_Nacimiento" required>
+                </div>
+            </div>
+             <div class="cont-input doble telefono">
+                <div class="cont-input">
+                        <label class="lbl" for="prefijo">Prefijo</label>
+                            <select class="input" id="prefijo" name="prefijo">
+                                <option value="+54">+54 🇦🇷</option>
+                                <option value="+49">+49 🇩🇪</option>
+                                <option value="+61">+61 🇭🇲</option>
+                                <option value="+43">+43 🇦🇹</option>
+                                <option value="+32">+32 🇧🇪</option>
+                                <option value="+55">+55 🇧🇷</option>
+                                <option value="+1">+1 🇨🇦</option>
+                                <option value="+56">+56 🇨🇱</option>
+                                <option value="+57">+57 🇨🇴</option>
+                                <option value="+506">+506 🇨🇷</option>
+                                <option value="+385">+385 🇭🇷</option>
+                                <option value="+53">+53 🇨🇺</option>
+                                <option value="+45">+45 🇩🇰</option>
+                                <option value="+1-809">+1-809 🇩🇴</option>
+                                <option value="+1">+1 🇺🇲</option>
+                                <option value="+593">+593 🇪🇨</option>
+                                <option value="+503">+503 🇸🇻</option>
+                                <option value="+358">+358 🇫🇮</option>
+                                <option value="+33">+33 🇲🇫</option>
+                                <option value="+30">+30 🇬🇷</option>
+                                <option value="+502">+502 🇬🇹</option>
+                                <option value="+504">+504 🇭🇳</option>
+                                <option value="+354">+354 🇮🇸</option>
+                                <option value="+353">+353 🇮🇪</option>
+                                <option value="+39">+39 🇮🇹</option>
+                                <option value="+1-876">+1-876 🇯🇲</option>
+                                <option value="+81">+81 🇯🇵</option>
+                                <option value="+52">+52 🇲🇽</option>
+                                <option value="+377">+377 🇲🇨</option>
+                                <option value="+212">+212 🇲🇦</option>
+                                <option value="+31">+31 🇳🇱</option>
+                                <option value="+64">+64 🇳🇿</option>
+                                <option value="+505">+505 🇳🇮</option>
+                                <option value="+47">+47 🇸🇯</option>
+                                <option value="+507">+507 🇵🇦</option>
+                                <option value="+595">+595 🇵🇾</option>
+                                <option value="+48">+48 🇵🇱</option>
+                                <option value="+351">+351 🇵🇹</option>
+                                <option value="+1-787">+1-787 🇵🇷</option>
+                                <option value="+7">+7 🇷🇺</option>
+                                <option value="+34">+34 🇪🇦</option>
+                                <option value="+46">+46 🇸🇪</option>
+                                <option value="+41">+41 🇨🇭</option>
+                                <option value="+90">+90 🇹🇷</option>
+                                <option value="+44">+44 🇬🇧</option>
+                                <option value="+82">+82 🇰🇷</option>
+                                <option value="+380">+380 🇺🇦</option>
+                                <option value="+598">+598 🇺🇾</option>
+                                <option value="+58">+58 🇻🇪</option>
+                            </select>
+                </div>
+                <div class="cont-input">
+                    <label class="lbl" name="telefono">Telefono</label>
+                    <input class="input" type="tel" name="telefono" id="telefono" required>
+                </div>
+            </div>
 
+             <div class="cont-input">
+                <label class="lbl" name="email">Correo</label>
+                <input class="input" type="email" name="email" id="email" required>
+            </div>
+             <div class="cont-input">
+                <label class="lbl" name="contraseña">Contraseña</label>
+                <input class="input" type="password" name="contrasena" id="contrasena" maxlength="50" required>
+            </div>
+            <span class="mensaje"><?php echo $mensaje ?? ''; ?></span>
+            <div class="cont-btn-link">
+            <span><a href="">¿Ya tienes cuenta?</a></span>
+            <button type="submit" class="btn-enviar" name="enviar">Registrarse</button>
+            </div>
+        </form>
+        </div>
