@@ -146,7 +146,7 @@ if(     // Verificar si los campos del formulario están definidos
                 <label class="lbl" name="contraseña">Contraseña</label>
                 <input class="input" type="password" name="contrasena" id="contrasena" maxlength="50" required>
             </div>
-            <span class="mensaje"><?php echo $mensaje ?? ''; ?></span>
+            <span class="mensaje"><?php echo $mensaje ?></span>
             <div class="cont-btn-link">
             <span><a href="/Olimpiadas/Truway/php/general/iniciar-sesion.php">¿Ya tienes cuenta?</a></span>
             <button type="submit" class="btn-enviar" name="enviar">Registrarse</button>
