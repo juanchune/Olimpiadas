@@ -30,14 +30,21 @@ if (empty($productos)) {
 
 function vaciar_carrito() {
     // Lógica para vaciar el carrito (por ejemplo, borrando la sesión o la base de datos)
-    unset($_SESSION['carrito']); // En este caso, borramos la sesión del carrito
-    // (Reemplaza esta línea con la lógica que corresponda a tu implementación)
+    unset($_SESSION['carrito']); 
+    include('conexion.php');
+    $id_usuario = $_SESSION['id']; // Asegúrate de que la sesión tenga el id del usuario
+    $consulta = "DELETE FROM carrito WHERE id_usuario = '$id_usuario'";
+    $resultado = mysqli_query($conexion, $consulta);
+    if (!$resultado) {
+        die("Error al vaciar el carrito: " . mysqli_error($conexion));
+    }
+
 }
     // Si se hace clic en el botón vaciar carrito, ejecutamos la función
     if (isset($_POST['vaciar_carrito'])) {
         vaciar_carrito();
         // Redirige al usuario a la página del carrito
-        header('Location: carrito.php'); // Reemplaza carrito.php con la URL correcta
+        header('Location: carrito.php'); 
         exit();
     }
 ?>
