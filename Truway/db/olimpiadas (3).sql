@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-06-2025 a las 07:21:07
+-- Tiempo de generación: 11-06-2025 a las 04:55:59
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -21,19 +21,17 @@ SET time_zone = "+00:00";
 -- Base de datos: `olimpiadas`
 --
 
-CREATE DATABASE IF NOT EXISTS `olimpiadas` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `olimpiadas`;
-
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estados_pedidos`
+-- Estructura de tabla para la tabla `carrito`
 --
 
-CREATE TABLE `estados_pedidos` (
-  `id_estado` int(11) NOT NULL,
-  `estado` varchar(50) NOT NULL,
-  `descripcion` text NOT NULL
+CREATE TABLE `carrito` (
+  `id_carrito` int(11) NOT NULL,
+  `id_producto` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -45,9 +43,21 @@ CREATE TABLE `estados_pedidos` (
 CREATE TABLE `pedidos` (
   `id_pedido` int(11) NOT NULL,
   `id_usuario` int(11) DEFAULT NULL,
-  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
   `total` decimal(10,2) NOT NULL,
-  `estado` int(11) DEFAULT NULL
+  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos_historicos`
+--
+
+CREATE TABLE `pedidos_historicos` (
+  `id_historico` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
+  `total` decimal(10,0) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -62,7 +72,12 @@ CREATE TABLE `productos` (
   `precio_unitario` decimal(10,0) NOT NULL,
   `descripcion` text NOT NULL,
   `calificacion_promedio` decimal(10,0) NOT NULL,
-  `tipo_producto` int(11) NOT NULL
+  `tipo_producto` int(11) NOT NULL,
+  `tiempo` time NOT NULL,
+  `num_pasajeros` int(11) NOT NULL,
+  `pais` text NOT NULL,
+  `provincia` text NOT NULL,
+  `localidad` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -76,6 +91,16 @@ CREATE TABLE `tipos_productos` (
   `tipo` varchar(50) NOT NULL,
   `descripcion` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `tipos_productos`
+--
+
+INSERT INTO `tipos_productos` (`id_tipo`, `tipo`, `descripcion`) VALUES
+(1, 'pasaje aereo', 'boleto de avion'),
+(2, 'alquiler de auto', 'servicio de alquiler de auto para recorrer'),
+(3, 'estadia', 'servicio de estadia con tiempo determinado en dias y noches'),
+(4, 'completo', 'paquete all-inclusive, con todo lo anterior: estadia, pasajes aereos y alquiler de auto');
 
 -- --------------------------------------------------------
 
@@ -99,18 +124,25 @@ CREATE TABLE `usuarios` (
 --
 
 --
--- Indices de la tabla `estados_pedidos`
+-- Indices de la tabla `carrito`
 --
-ALTER TABLE `estados_pedidos`
-  ADD PRIMARY KEY (`id_estado`);
+ALTER TABLE `carrito`
+  ADD PRIMARY KEY (`id_carrito`),
+  ADD KEY `id_usuario` (`id_usuario`),
+  ADD KEY `id_producto` (`id_producto`);
 
 --
 -- Indices de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `estado` (`estado`);
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `pedidos_historicos`
+--
+ALTER TABLE `pedidos_historicos`
+  ADD PRIMARY KEY (`id_historico`);
 
 --
 -- Indices de la tabla `productos`
@@ -137,16 +169,22 @@ ALTER TABLE `usuarios`
 --
 
 --
--- AUTO_INCREMENT de la tabla `estados_pedidos`
+-- AUTO_INCREMENT de la tabla `carrito`
 --
-ALTER TABLE `estados_pedidos`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `carrito`
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
   MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `pedidos_historicos`
+--
+ALTER TABLE `pedidos_historicos`
+  MODIFY `id_historico` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
@@ -158,7 +196,7 @@ ALTER TABLE `productos`
 -- AUTO_INCREMENT de la tabla `tipos_productos`
 --
 ALTER TABLE `tipos_productos`
-  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tipo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
@@ -171,11 +209,17 @@ ALTER TABLE `usuarios`
 --
 
 --
+-- Filtros para la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  ADD CONSTRAINT `id_producto` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`),
+  ADD CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
-  ADD CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`estado`) REFERENCES `estados_pedidos` (`id_estado`);
+  ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
 --
 -- Filtros para la tabla `productos`
