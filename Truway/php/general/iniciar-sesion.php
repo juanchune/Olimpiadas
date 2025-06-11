@@ -4,7 +4,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
 include('conexion.php');
 
 $mensaje = '';
-
 $emailJefeDeVentas = "Matias@admin.com";
 $contrasenaJefeDeVentas = "gige121234";
 
@@ -28,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($contrasena_MD5 == $result2['contrasena']) {
                 $_SESSION['id'] = $result2['id_usuario'];
                 $_SESSION['email'] = $result2['email'];
+                $_SESSION['rol'] = 'cliente';
                 header("Location: ../../index.php");
                 exit;
             } else {
@@ -58,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
              <div class="cont-input">
                 <label class="lbl iniciar-sesion" name="contraseña">Contraseña</label>
-                <input class="input input-iniciar-sesion contrasenia" type="password" name="contrasenia" id="contrasenia" maxlength="50" required>
+                <input class="input input-iniciar-sesion contrasenia" type="password" name="contrasena" id="contrasena" maxlength="50" required>
             </div>
              <?php if ($mensaje): ?>
-                <p class="mensaje">><?= $mensaje ?></p>
+                <p class="mensaje"><?= $mensaje ?></p>
             <?php endif; ?>
             <div class="cont-btn-link">
             <span><a href="/Olimpiadas/Truway/php/cliente/registro.php">¿No tienes cuenta?</a></span>
