@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['id'] = 'admin';
             $_SESSION['email'] = $email;
             $_SESSION['rol'] = 'admin';
-            header("Location: index.php");
+            header("Location: ../../index.php");
             exit;
         }
         $sql = "SELECT * FROM usuarios WHERE email = '$email'";
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['id'] = $result2['id_usuario'];
                 $_SESSION['email'] = $result2['email'];
                 $_SESSION['rol'] = 'cliente';
-                header("Location: index.php");
+                header("Location: ../../index.php");
                 exit;
             } else {
                 $mensaje = 'Contraseña incorrecta';
@@ -51,14 +51,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php if ($mensaje): ?>
             <p style="color:red;"><?= $mensaje ?></p>
         <?php endif; ?>
-        <form action="ingreso.php" method="POST" class="form-iniciar-sesion">
+        <form action="iniciar-sesion.php" method="POST" class="form-iniciar-sesion">
             <div class="cont-input">
                 <label class="lbl-iniciar-sesion" for="email">email</label>
                 <input class="input-iniciar-sesion email" type="text" id="email" name="email" required>
             </div>
             <div class="cont-input">
                 <label class="lbl-iniciar-sesion" for="contrasenia">Contraseña</label>
-                <input class="input-iniciar-sesion contrasenia" type="password" id="contrasenia" name="contrasena" required>
+                <input class="input-iniciar-sesion contrasenia" type="password" id="contrasena" name="contrasena" required>
             </div>
             <a href="">¿Olvidaste tu contraseña?</a>
             <button type="submit" class="btn-iniciar-sesion">Iniciar sesión</button>

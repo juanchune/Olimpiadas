@@ -1,50 +1,46 @@
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
-
-
+$mensaje = '';
 if(     // Verificar si los campos del formulario están definidos
         isset($_POST['nombre']) && 
         isset($_POST['apellido']) && 
         isset($_POST['email']) &&
         isset($_POST['contrasena']) &&
-        isset($_POST['telefono'])&&
         isset($_POST['sexo']) &&
-        isset($_POST['fecha_nacimiento'])
+        isset($_POST['fecha_nacimiento'])&&  
+        isset($_POST['prefijo'])&&    
+        isset($_POST['telefono'])
     ) {
-        // Obtener los datos del formulario
-        $nombre = $_POST['nombre']; 
-        $apellido = $_POST['apellido']; 
-        $email = $_POST['email']; 
-        $contrasena = $_POST['contrasena']; 
-        $telefono = $_POST['telefono']; 
-        $sexo = $_POST['sexo']; 
-        $fecha_nacimiento = $_POST['fecha_nacimiento']; 
-        $prefijo = $_POST['prefijo'];
-
-        //Encriptar la contraseña
-        $contrasena_MD5 = md5($contrasena); 
-
-        // Verificar si el email ya está registrado
+        // Asignar los valores de los campos del formulario a variables
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $email = $_POST['email'];
+        $contrasena = $_POST['contrasena'];
+        $sexo = $_POST['sexo'];
+        $fecha_nacimiento = $_POST['fecha_nacimiento'];
+        $telefono = $_POST['prefijo'] . $_POST['telefono'];
+        // Encriptar la contraseña
+        $contrasena_MD5 = md5($contrasena);
+        // Verificar si el correo electrónico ya posee una cuenta existente en la base de datos
         $consulta = "SELECT email FROM usuarios WHERE email='$email'";
-        $consulta1 = mysqli_query($conexion, $consulta); 
-
+        $consulta1 = mysqli_query($conexion, $consulta);
         // Si el email ya está registrado, mostrar un mensaje de error
         if (mysqli_num_rows($consulta1) > 0) {
-                $mensaje = "El email ya está registrado. <a href='registro.php'>Vuelve</a> y usa otro.";
+            $mensaje = "El email ya está registrado.";
         } else {
-        $sql = "INSERT INTO usuarios (nombre, apellido, email, contrasena, sexo, fecha_nacimiento, telefono) VALUES ('$nombre', '$apellido', '$email', '$contrasena_MD5', '$sexo', '$fecha_nacimiento', '$telefono')";
-        $result = mysqli_query($conexion, $sql);
-        if ($result) {
-            $mensaje = "Registro exitoso. Redirigiendo al login...";
-            header("Refresh:2; url=../general/ingreso.php");
-            exit;
-        } else {
-            $mensaje = "Error al registrar usuario.";
+            // Si el email no está registrado, insertar los datos en la base de datos
+            $insertar = "INSERT INTO usuarios (nombre, apellido, email, contrasena, sexo, fecha_nacimiento, telefono) 
+                         VALUES ('$nombre', '$apellido', '$email', '$contrasena_MD5', '$sexo', '$fecha_nacimiento', '$telefono')";
+            $resultado = mysqli_query($conexion, $insertar);
+            // Verificar si la inserción fue exitosa
+            if ($resultado) {
+                $mensaje = "Registro exitoso. <a href='../general/iniciar-sesion.php'>Inicia sesión</a>.";
+            } else {
+                $mensaje = "Error al registrar. Por favor intenta nuevamente.";
+            }
         }
-        echo $mensaje;
-        }
-    }
+    }       
 ?>
 <link rel="stylesheet" href="/Olimpiadas/truway/css/registro.css">
 <section class="logo-titulo">
@@ -78,7 +74,7 @@ if(     // Verificar si los campos del formulario están definidos
                 </div>
                 <div class=cont-input>
                     <label class="lbl" for="fecha-nacimiento">Fecha de nacimiento</label>
-                    <input class="input" type="date" name="fecha_Nacimiento" id="fecha_Nacimiento" required>
+                    <input class="input" type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
                 </div>
             </div>
              <div class="cont-input doble telefono">
