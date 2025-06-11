@@ -1,9 +1,20 @@
 <?php
+session_start(); 
 include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.php';
 include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/navegador.php';
-
+if (isset($_SESSION['email'])):
+    if ($_SESSION['rol'] === 'admin'):
 ?>
-     <link rel="stylesheet" href="/Olimpiadas/Truway/css/index.css">
+<p>HOLA ADMIN</p>
+<form action="/Olimpiadas/Truway/php/componentes/logout.php" method="POST"> 
+    <button type="submit" class="logout-btn">Cerrar sesión</button>
+</form>
+
+
+
+    <?php endif;
+else: ?>
+    <link rel="stylesheet" href="/Olimpiadas/Truway/css/index.css">
     <header>
             <div class="capa-oscura"></div>
             <div class="contenido">
@@ -132,6 +143,7 @@ include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/navegad
             </div>
         </section>
     </main>
+    <?php endif; ?>
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/footer.php';
 ?>

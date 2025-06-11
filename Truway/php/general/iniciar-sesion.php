@@ -28,7 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($contrasena_MD5 == $result2['contrasena']) {
                 $_SESSION['id'] = $result2['id_usuario'];
                 $_SESSION['email'] = $result2['email'];
-                $_SESSION['rol'] = 'cliente';
                 header("Location: ../../index.php");
                 exit;
             } else {
