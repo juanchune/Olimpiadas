@@ -125,6 +125,10 @@ Pedidos_Entregados(Historica)
       -fecha_entrega
       -monto
 
+Carrito
+      -id_carrito
+      -id_pedido
+      -id_detalle_pedido
 
 
 
