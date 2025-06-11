@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 $mensaje = '';
 if(     // Verificar si los campos del formulario están definidos
@@ -42,10 +42,10 @@ if(     // Verificar si los campos del formulario están definidos
         }
     }       
 ?>
-<link rel="stylesheet" href="/Olimpiadas/truway/css/registro.css">
+<link rel="stylesheet" href="/Olimpiadas/Truway/css/registro.css">
 <section class="logo-titulo">
             <div class="cont-img">
-                <img src="./css/recursos/Logo-2 1.png">
+                <img src="/Olimpiadas/Truway/css/recursos/Logo-2 1.png">
             </div>
             <h2 class="titulo">Truway</h2>
         </section>
@@ -148,7 +148,7 @@ if(     // Verificar si los campos del formulario están definidos
             </div>
             <span class="mensaje"><?php echo $mensaje ?? ''; ?></span>
             <div class="cont-btn-link">
-            <span><a href="">¿Ya tienes cuenta?</a></span>
+            <span><a href="/Olimpiadas/Truway/php/general/iniciar-sesion.php">¿Ya tienes cuenta?</a></span>
             <button type="submit" class="btn-enviar" name="enviar">Registrarse</button>
             </div>
         </form>
