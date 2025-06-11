@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/navegador.css">
+    <link rel="stylesheet" href="../css/colores.css">
+    <link rel="stylesheet" href="../css/tiporgrafias.css">
+    <title>Document</title>
+</head>
+<body>
+    <main> 
+        <nav>
+            <div class="cont-logo-nombre">
+                <div class="cont-img">
+                    <img src="../css/recursos/Logo-2 1.png" alt="Logo">
+                </div>
+                <h6 class="titulo-nav">Truway</h6>
+            </div>
+            <div class="cont-btns">
+                <!-- <ul class="nav-lista-btns">
+                    <li class="btns"><a href>Inicio</a></li>
+                    <li class="btns"><a href>Sobre nosotros</a></li>
+                    <li class="btns"><a href>Porductos</a></li>
+                </ul> -->
+            </div>
+            <div class="cont-btns cont-usuario">
+                    <ul class="nav-lista-btns">
+                        <li class="btns user-dropdown">
+                            <svg xmlns="http://www.w3.org/2000/svg"class="svg-icon" viewBox="0 0 24 24" onclick="bandejaUsuario(event)"><circle cx="12" cy="6" r="4" fill="currentColor " class="icon"/><path class="icon" fill="currentColor" d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5"/>
+                            </svg>
+                            <ul class="user-dropdown-content">
+                                <li>
+                                    <div class="user-info">
+                                        <span class="user-name">ADMINISTRADOR</span>
+                                        <!-- <span class="user-username"></span> -->
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="btn-dropdown logout">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="nav-icono" fill="currentColor" d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h6q.425 0 .713.288T12 4t-.288.713T11 5H5v14h6q.425 0 .713.288T12 20t-.288.713T11 21zm12.175-8H10q-.425 0-.712-.288T9 12t.288-.712T10 11h7.175L15.3 9.125q-.275-.275-.275-.675t.275-.7t.7-.313t.725.288L20.3 11.3q.3.3.3.7t-.3.7l-3.575 3.575q-.3.3-.712.288t-.713-.313q-.275-.3-.262-.712t.287-.688z"/></svg>
+                                        <form action="logout.php" method="POST"> 
+                                            <button type="submit" class="logout-btn">Cerrar sesión</button>
+                                        </form>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    
+                </div>
+        </nav>

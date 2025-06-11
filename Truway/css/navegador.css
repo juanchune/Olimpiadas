@@ -1,3 +1,18 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Mulish;
+}
+
+body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--blanco-50);
+}
+
+
 
 .svg-icon{
     width: 1.5rem;
@@ -25,6 +40,7 @@ nav{
     display: flex;
     align-items: center;
     gap: .5rem;
+    
 }
 
 .cont-logo-nombre .cont-img{
@@ -175,4 +191,39 @@ user-dropdown{
   font-weight: 300;
 }
 
+
+.iniciar-sesion, .registrarse{
+  border-style: none;
+  display: flex;
+  padding: 0.5rem 0.625rem;
+  align-items: center;
+  gap: 0.3125rem;
+  border-radius: 0.625rem;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.iniciar-sesion{
+  background-color: var(--blanco-50);
+  font:var(--blanco-50);
+  border: solid 2px var(--blanco-50);
+  color: var(--terciario-50);
+}
+
+.registrarse{
+  background-color: var(--terciario-50);
+  border: solid 2px var(--blanco-50);
+  color: var(--blanco-50);
+}
+
+.icon-registrarse{
+  color: var(--blanco-50);
+
+}
+
+.icon-iniciar-sesion{
+  color: var(--terciario-50);
+}
 
