@@ -10,42 +10,22 @@ if (!$resultado) {
     die("Error en la consulta: " . mysqli_error($conexion));
 }
 // Inicializamos variables para almacenar los datos del carrito
-$cantidad_paquetes = 0;
+$cantidad_paquetes = 0; 
 $subtotal = 0;
 $precio_final = 0;
-// Creamos un array para almacenar los productos del carrito
+// Recorremos los resultados y los almacenamos en un array
 $productos = [];
 while ($fila = mysqli_fetch_assoc($resultado)) {
-    $id_producto = $fila['id_producto'];
-    $cantidad_personas = $fila['cantidad_personas'];
-    
-    // Realizamos una consulta para obtener los detalles del producto
-    $consulta_producto = "SELECT * FROM productos WHERE id_producto = '$id_producto'";
-    $resultado_producto = mysqli_query($conexion, $consulta_producto);
-    
-    if ($resultado_producto && mysqli_num_rows($resultado_producto) > 0) {
-        $producto = mysqli_fetch_assoc($resultado_producto);
-        
-        // Calculamos el precio total del producto
-        $precio_unitario = $producto['precio']; // Asegúrate de que este campo exista en tu tabla productos
-        $precio_total = $precio_unitario * $cantidad_personas;
-        
-        // Agregamos los datos del producto al array
-        $productos[] = [
-            'nombre' => $producto['nombre'], // Asegúrate de que este campo exista en tu tabla productos
-            'tipo' => $producto['tipo'], // Asegúrate de que este campo exista en tu tabla productos
-            'destino' => $producto['destino'], // Asegúrate de que este campo exista en tu tabla productos
-            'fecha' => $producto['fecha'], // Asegúrate de que este campo exista en tu tabla productos
-            'cantidad_personas' => $cantidad_personas,
-            'precio_total' => $precio_total,
-            'id_producto' => $id_producto
-        ];
-        
-        // Actualizamos las variables de resumen del carrito
-        $cantidad_paquetes++;
-        $subtotal += $precio_total;
-        $precio_final += $precio_total;
-    }
+    $productos[] = $fila;
+    $cantidad_paquetes++;
+    $subtotal += $fila['precio']; // Asumiendo que 'precio' es el precio total del paquete
+}
+// Calculamos el precio final
+$precio_final = $subtotal; // Aquí puedes aplicar descuentos o impuestos si es necesario
+// Si no hay productos en el carrito, mostramos un mensaje
+if (empty($productos)) {
+    echo "<p>No hay productos en el carrito.</p>";
+    exit();
 }
 
 function vaciar_carrito() {
