@@ -63,6 +63,68 @@ Navegador Lateral(solo admin):
 
 <!--Datos-->
 
+Usuarios:
+      -id_usuario
+      -Nombre
+      -Apellido
+      -Email
+      -Contrasena
+      -Sexo
+      -Fecha_Nacimiento
+      -Telefono
+
+Admin: 
+      Hardcodeado
+      -id_admin [0]
+      -Email
+      -Contrasena
+
+Productos
+      -id_producto
+      -Nombre
+      -Precio_unitario
+      -Descripcion
+      -tipo_producto
+
+Tipo_producto
+      -id_tipo
+      -tipo
+      -descripcion
+
+Pedidos
+      -id_pedido
+      -id_usuario
+      -fecha_pedido
+      -estado_pedido
+      
+Detalle_pedido
+      -id_detalle_pedido
+      -id_pedido
+      -id_producto
+      -cantidad
+
+Estado_pedido
+      -id_pedido
+      -estado_pedido[Rechazados, Pendientes, Aprobados, Entregados]
+
+Pedidos_pendientes
+      -id_pedido_pendiente
+      -id_pedido
+
+Pedidos_rechazados
+      -id_pedido_rechazado
+      -id_pedido
+
+Pedidos_rechazados
+      -id_pedido_aprobado
+      -id_pedido
+
+Pedidos_Entregados(Historica)
+      -id_pedido_entregado
+      -id_pedido
+      -fecha_entrega
+      -monto
+
 
 
 
