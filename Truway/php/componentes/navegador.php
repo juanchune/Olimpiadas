@@ -6,7 +6,6 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
             // Verificar si el usuario ha iniciado sesión
         if (isset($_SESSION['id'])) {
             $id_usuario = $_SESSION['id'];
-
             // Consulta para obtener los datos del usuario
             $query = "SELECT nombre, nickname, foto FROM usuarios WHERE id_usuario = $id_usuario";
             $resultado = mysqli_query($conexion, $query);
@@ -27,6 +26,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
     $foto = 'perfil.png';
 }
 ?> <!-- Menú para clientes -->
+
 <link rel="stylesheet" href="/Olimpiadas/Truway/css/navegador.css">
 <nav>
             <div class="cont-logo-nombre">
