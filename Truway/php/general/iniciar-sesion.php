@@ -1,6 +1,6 @@
 <?php
 session_start();
-include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 
 $mensaje = '';
@@ -39,27 +39,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
-<header>
-    <link rel="stylesheet" href="./css/iniciar-sesion.css">
-</header>
-    <div class="imagen-principal">
-         <img class="img-iniciar-sesion" src="./css/recursos/Principal.png"> 
-    </div>
-    <div class="cont-formulario-iniciar-sesion">
-        <h4 class="titulo-iniciar-sesion">Iniciar sesión</h4>
-        <?php if ($mensaje): ?>
-            <p style="color:red;"><?= $mensaje ?></p>
-        <?php endif; ?>
-        <form action="iniciar-sesion.php" method="POST" class="form-iniciar-sesion">
-            <div class="cont-input">
-                <label class="lbl-iniciar-sesion" for="email">email</label>
-                <input class="input-iniciar-sesion email" type="text" id="email" name="email" required>
+    <link rel="stylesheet" href="/Olimpiadas/Truway/css/iniciar-sesion.css">
+
+   <main>
+        <section class="logo-titulo">
+            <div class="cont-img">
+                <img src="/Olimpiadas/Truway/css/recursos/Logo-2 1.png">
             </div>
-            <div class="cont-input">
-                <label class="lbl-iniciar-sesion" for="contrasenia">Contraseña</label>
-                <input class="input-iniciar-sesion contrasenia" type="password" id="contrasena" name="contrasena" required>
+            <h2 class="titulo">Truway</h2>
+        </section>
+        <div class="cont-formulario-subtitulo">
+        <h2>Iniciar sesion</h2>
+        <form class="cont-formulario" method="post" action="iniciar-sesion.php">
+
+             <div class="cont-input">
+                <label class="lbl iniciar-sesion" name="correo">Correo</label>
+                <input class="input input-iniciar-sesion email" type="email" name="email" id="email" required>
             </div>
-            <a href="">¿Olvidaste tu contraseña?</a>
-            <button type="submit" class="btn-iniciar-sesion">Iniciar sesión</button>
+             <div class="cont-input">
+                <label class="lbl iniciar-sesion" name="contraseña">Contraseña</label>
+                <input class="input input-iniciar-sesion contrasenia" type="password" name="contrasenia" id="contrasenia" maxlength="50" required>
+            </div>
+             <?php if ($mensaje): ?>
+                <p class="mensaje">><?= $mensaje ?></p>
+            <?php endif; ?>
+            <div class="cont-btn-link">
+            <span><a href="/Olimpiadas/Truway/php/cliente/registro.php">¿No tienes cuenta?</a></span>
+            <button type="submit" class="btn-iniciar-sesion">Iniciar sesion</button>
+            </div>
         </form>
-    </div>
+        </div>
+    </main>
+</body>
+</html>
