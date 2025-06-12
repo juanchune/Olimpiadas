@@ -62,7 +62,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
 
                                 <li>
                                     <div class="btn-dropdown perfil">
-                                        <a href="perfil.html" class="perfil-btn">
+                                        <a href="/Olimpiadas/Truway/php/cliente/perfil.php" class="perfil-btn">
                                         <svg xmlns="http://www.w3.org/2000/svg"class="svg-icon" viewBox="0 0 24 24" onclick="bandejaUsuario(event)"><circle  class="nav-icon" cx="12" cy="6" r="4" fill="currentColor " class="icon"/><path class="nav-icon" fill="currentColor" d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5"/>
                                         </svg>
                                             <span>Perfil</span>
