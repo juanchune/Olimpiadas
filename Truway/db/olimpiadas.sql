@@ -1,7 +1,34 @@
-ATE DATABASE IF NOT EXISTS `olimpiadas` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+CREATE DATABASE IF NOT EXISTS `olimpiadas` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `olimpiadas`;
 
+
+-- Estructura de tabla para la tabla `usuarios`
+CREATE TABLE `usuarios` (
+  `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `apellido` varchar(100) NOT NULL,
+  `email` text NOT NULL,
+  `contrasena` varchar(50) NOT NULL,
+  `fecha_nacimiento` date NOT NULL,
+  `telefono` text NOT NULL,
+  PRIMARY KEY (`id_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 -- --------------------------------------------------------
+
+-- Estructura de tabla para la tabla `pedidos`
+CREATE TABLE `pedidos` (
+  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_pedido` date NOT NULL,
+  `precio_total` float(11,2) NOT NULL,
+  `metodo_pago` varchar(50) DEFAULT NULL,
+  `cantidad` int(11) NOT NULL,
+  `estado_pedido` int(11) NOT NULL,
+  PRIMARY KEY (`id_pedido`),
+  FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id_usuario`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Estructura de tabla para la tabla `pedidos_historicos`
@@ -124,18 +151,8 @@ CREATE TABLE `pasaje` (
   FOREIGN KEY (`id_producto`) REFERENCES `productos`(`id_producto`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Estructura de tabla para la tabla `pedidos`
-CREATE TABLE `pedidos` (
-  `id_pedido` int(11) NOT NULL AUTO_INCREMENT,
-  `id_usuario` int(11) NOT NULL,
-  `fecha_pedido` date NOT NULL,
-  `precio_total` float(11,2) NOT NULL,
-  `metodo_pago` varchar(50) DEFAULT NULL,
-  `cantidad` int(11) NOT NULL,
-  `estado_pedido` int(11) NOT NULL,
-  PRIMARY KEY (`id_pedido`),
-  FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id_usuario`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
 
 -- Estructura de tabla para la tabla `productos`
 CREATE TABLE `productos` (
@@ -155,17 +172,7 @@ CREATE TABLE `tipo_producto` (
   PRIMARY KEY (`id_tipo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
--- Estructura de tabla para la tabla `usuarios`
-CREATE TABLE `usuarios` (
-  `id_usuario` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `apellido` varchar(100) NOT NULL,
-  `email` text NOT NULL,
-  `contrasena` varchar(50) NOT NULL,
-  `fecha_nacimiento` date NOT NULL,
-  `telefono` text NOT NULL,
-  PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 
 -- Estructura de tabla para la tabla `vehiculo`
 CREATE TABLE `vehiculo` (
