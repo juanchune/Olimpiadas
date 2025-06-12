@@ -43,6 +43,7 @@ if(     // Verificar si los campos del formulario están definidos
     }       
 ?>
 <link rel="stylesheet" href="/Olimpiadas/Truway/css/registro.css">
+<main>
 <section class="logo-titulo">
             <div class="cont-img">
                 <img src="/Olimpiadas/Truway/css/recursos/Logo-2 1.png">
@@ -153,3 +154,6 @@ if(     // Verificar si los campos del formulario están definidos
             </div>
         </form>
         </div>
+</main>
+</body>
+</html>

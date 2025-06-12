@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['id'] = 'admin';
             $_SESSION['email'] = $email;
             $_SESSION['rol'] = 'admin';
-            header("Location: ../../index.php");
+            header("Location: /Olimpiadas/Truway/php/admin/consultar-productos.php");
             exit;
         }
         $sql = "SELECT * FROM usuarios WHERE email = '$email'";

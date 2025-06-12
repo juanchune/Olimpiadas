@@ -1,7 +1,7 @@
 <?php
 session_start();
+?><link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css"><?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
-include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
 include('conexion.php');
 
 $consulta = "SELECT * FROM carrito WHERE id_usuario = '".$_SESSION['id']."'"; // Asegúrate de que la sesión tenga el id del usuario
@@ -23,7 +23,11 @@ while ($fila = mysqli_fetch_assoc($resultado)) {
 // Calculamos el precio final
 $precio_final = $subtotal; // Aquí puedes aplicar descuentos o impuestos si es necesario
 // Si no hay productos en el carrito, mostramos un mensaje
-if (empty($productos)) {
+if (empty($productos)) { ?>
+    <main>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
+    </main>
+    <?php
     echo "<p>No hay productos en el carrito.</p>";
     exit();
 }
@@ -48,7 +52,8 @@ function vaciar_carrito() {
         exit();
     }
 ?>
-<link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css">
+<main>
+  <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
 <section class="section-carrito">
             <div class="grid-productos">
                 <h2 class="subtitulo">Mis reservas</h2>
@@ -123,4 +128,4 @@ function vaciar_carrito() {
                 </article>
             </div>
         </section>
-    </main>
+</main>

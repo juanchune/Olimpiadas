@@ -1,5 +1,5 @@
 <?php
-include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 
 ?>
 <link rel="stylesheet" href="/Olimpiadas/Truway/css/footer.css">
@@ -38,7 +38,7 @@ include $_SERVER['DOCUMENT_ROOT'] . './Olimpiadas/truway/php/componentes/header.
             <div class="cont-nav">
                 <h3>Navegacion Rapida</h3>
                 <div class="info-nav">
-                    <a href="#inicio">Inicio</a>
+                    <a href="/Olimpiadas/Truway/index.php">Inicio</a>
                     <a href=#SobreNosotros>Sobre nosostros</a>
                     <a href=#Porductos>Productos</a>
                 </div>
