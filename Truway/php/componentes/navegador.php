@@ -146,7 +146,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
         <nav class="nav-lateral">
             <ul class="lista-menu-lateral">
                 <li>
-                    <a href="admin-principal.html">
+                    <a href="/Olimpiadas/Truway/php/admin/consultar-producto.php">
                         <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
                             <path fill="currentColor" class="icon"
                                 d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0s.41-1.08 0-1.49zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14" />
@@ -155,7 +155,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
                     </a>
                 </li>
                 <li>
-                    <a href="agregar-productos.html">
+                    <a href="/Olimpiadas/Truway/php/admin/agregar-producto.php">
                         <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
                             <path fill="currentColor" class="icon"
                                 d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z" />
@@ -164,7 +164,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
                     </a>
                 </li>
                 <li>
-                    <a href="consultar-pedidos-entregados.html">
+                    <a href="/Olimpiadas/Truway/php/admin/consultar-pedidos-entregados.php">
                         <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
                             <path class="icon" fill="currentColor"
                                 d="M8 3.5A1.5 1.5 0 0 1 9.5 2h5A1.5 1.5 0 0 1 16 3.5v1A1.5 1.5 0 0 1 14.5 6h-5A1.5 1.5 0 0 1 8 4.5z" />
@@ -176,7 +176,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
                     </a>
                 </li>
                 <li>
-                    <a href="ventas-pagas.html">
+                    <a href="/Olimpiadas/Truway/php/admin/ventas-pagas.php">
                         <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
                             <path class="icon" fill="currentColor"
                                 d="M21.92 6.62a1 1 0 0 0-.54-.54A1 1 0 0 0 21 6h-5a1 1 0 0 0 0 2h2.59L13 13.59l-3.29-3.3a1 1 0 0 0-1.42 0l-6 6a1 1 0 0 0 0 1.42a1 1 0 0 0 1.42 0L9 12.41l3.29 3.3a1 1 0 0 0 1.42 0L20 9.41V12a1 1 0 0 0 2 0V7a1 1 0 0 0-.08-.38" />

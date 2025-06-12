@@ -1,6 +1,47 @@
 ATE DATABASE IF NOT EXISTS `olimpiadas` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE `olimpiadas`;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos_historicos`
+--
+
+CREATE TABLE `pedidos_historicos` (
+  `id_historico` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp(),
+  `total` decimal(10,0) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos_pendientes`
+--
+
+CREATE TABLE `pedidos_pendientes` (
+  `id_pedido` int(11) NOT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `fecha_pedido` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `pedidos_rechazados`
+--
+
+CREATE TABLE `pedidos_rechazados` (
+  `id_rechazado` int(11) NOT NULL,
+  `fecha_pedido` datetime NOT NULL,
+  `fecha_rechazado` datetime NOT NULL DEFAULT current_timestamp(),
+  `fk_id_usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
 -- Estructura de tabla para la tabla `carrito`
 CREATE TABLE `carrito` (
   `id_carrito` int(11) NOT NULL AUTO_INCREMENT,

@@ -6,7 +6,7 @@ include('conexion.php');
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
 <main>
-     <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos.css">
+     <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos-paquetes.css">
         <div class="cont-titulo-btn">
             <h2 class="subtitulo">Consultar productos</h2>
             
@@ -21,12 +21,14 @@ include('conexion.php');
             </div>
         </div>
         <div class="seleccionar-tipo-tabla">
-                <a href="consultar-pedidos-entregados.html" class="tabla paquetes">Tabla paquetes</a>
-                <a href="consultar-pedidos-pendientes.html"  class="tabla exursiones">Tabla exursiones</a></span>
-                <a href="consultar-pedidos-rechazados.html" class="tabla aqluiler-autos">Tabla alquiler autos</a></span>
-                <a href="consultar-pedidos-rechazados.html" class="tabla estadias">Tabla estadias</a></span>
-                <a href="consultar-pedidos-rechazados.html" class="tabla boletos-avion">Tabla boleteos de avion</a></span>
-            </div>
+            <a href="/Olimpiadas/Truway/php/admin/consultar-producto.php" class="tabla">Productos general</a>
+            <a href="/Olimpiadas/Truway/php/admin/consultar-producto-paquetes.php" class="tabla seleccionado">Paquetes</a>
+            <a href="/Olimpiadas/Truway/php/admin/consultar-producto-excursiones.php" class="tabla">Excursiones</a>
+            <a href="/Olimpiadas/Truway/php/admin/consultar-producto-alquiler-autos.php" class="tabla">Alquiler autos</a>
+            <a href="/Olimpiadas/Truway/php/admin/consultar-producto-estadias.php" class="tabla">Estadías</a>
+            <a href="/Olimpiadas/Truway/php/admin/consultar-producto-boletos-avion.php" class="tabla">Boletos de avión</a>
+        </div>
+
         <div class="cont-filtros">
             <form method="get" action="" class="form-filtros">
                 <div class=filtros>
@@ -140,7 +142,7 @@ include('conexion.php');
         </section>
     </main>
 
-    <script>
+<script>
         document.querySelectorAll('.btn-desplegable').forEach(btn => {
         btn.addEventListener('click', () => {
             const producto = btn.closest('.producto');
@@ -159,6 +161,8 @@ include('conexion.php');
             detalleActual.classList.toggle('oculto');
         });
         });
-    </script>
+
+   
+</script>
 </body>
 </html>

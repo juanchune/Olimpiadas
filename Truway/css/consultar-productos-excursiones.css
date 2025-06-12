@@ -87,7 +87,7 @@ main {
     font-size: .9em;
     transition: all .5s ease;
     font-weight: 500;
-    color: var(--terciario-terciario);
+    color: var(--secundario-50);
     border: 1.5px solid var(--secundario-50);
 
 }
