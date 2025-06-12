@@ -7,7 +7,6 @@ if(     // Verificar si los campos del formulario están definidos
         isset($_POST['apellido']) && 
         isset($_POST['email']) &&
         isset($_POST['contrasena']) &&
-        isset($_POST['sexo']) &&
         isset($_POST['fecha_nacimiento'])&&  
         isset($_POST['prefijo'])&&    
         isset($_POST['telefono'])
@@ -17,7 +16,6 @@ if(     // Verificar si los campos del formulario están definidos
         $apellido = $_POST['apellido'];
         $email = $_POST['email'];
         $contrasena = $_POST['contrasena'];
-        $sexo = $_POST['sexo'];
         $fecha_nacimiento = $_POST['fecha_nacimiento'];
         $telefono = $_POST['prefijo'] . $_POST['telefono'];
         // Encriptar la contraseña
@@ -30,8 +28,8 @@ if(     // Verificar si los campos del formulario están definidos
             $mensaje = "El email ya está registrado.";
         } else {
             // Si el email no está registrado, insertar los datos en la base de datos
-            $insertar = "INSERT INTO usuarios (nombre, apellido, email, contrasena, sexo, fecha_nacimiento, telefono) 
-                         VALUES ('$nombre', '$apellido', '$email', '$contrasena_MD5', '$sexo', '$fecha_nacimiento', '$telefono')";
+            $insertar = "INSERT INTO usuarios (nombre, apellido, email, contrasena, fecha_nacimiento, telefono) 
+                         VALUES ('$nombre', '$apellido', '$email', '$contrasena_MD5', '$fecha_nacimiento', '$telefono')";
             $resultado = mysqli_query($conexion, $insertar);
             // Verificar si la inserción fue exitosa
             if ($resultado) {
@@ -64,15 +62,7 @@ if(     // Verificar si los campos del formulario están definidos
                 </div>
             </div>
             <div class="cont-input doble">
-                <div class="cont-input">
-                        <label class="lbl" for="sexo">Sexo</label>
-                            <select class="input" id="sexo" name="sexo">
-                                <option value="" disabled selected>Seleccione una opción</option>
-                                <option value="femenino">Femenino</option>
-                                <option value="masculino">Masculino</option>
-                                <option value="otro">Otro</option>
-                            </select>
-                </div>
+                
                 <div class=cont-input>
                     <label class="lbl" for="fecha-nacimiento">Fecha de nacimiento</label>
                     <input class="input" type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
