@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-06-2025 a las 01:46:13
+-- Tiempo de generación: 12-06-2025 a las 05:22:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -87,11 +87,30 @@ CREATE TABLE `productos` (
   `precio_unitario` decimal(10,0) NOT NULL,
   `descripcion` text NOT NULL,
   `tiempo` time NOT NULL,
-  `num_pasajeros` int(11) NOT NULL,
   `pais` text NOT NULL,
   `provincia` text NOT NULL,
   `localidad` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `roles`
+--
+
+CREATE TABLE `roles` (
+  `id_rol` int(11) NOT NULL,
+  `nombre` varchar(20) NOT NULL,
+  `descripcion` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `roles`
+--
+
+INSERT INTO `roles` (`id_rol`, `nombre`, `descripcion`) VALUES
+(1, 'administrador', 'gestion y control del sitio'),
+(2, 'usuario', 'usuario corriente del sitio');
 
 -- --------------------------------------------------------
 
@@ -101,6 +120,7 @@ CREATE TABLE `productos` (
 
 CREATE TABLE `usuarios` (
   `id_usuario` int(11) NOT NULL,
+  `rol` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido` varchar(100) NOT NULL,
   `email` text NOT NULL,
@@ -126,7 +146,8 @@ ALTER TABLE `carrito`
 -- Indices de la tabla `pedidos_historicos`
 --
 ALTER TABLE `pedidos_historicos`
-  ADD PRIMARY KEY (`id_historico`);
+  ADD PRIMARY KEY (`id_historico`),
+  ADD KEY `fkid_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `pedidos_pendientes`
@@ -149,11 +170,18 @@ ALTER TABLE `productos`
   ADD PRIMARY KEY (`id_producto`);
 
 --
+-- Indices de la tabla `roles`
+--
+ALTER TABLE `roles`
+  ADD PRIMARY KEY (`id_rol`);
+
+--
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`),
-  ADD UNIQUE KEY `email` (`email`) USING HASH;
+  ADD UNIQUE KEY `email` (`email`) USING HASH,
+  ADD KEY `fk_rol` (`rol`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -190,6 +218,12 @@ ALTER TABLE `productos`
   MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT de la tabla `roles`
+--
+ALTER TABLE `roles`
+  MODIFY `id_rol` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
@@ -207,6 +241,12 @@ ALTER TABLE `carrito`
   ADD CONSTRAINT `id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
 --
+-- Filtros para la tabla `pedidos_historicos`
+--
+ALTER TABLE `pedidos_historicos`
+  ADD CONSTRAINT `fkid_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
 -- Filtros para la tabla `pedidos_pendientes`
 --
 ALTER TABLE `pedidos_pendientes`
@@ -217,6 +257,12 @@ ALTER TABLE `pedidos_pendientes`
 --
 ALTER TABLE `pedidos_rechazados`
   ADD CONSTRAINT `fk_id_usuario` FOREIGN KEY (`fk_id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Filtros para la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD CONSTRAINT `fk_rol` FOREIGN KEY (`rol`) REFERENCES `roles` (`id_rol`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
