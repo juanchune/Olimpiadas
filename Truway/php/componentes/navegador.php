@@ -35,7 +35,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
                 <ul class="nav-lista-btns">
                     <li class="btns"><a href="/Olimpiadas/Truway/index.php">Inicio</a></li>
                     <li class="btns"><a href="#">Sobre nosotros</a></li>
-                    <li class="btns"><a href="">Productos</a></li>
+                    <li class="btns"><a href="/Olimpiadas/Truway/php/cliente/mostrarProducto.php">Productos</a></li>
                 </ul>
             </div>
             <div class="cont-btns cont-usuario">
