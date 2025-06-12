@@ -15,30 +15,22 @@ include('conexion.php');
             <a href="/Olimpiadas/Truway/php/admin/ventas-pendientes.php" class="tipo-venta pendientes">Pendites de pago</a></span>
         </div>
 
-   
+         <section class="section-tabla-productos">
+                <article class="producto">
+                    <div class="informacion-principal">
+                        <div class="informacion">
+                            <span class="lbl-informacion">ID PEDIDO</span>
+                            <span class="lbl-informacion">ID USUARIO</span>
+                            <span class="lbl-informacion">FECHA</span>
+                            <span class="lbl-informacion">PRECIO_TOTAL</span>
+                            <span class="lbl-informacion">METODO_PAGO</span>
+                            <span class="lbl-informacion">CANTIDAD</span>
+                        </div>
+                    </div>
+
+                </article>
+        </section>
 </main>
 
-<script>
-        document.querySelectorAll('.btn-desplegable').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const producto = btn.closest('.producto');
-            const detalleActual = producto.querySelector('.detalles-producto');
-
-            // Cierra todos los demás detalles-producto
-            document.querySelectorAll('.detalles-producto').forEach(detalle => {
-            if (detalle !== detalleActual) {
-                detalle.classList.remove('activo');
-                detalle.classList.add('oculto');
-            }
-            });
-
-            // Alterna el actual
-            detalleActual.classList.toggle('activo');
-            detalleActual.classList.toggle('oculto');
-        });
-        });
-
-   
-</script>
 </body>
 </html>

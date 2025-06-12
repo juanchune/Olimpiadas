@@ -188,7 +188,7 @@ main {
 .informacion-principal .informacion{
     width: 100%;
     display: grid;
-    grid-template-columns: .4fr .4fr .7fr .2fr .4fr; 
+    grid-template-columns: .4fr .4fr .8fr .8fr 1fr .2fr;
     align-items: center;
 
 }
@@ -201,7 +201,3 @@ main {
     border-left: .5px solid var(--terciario-50);
     border-right: .5px solid var(--terciario-50);
 }
-
-
-
-
