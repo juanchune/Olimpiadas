@@ -1,3 +1,6 @@
+CREATE DATABASE IF NOT EXISTS `truway` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `truway`;
+
 CREATE TABLE usuarios (
   id_usuario int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
   nombre varchar(100) NOT NULL,
