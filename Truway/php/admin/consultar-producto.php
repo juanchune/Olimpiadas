@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
@@ -14,11 +13,8 @@ $filters = [];
 if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {
     $filters[] = "tp.tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo-producto']) . "'";
 }
-if (isset($_GET['min_precio']) && $_GET['min_precio'] !== '') {
-    $filters[] = "p.precio >= " . intval($_GET['min_precio']);
-}
-if (isset($_GET['max_precio']) && $_GET['max_precio'] !== '') {
-    $filters[] = "p.precio <= " . intval($_GET['max_precio']);
+if (isset($_GET['precio']) && $_GET['precio'] !== '') {
+    $filters[] = "p.precio <= " . intval($_GET['precio']);
 }
 
 // Si hay filtros, añadirlos a la consulta
@@ -31,6 +27,9 @@ $result = mysqli_query($conexion, $query);
 // Obtener valores únicos para los filtros
 $tipoProductoQuery = "SELECT DISTINCT tipo FROM tipo_producto ORDER BY tipo ASC";
 $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
+
+$precioQuery = "SELECT DISTINCT precio FROM productos ORDER BY precio ASC";
+$precioResult = mysqli_query($conexion, $precioQuery);
 ?>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; ?>
@@ -67,12 +66,12 @@ $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
                     <?php } ?>
                 </select>
 
-                <div class="filtro-rango-precio">
-                    <label for="min_precio">Precio mínimo:</label>
-                    <input type="number" id="min_precio" name="min_precio" placeholder="Ej: 1000" min="0">
-                    <label for="max_precio">Precio máximo:</label>
-                    <input type="number" id="max_precio" name="max_precio" placeholder="Ej: 5000" min="0">
-                </div>
+                <select class="select-filtro" name="precio">
+                    <option value="" disabled selected>Seleccione un rango de precio</option>
+                    <?php while ($precioRow = mysqli_fetch_assoc($precioResult)) { ?>
+                        <option value="<?= $precioRow['precio'] ?>">Hasta $<?= $precioRow['precio'] ?></option>
+                    <?php } ?>
+                </select>
             </div>
             <button class="btn-filtrar" name="filtrar">Filtrar</button>
         </form>
@@ -92,14 +91,14 @@ $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
         </article>
 
         <!-- Productos dinámicos -->
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
             <article class="producto">
                 <div class="informacion-principal">
                     <div class="informacion">
-                        <span class="lbl-informacion"><?= $row['id_producto'] ?></span>
-                        <span class="lbl-informacion"><?= $row['nombre'] ?></span>
-                        <span class="lbl-informacion"><?= $row['tipo'] ?></span>
-                        <span class="lbl-informacion">$<?= $row['precio'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['nombre'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['tipo'] ?></span>
+                        <span class="lbl-informacion">$<?= $dato['precio'] ?></span>
                     </div>
                     <div class="btns">
                         <button class="btn-modificar">
@@ -124,7 +123,7 @@ $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
                 <div class="detalles-producto oculto">
                     <div class="cont-descripcion">
                         <h5>Descripción</h5>
-                        <p class="descripcion"><?= $row['descripcion'] ?></p>
+                        <p class="descripcion"><?= $dato['descripcion'] ?></p>
                     </div>
                 </div>
             </article>

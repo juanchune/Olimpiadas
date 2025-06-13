@@ -87,16 +87,16 @@ $result = mysqli_query($conexion, $query);
         </article>
 
         <!-- Paquetes dinámicos -->
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
             <article class="producto">
                 <div class="informacion-principal">
                     <div class="informacion">
-                        <span class="lbl-informacion"><?= $row['id_producto'] ?></span>
-                        <span class="lbl-informacion"><?= $row['id_paquete'] ?></span>
-                        <span class="lbl-informacion"><?= $row['nombre'] ?></span>
-                        <span class="lbl-informacion"><?= $row['descripcion'] ?></span>
-                        <span class="lbl-informacion"><?= $row['precio'] ?></span>
-                        <span class="lbl-informacion"><?= $row['descripcion'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_paquete'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['nombre'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['descripcion'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['precio'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['descripcion'] ?></span>
                     </div>
                     <div class="btns">
                         <button class="btn-modificar">
