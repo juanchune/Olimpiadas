@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
@@ -9,7 +10,7 @@ if (!isset($_SESSION['id'])) {
     exit;
 }
 
-$id_usuario = $_SESSION['id'];
+$id_usuario = intval($_SESSION['id']); // Asegurarse de que sea un número entero
 
 // Consultar los pedidos del usuario
 $query = "SELECT * FROM pedidos WHERE id_usuario = $id_usuario ORDER BY fecha DESC";
@@ -26,6 +27,28 @@ $rechazados = [];
 
 // Clasificar los pedidos según su estado
 while ($pedido = mysqli_fetch_assoc($resultado)) {
+    // Consultar los productos que integran el pedido
+    $id_pedido = intval($pedido['id_pedido']);
+    $query_productos = "SELECT p.id_producto, tp.descripcion 
+                        FROM detalle_paquete dp
+                        JOIN productos p ON dp.id_producto = p.id_producto
+                        JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo
+                        WHERE dp.id_detalle_paquete = $id_pedido";
+    $resultado_productos = mysqli_query($conexion, $query_productos);
+
+    if (!$resultado_productos) {
+        die("Error al consultar los productos del pedido: " . mysqli_error($conexion));
+    }
+
+    $productos = [];
+    while ($producto = mysqli_fetch_assoc($resultado_productos)) {
+        $productos[] = $producto;
+    }
+
+    // Agregar los productos al pedido
+    $pedido['productos'] = $productos;
+
+    // Clasificar el pedido según su estado
     switch ($pedido['estado']) {
         case 'pendiente':
             $pendientes[] = $pedido;
@@ -53,7 +76,15 @@ while ($pedido = mysqli_fetch_assoc($resultado)) {
                 <ul>
                     <?php foreach ($pendientes as $pedido): ?>
                         <li>
-                            Pedido #<?php echo $pedido['id_pedido']; ?> - Fecha: <?php echo $pedido['fecha']; ?> - Total: $<?php echo number_format($pedido['precio_total'], 2); ?>
+                            Pedido #<?php echo htmlspecialchars($pedido['id_pedido']); ?> - Fecha: <?php echo htmlspecialchars($pedido['fecha']); ?> - Total: $<?php echo number_format($pedido['precio_total'], 2); ?>
+                            <ul>
+                                <h4>Productos:</h4>
+                                <?php foreach ($pedido['productos'] as $producto): ?>
+                                    <li>
+                                        Producto ID: <?php echo htmlspecialchars($producto['id_producto']); ?> - Descripción: <?php echo htmlspecialchars($producto['descripcion']); ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -68,7 +99,15 @@ while ($pedido = mysqli_fetch_assoc($resultado)) {
                 <ul>
                     <?php foreach ($aprobados as $pedido): ?>
                         <li>
-                            Pedido #<?php echo $pedido['id_pedido']; ?> - Fecha: <?php echo $pedido['fecha']; ?> - Total: $<?php echo number_format($pedido['precio_total'], 2); ?>
+                            Pedido #<?php echo htmlspecialchars($pedido['id_pedido']); ?> - Fecha: <?php echo htmlspecialchars($pedido['fecha']); ?> - Total: $<?php echo number_format($pedido['precio_total'], 2); ?>
+                            <ul>
+                                <h4>Productos:</h4>
+                                <?php foreach ($pedido['productos'] as $producto): ?>
+                                    <li>
+                                        Producto ID: <?php echo htmlspecialchars($producto['id_producto']); ?> - Descripción: <?php echo htmlspecialchars($producto['descripcion']); ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -83,7 +122,15 @@ while ($pedido = mysqli_fetch_assoc($resultado)) {
                 <ul>
                     <?php foreach ($rechazados as $pedido): ?>
                         <li>
-                            Pedido #<?php echo $pedido['id_pedido']; ?> - Fecha: <?php echo $pedido['fecha']; ?> - Total: $<?php echo number_format($pedido['precio_total'], 2); ?>
+                            Pedido #<?php echo htmlspecialchars($pedido['id_pedido']); ?> - Fecha: <?php echo htmlspecialchars($pedido['fecha']); ?> - Total: $<?php echo number_format($pedido['precio_total'], 2); ?>
+                            <ul>
+                                <h4>Productos:</h4>
+                                <?php foreach ($pedido['productos'] as $producto): ?>
+                                    <li>
+                                        Producto ID: <?php echo htmlspecialchars($producto['id_producto']); ?> - Descripción: <?php echo htmlspecialchars($producto['descripcion']); ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </li>
                     <?php endforeach; ?>
                 </ul>
