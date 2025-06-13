@@ -5,14 +5,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
 include('conexion.php');
 
 // Consulta inicial para obtener todos los paquetes
-$query = "SELECT p.id_producto, p.id_paquete, pr.nombre, pr.descripcion, pr.precio 
+$query = "SELECT p.id_producto, p.id_paquete, pr.nombre, pr.descripcion, pr.precio, p.pais 
           FROM paquetes p
           JOIN productos pr ON p.id_producto = pr.id_producto";
 $filters = [];
 
 // Aplicar filtros si se envían por GET
 if (isset($_GET['pais']) && $_GET['pais'] !== '') {
-    $filters[] = "pr.descripcion LIKE '%" . mysqli_real_escape_string($conexion, $_GET['pais']) . "%'";
+    $filters[] = "p.pais = '" . mysqli_real_escape_string($conexion, $_GET['pais']) . "'";
 }
 if (isset($_GET['precio']) && $_GET['precio'] !== '') {
     $filters[] = "pr.precio <= " . intval($_GET['precio']);
@@ -95,8 +95,8 @@ $result = mysqli_query($conexion, $query);
                         <span class="lbl-informacion"><?= $dato['id_paquete'] ?></span>
                         <span class="lbl-informacion"><?= $dato['nombre'] ?></span>
                         <span class="lbl-informacion"><?= $dato['descripcion'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['precio'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['descripcion'] ?></span>
+                        <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
+                        <span class="lbl-informacion"><?= $dato['pais'] ?></span>
                     </div>
                     <div class="btns">
                         <button class="btn-modificar">
@@ -122,26 +122,4 @@ $result = mysqli_query($conexion, $query);
         <?php } ?>
     </section>
 </main>
-
-<script>
-    document.querySelectorAll('.btn-desplegable').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const producto = btn.closest('.producto');
-            const detalleActual = producto.querySelector('.detalles-producto');
-
-            // Cierra todos los demás detalles-producto
-            document.querySelectorAll('.detalles-producto').forEach(detalle => {
-                if (detalle !== detalleActual) {
-                    detalle.classList.remove('activo');
-                    detalle.classList.add('oculto');
-                }
-            });
-
-            // Alterna el actual
-            detalleActual.classList.toggle('activo');
-            detalleActual.classList.toggle('oculto');
-        });
-    });
-</script>
 </body>
-</html>
