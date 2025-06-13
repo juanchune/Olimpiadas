@@ -4,7 +4,10 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
 include('conexion.php');
 ?>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
+<?php
+    include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
+    
+?>
 <main>
     <link rel="stylesheet" href="/Olimpiadas/Truway/css/ventas.css">
         <div class="cont-titulo-btn">
@@ -12,7 +15,7 @@ include('conexion.php');
         </div>
         <div class="seleccionar-tipo-venta">
             <a href="/Olimpiadas/Truway/php/admin/ventas-pagas.php" class="tipo-venta pagas seleccionado">Pagas</a>
-            <a href="/Olimpiadas/Truway/php/admin/ventas-pendientes.php" class="tipo-venta pendientes">Pendites de pago</a></span>
+            <a href="/Olimpiadas/Truway/php/admin/ventas-pendientes.php" class="tipo-venta pendientes">Pendientes de pago</a></span>
         </div>
 
          <section class="section-tabla-productos">
