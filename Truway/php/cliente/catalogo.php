@@ -1,6 +1,5 @@
 <?php
 session_start();
-?><link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css"><?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 ?>
@@ -12,28 +11,28 @@ include('conexion.php');
             <h2 class="subtitulo">Tipo de producto</h2>
             <form class="filtros" method="get" action="">
                 <div class="input-filtro">
-                    <label for="tipo-proudcto" class=lbl>Todos los productos</label>
-                    <input type=checkbox name="tipo-producto" value="toodos"> 
+                    <input type="checkbox" id="todos" name="tipo-producto" value="todos">
+                    <label for="todos" class="lbl">Todos los productos</label>
                 </div>
                 <div class="input-filtro">
-                    <label for="tipo-proudcto" class=lbl>Paquetes</label>
-                    <input type=checkbox name="tipo-producto" value="paquetes"> 
+                    <input type="checkbox" id="paquetes" name="tipo-producto" value="paquetes">
+                    <label for="paquetes" class="lbl">Paquetes</label>
                 </div>
                 <div class="input-filtro">
-                    <label for="tipo-proudcto" class=lbl>Excursiones</label>
-                    <input type=checkbox name="tipo-producto" value="excursiones"> 
+                    <input type="checkbox" id="excursiones" name="tipo-producto" value="excursiones">
+                    <label for="excursiones" class="lbl">Excursiones</label>
                 </div>
                 <div class="input-filtro">
-                    <label for="tipo-proudcto" class=lbl>Estadias</label>
-                    <input type=checkbox name="tipo-producto" value="estadias"> 
+                    <input type="checkbox" id="estadias" name="tipo-producto" value="estadias">
+                    <label for="estadias" class="lbl">Estadías</label>
                 </div>
                 <div class="input-filtro">
-                    <label for="tipo-proudcto" class=lbl>Vehiculos</label>
-                    <input type=checkbox name="tipo-producto" value="vehiculos"> 
+                    <input type="checkbox" id="vehiculos" name="tipo-producto" value="vehiculos">
+                    <label for="vehiculos" class="lbl">Vehículos</label>
                 </div>
                 <div class="input-filtro">
-                    <label for="tipo-proudcto" class=lbl>Boletos de avion</label>
-                    <input type=checkbox name="tipo-producto" value="boletos_avion"> 
+                    <input type="checkbox" id="boletos" name="tipo-producto" value="boletos_avion">
+                    <label for="boletos" class="lbl">Boletos de avión</label>
                 </div>
             </form>
         </div>
@@ -103,6 +102,15 @@ include('conexion.php');
         <div>
     </section>
 </main>
+<script>
+    // Envía automáticamente el formulario cuando se hace click en un checkbox
+    document.querySelectorAll('.filtros input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+</script>
+
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/footer.php';
 ?>

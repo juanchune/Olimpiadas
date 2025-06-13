@@ -61,13 +61,11 @@ if(     // Verificar si los campos del formulario están definidos
                     <input class="input" type="text" name="apellido" id="apellido" maxlength="50" required>
                 </div>
             </div>
-            <div class="cont-input doble">
                 
                 <div class=cont-input>
                     <label class="lbl" for="fecha-nacimiento">Fecha de nacimiento</label>
                     <input class="input" type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
                 </div>
-            </div>
              <div class="cont-input doble telefono">
                 <div class="cont-input">
                         <label class="lbl" for="prefijo">Prefijo</label>

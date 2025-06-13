@@ -1,32 +1,32 @@
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Mulish;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Mulish;
 }
 
 body {
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  background-color: var(--blanco-50);
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--blanco-50);
 }
 
-main{
+main {
     padding: 0 2rem;
 }
 
-.svg-icon{
+.svg-icon {
     width: 1.5rem;
     height: 1.5rem;
     flex-shrink: 0;
 }
 
-.svg-icon .icon{
+.svg-icon .icon {
     color: var(--blanco-50);
 }
 
-.section-catalogo{
+.section-catalogo {
     width: 100%;
     height: 100vh;
     display: grid;
@@ -35,47 +35,75 @@ main{
     gap: .5rem;
 }
 
-.cont-filtros{
+.cont-filtros {
     display: flex;
     flex-direction: column;
     gap: .5rem;
-    border-right: 1px solid var(--terciario-50); 
+    border-right: 1px solid var(--terciario-50);
+    padding-right: 1rem;
 }
 
-.filtros{
+.filtros {
     display: flex;
     flex-direction: column;
     gap: .5rem;
 }
 
-.filtros .input-filtro{
+.input-filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    position: relative;
+}
+
+.input-filtro input[type="checkbox"] {
+    display: none;
+}
+
+.lbl {
+    display: inline-block;
+    padding: .5rem .7rem;
+    background-color: var(--blanco-50);
     cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.input-filtro .lbl{
-    font-size: 1rem;
-    color: var(--terciario-50);
-    font-weight: 700;
-    transition: all .5s ease;
+.lbl::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0%;
+    height: 1px;
+    background-color: var(--terciario-50);
+    transform: translateX(-50%);
+    transition: width 0.4s ease;
+}
+
+.input-filtro:hover .lbl::after {
+    width: 100%;
 }
 
 
-.subtitulo{
+
+.subtitulo {
     color: var(--terciario-50);
     font-family: Noto_Sans;
     font-size: 1.5rem;
 }
 
-.productos-grid{
+.productos-grid {
     width: 100%;
     height: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, auto);
+    grid-template-columns: repeat(auto-fit, minmax(100%, 1fr));
     justify-content: space-between;
     gap: .5rem;
 }
 
-.productos-grid .producto{
+.productos-grid .producto {
     width: 100%;
     height: auto;
     background-color: var(--blanco-50);
@@ -88,34 +116,35 @@ main{
     padding: .2rem;
 }
 
-.producto .nombre-producto{
+.producto .nombre-producto {
     color: var(--terciario-50);
     font-family: Noto_Sans;
     font-size: 1.25rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2;         /* Futuro soporte estandar */
+    line-clamp: 2;
+    /* Futuro soporte estandar */
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
 }
 
-.producto .svg-icon{
+.producto .svg-icon {
     width: 1.8rem;
     height: 1.8rem;
 }
 
-.producto .svg-icon .icon{
+.producto .svg-icon .icon {
     color: var(--blanco-50);
 }
 
-.cont-categoria-precio{
+.cont-categoria-precio {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.cont-categoria-precio .categoria{
+.cont-categoria-precio .categoria {
     max-width: 40%;
     width: auto;
     background-color: var(--secundario-50);
@@ -127,13 +156,13 @@ main{
     padding: .2rem .5rem;
 }
 
-.categoria span{
+.categoria span {
     color: var(--blanco-50);
     font-family: Mulish;
     font-size: .8rem;
 }
 
-.cont-categoria-precio .precio{
+.cont-categoria-precio .precio {
     max-width: 60%;
     width: auto;
     align-items: center;
@@ -145,35 +174,35 @@ main{
     text-align: end;
 }
 
-.producto .descripcion-producto{
-    text-align:start;
+.producto .descripcion-producto {
+    text-align: start;
     font-size: .9rem;
     color: var(--terciario-50);
 }
 
-.cont-tiempo-btn{
+.cont-tiempo-btn {
     display: flex;
     justify-content: space-between;
 }
 
-.cont-tiempo-btn .cont-tiempo{
+.cont-tiempo-btn .cont-tiempo {
     display: flex;
     gap: .5rem;
     align-items: center;
 }
 
-.cont-tiempo .tiempo{
+.cont-tiempo .tiempo {
     font-size: .9rem;
     font-weight: 500;
     color: var(--Negros-700);
 }
 
-.cont-tiempo .svg-icon{
+.cont-tiempo .svg-icon {
     width: 1.5rem;
     height: 1.5rem;
 }
 
-.cont-tiempo-btn .btn-ver-mas{
+.cont-tiempo-btn .btn-ver-mas {
     all: unset;
     padding: .3rem 1.2rem;
     background-color: var(--blanco-50);
@@ -185,7 +214,7 @@ main{
     border: 1px solid var(--terciario-50);
 }
 
-.btn-ver-mas:hover{
+.btn-ver-mas:hover {
     background-color: var(--secundario-50);
     color: var(--blanco-50);
 }

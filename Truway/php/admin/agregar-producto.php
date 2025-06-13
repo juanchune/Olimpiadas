@@ -285,6 +285,40 @@ include('conexion.php');
     });
   });
 
+  <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const select = document.getElementById('tipo-producto');
+    const formularios = document.querySelectorAll('.cont-formulario-especifico-producto');
+
+    function mostrarFormularioSeleccionado() {
+        const valor = select.value;
+
+        // Ocultar todos los formularios
+        formularios.forEach(form => form.classList.add('oculto'));
+
+        // Mostrar el formulario correspondiente
+        if (valor === 'excursion') {
+            document.querySelector('.cont-formulario-especifico-producto.excursiones').classList.remove('oculto');
+        } else if (valor === 'hotel') {
+            document.querySelector('.cont-formulario-especifico-producto.estadias').classList.remove('oculto');
+        } else if (valor === 'vuelo') {
+            document.querySelector('.cont-formulario-especifico-producto.boletos-avion').classList.remove('oculto');
+        } else if (valor === 'vehiculo') {
+            document.querySelector('.cont-formulario-especifico-producto.vehiculo').classList.remove('oculto');
+        } else if (valor === 'paquete') {
+            document.querySelector('.cont-formulario-especifico-producto.paquete').classList.remove('oculto');
+        }
+    }
+
+    // Ejecutar una vez al cargar la página
+    mostrarFormularioSeleccionado();
+
+    // Y cada vez que el usuario cambie el select
+    select.addEventListener('change', mostrarFormularioSeleccionado);
+});
+</script>
+
+
 </script>
 
 
