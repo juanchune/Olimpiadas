@@ -170,16 +170,14 @@ main {
     display: none;
 }
 
-
-.seleccion-producto{
+.contenedor-selecciones{
     width: 100%;
+}
+
+.contenedor-selecciones .input-total{
+    width: 90%;
     display: flex;
     gap: 1rem;
     align-items: center;
-    justify-content: center;
-}
-
-.contenedor-selecciones{
-    display: none;
 }
 

@@ -186,92 +186,90 @@ include('conexion.php');
     <h2 class="subtitulo">Información del paquete</h2>
     <form method="post" action="" class="frm-productos">
 
-    <!--Excursiones-->
+    <!-- Excursiones (siempre visible) -->
     <div class="grupo-producto">
-    <label class="lbl">Excursiones incluidas</label>
-
-    <div class="contenedor-selecciones" id="productos-excursiones">
-        <div class="seleccion-producto">
-        <select name="excursion" class="input-producto select-producto" data-hidden-input="input-id-excursion" required>
-            <option value="">Seleccionar excursión</option>
-            <option value="1">Tour por Cataratas</option>
-            <option value="2">Excursión al Glaciar</option>
-        </select>
+        <label class="lbl">Excursiones incluidas</label>
+        <div class="contenedor-selecciones" id="productos-excursiones">
+            <div class="seleccion-producto">
+            <select name="excursion" class="input-producto input-total" required>
+                <option value="">Seleccionar excursión</option>
+                <option value="1">Tour por Cataratas</option>
+                <option value="2">Excursión al Glaciar</option>
+            </select>
+            </div>
         </div>
     </div>
+
+    <!-- Estadías -->
+    <div class="grupo-producto">
+        <label class="lbl">¿Incluir estadías?</label>
+        <div class="cont-checkbox">
+            <input type="checkbox" id="incluir-estadias" class="toggle-producto" data-target="estadias">
+            <label for="incluir-estadias">Sí</label>
+        </div>
+        <div class="contenedor-selecciones" id="productos-estadias">
+            <div class="seleccion-producto">
+                <select name="estadias" class="input-producto input-total">
+                    <option value="">Seleccionar estadía</option>
+                    <option value="1">Hotel Plaza - 3 noches</option>
+                    <option value="2">Hostel Sur - 2 noches</option>
+                </select>
+            </div>
+        </div>
     </div>
 
-
-        <!-- Estadias -->
-        <div class="grupo-producto">
-            <label class="lbl">¿Incluir estadías?</label>
-            <div class="cont-checkbox">
-                <input type="checkbox" id="incluir-estadias" class="toggle-producto" data-target="estadias">
-                <label for="incluir-estadias">Sí</label>
-            </div>
-
-            <div class="contenedor-selecciones" id="productos-estadias" style="display: none;">
-                <div class="seleccion-producto">
-                    <select name="estadias" class="input-producto">
-                        <option value="">Seleccionar estadía</option>
-                        <option value="1">Hotel Plaza - 3 noches</option>
-                        <option value="2">Hostel Sur - 2 noches</option>
-                    </select>
-                </div>
+    <!-- Boletos -->
+    <div class="grupo-producto">
+        <label class="lbl">¿Incluir boletos?</label>
+        <div class="cont-checkbox">
+            <input type="checkbox" id="incluir-boletos" class="toggle-producto" data-target="boletos">
+            <label for="incluir-boletos">Sí</label>
+        </div>
+        <div class="contenedor-selecciones" id="productos-boletos">
+            <div class="seleccion-producto">
+                <select name="boletos" class="input-producto input-total">
+                    <option value="">Seleccionar boleto</option>
+                    <option value="1">Avión - Buenos Aires → Madrid</option>
+                    <option value="2">Bus - Mendoza → Córdoba</option>
+                </select>
             </div>
         </div>
+    </div>
 
-        <!--Boletos -->
-        <div class="grupo-producto">
-            <label class="lbl">¿Incluir boletos?</label>
-            <div class="cont-checkbox">
-                <input type="checkbox" id="incluir-boletos" class="toggle-producto" data-target="boletos">
-                <label for="incluir-boletos">Sí</label>
-            </div>
-
-            <div class="contenedor-selecciones" id="productos-boletos">
-                <div class="seleccion-producto">
-                    <select name="boletos" class="input-producto">
-                        <option value="">Seleccionar boleto</option>
-                        <option value="1">Avión - Buenos Aires → Madrid</option>
-                        <option value="2">Bus - Mendoza → Córdoba</option>
-                    </select>
-                </div>
-            </div>
+    <!-- Vehículos -->
+    <div class="grupo-producto">
+        <label class="lbl">¿Incluir vehículos?</label>
+        <div class="cont-checkbox">
+            <input type="checkbox" id="incluir-vehiculos" class="toggle-producto" data-target="vehiculos">
+            <label for="incluir-vehiculos">Sí</label>
         </div>
-
-        
-        <!-- Vehiculos -->
-        <div class="grupo-producto">
-            <label class="lbl">¿Incluir vehículos?</label>
-            <div class="cont-checkbox">
-                <input type="checkbox" id="incluir-vehiculos" class="toggle-producto" data-target="vehiculos">
-                <label for="incluir-vehiculos">Sí</label>
-            </div>
-
-            <div class="contenedor-selecciones" id="productos-vehiculos" style="display: none;">
-                <div class="seleccion-producto">
-                <select name="vehiculo" class="input-producto select-producto" data-hidden-input="input-id-vehiculo">
+        <div class="contenedor-selecciones" id="productos-vehiculos">
+            <div class="seleccion-producto">
+                <select name="vehiculo" class="input-producto input-total">
                     <option value="">Seleccionar vehículo</option>
                     <option value="1">Auto - Toyota Corolla</option>
                     <option value="2">Camioneta - Ford Ranger</option>
                 </select>
-                </div>
-            
             </div>
         </div>
+    </div>
 
     </form>
 </div>
 
 
 
+
     </section>
 </main>
-
 <script>
-  // Mostrar u ocultar selects según el checkbox
-  document.querySelectorAll('.toggle-producto').forEach(checkbox => {
+document.addEventListener('DOMContentLoaded', () => {
+  // Excursiones siempre visibles, no toca nada ahí
+
+  // Obtengo todos los checkboxes que controlan los selects
+  const toggles = document.querySelectorAll('.toggle-producto');
+
+  toggles.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
       const tipo = checkbox.dataset.target;
       const contenedor = document.getElementById('productos-' + tipo);
@@ -279,24 +277,48 @@ include('conexion.php');
       if (checkbox.checked) {
         contenedor.style.display = 'block';
       } else {
-        // Ocultar y eliminar selects agregados (menos el primero)
         contenedor.style.display = 'none';
-    }
+
+        // Limpio el select correspondiente al ocultar
+        const select = contenedor.querySelector('select');
+        if (select) {
+          select.selectedIndex = 0; // vuelve a la opción vacía
+        }
+      }
     });
   });
 
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const select = document.getElementById('tipo-producto');
-    const formularios = document.querySelectorAll('.cont-formulario-especifico-producto');
+  // Al cargar la página, aplico el estado inicial (por si están marcados algunos)
+  toggles.forEach(checkbox => {
+    const tipo = checkbox.dataset.target;
+    const contenedor = document.getElementById('productos-' + tipo);
 
-    function mostrarFormularioSeleccionado() {
-        const valor = select.value;
+    if (checkbox.checked) {
+      contenedor.style.display = 'block';
+    } else {
+      contenedor.style.display = 'none';
 
-        // Ocultar todos los formularios
-        formularios.forEach(form => form.classList.add('oculto'));
+      const select = contenedor.querySelector('select');
+      if (select) {
+        select.selectedIndex = 0;
+      }
+    }
+  });
+});
+</script>
 
-        // Mostrar el formulario correspondiente
+<script>
+
+  // Mostrar formulario específico según el select
+ document.addEventListener('DOMContentLoaded', function () {
+  const select = document.getElementById('tipo-producto');
+  const formularios = document.querySelectorAll('.cont-formulario-especifico-producto');
+
+  function mostrarFormularioSeleccionado() {
+  const valor = select.value;
+
+  formularios.forEach(form => form.classList.add('oculto'));
+
         if (valor === 'excursion') {
             document.querySelector('.cont-formulario-especifico-producto.excursiones').classList.remove('oculto');
         } else if (valor === 'hotel') {
@@ -310,16 +332,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Ejecutar una vez al cargar la página
-    mostrarFormularioSeleccionado();
 
-    // Y cada vez que el usuario cambie el select
-    select.addEventListener('change', mostrarFormularioSeleccionado);
+  mostrarFormularioSeleccionado();
+  select.addEventListener('change', mostrarFormularioSeleccionado);
 });
-</script>
-
 
 </script>
+
 
 
     
