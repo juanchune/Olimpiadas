@@ -92,16 +92,16 @@ $aerolineaResult = mysqli_query($conexion, $aerolineaQuery);
         </article>
 
         <!-- Boletos dinámicos -->
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
             <article class="producto">
                 <div class="informacion-principal">
                     <div class="informacion">
-                        <span class="lbl-informacion"><?= $row['id_pasaje'] ?></span>
-                        <span class="lbl-informacion"><?= $row['id_producto'] ?></span>
-                        <span class="lbl-informacion"><?= $row['origen'] ?></span>
-                        <span class="lbl-informacion"><?= $row['destino'] ?></span>
-                        <span class="lbl-informacion"><?= $row['aerolinea'] ?></span>
-                        <span class="lbl-informacion"><?= $row['tipo_pasaje'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_pasaje'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['origen'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['destino'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['aerolinea'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['tipo_pasaje'] ?></span>
                     </div>
                     <div class="btns">
                         <button class="btn-modificar">

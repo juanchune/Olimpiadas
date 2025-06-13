@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-06-2025 a las 02:22:31
+-- Tiempo de generación: 13-06-2025 a las 04:16:15
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `olimpiadas`
 --
+
+CREATE DATABASE IF NOT EXISTS `olimpiadas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `olimpiadas`;
 
 -- --------------------------------------------------------
 
@@ -80,9 +83,16 @@ CREATE TABLE `estadia` (
 
 CREATE TABLE `estado_pedido` (
   `id_estado` int(11) NOT NULL,
-  `id_pedido` int(11) NOT NULL,
   `estado` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `estado_pedido`
+--
+
+INSERT INTO `estado_pedido` (`id_estado`, `estado`) VALUES
+(1, 'entregado'),
+(2, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -103,9 +113,6 @@ CREATE TABLE `excursiones` (
 -- Volcado de datos para la tabla `excursiones`
 --
 
-INSERT INTO `excursiones` (`id_excursion`, `id_producto`, `ubicacion_salida`, `duracion`, `guia`, `dificultad`) VALUES
-(7, 10, 'Traslado desde su hotel', '08:00:00', 1, 'baja');
-
 -- --------------------------------------------------------
 
 --
@@ -119,7 +126,8 @@ CREATE TABLE `paquetes` (
   `id_estadia` int(11) DEFAULT NULL,
   `id_pasaje` int(11) DEFAULT NULL,
   `id_vehiculo` int(11) DEFAULT NULL,
-  `id_excursion` int(11) DEFAULT NULL
+  `id_excursion` int(11) DEFAULT NULL,
+  `pais` enum('Argentina','Uruguay','Chile','Brasil','Perú','Colombia') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -170,19 +178,6 @@ CREATE TABLE `productos` (
 --
 -- Volcado de datos para la tabla `productos`
 --
-
-INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `tipo_producto`) VALUES
-(2, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(3, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(4, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(5, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(6, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(7, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(8, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(9, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(10, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(11, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(12, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2);
 
 -- --------------------------------------------------------
 
@@ -283,8 +278,7 @@ ALTER TABLE `estadia`
 -- Indices de la tabla `estado_pedido`
 --
 ALTER TABLE `estado_pedido`
-  ADD PRIMARY KEY (`id_estado`),
-  ADD KEY `id_pedido` (`id_pedido`);
+  ADD PRIMARY KEY (`id_estado`);
 
 --
 -- Indices de la tabla `excursiones`
@@ -373,7 +367,7 @@ ALTER TABLE `estadia`
 -- AUTO_INCREMENT de la tabla `estado_pedido`
 --
 ALTER TABLE `estado_pedido`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `excursiones`
@@ -451,12 +445,6 @@ ALTER TABLE `detalle_paquete`
 --
 ALTER TABLE `estadia`
   ADD CONSTRAINT `estadia_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `estado_pedido`
---
-ALTER TABLE `estado_pedido`
-  ADD CONSTRAINT `estado_pedido_ibfk_1` FOREIGN KEY (`id_pedido`) REFERENCES `pedidos` (`id_pedido`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `excursiones`

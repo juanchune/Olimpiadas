@@ -92,16 +92,16 @@ $localidadResult = mysqli_query($conexion, $localidadQuery);
         </article>
 
         <!-- Estadías dinámicas -->
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
             <article class="producto">
                 <div class="informacion-principal">
                     <div class="informacion">
-                        <span class="lbl-informacion"><?= $row['id_estadia'] ?></span>
-                        <span class="lbl-informacion"><?= $row['id_producto'] ?></span>
-                        <span class="lbl-informacion"><?= $row['localidad'] ?></span>
-                        <span class="lbl-informacion"><?= $row['nombre_hotel'] ?></span>
-                        <span class="lbl-informacion"><?= $row['servicios'] ?></span>
-                        <span class="lbl-informacion"><?= $row['categoria'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_estadia'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['localidad'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['nombre_hotel'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['servicios'] ?></span>
+                        <span class="lbl-informacion"><?= $dato['categoria'] ?></span>
                     </div>
                     <div class="btns">
                         <button class="btn-modificar">

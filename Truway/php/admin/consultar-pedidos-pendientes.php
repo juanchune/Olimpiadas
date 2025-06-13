@@ -24,7 +24,7 @@ $result = mysqli_query($conexion, $query);
         <a href="/Olimpiadas/Truway/php/admin/consultar-pedidos-rechazados.php" class="tipo-pedido rechazados">Rechazados</a>
     </div>
     <section class="section-tabla-productos">
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
             <article class="producto">
                 <div class="informacion-principal">
                     <button class="btn-desplegable">
@@ -33,16 +33,16 @@ $result = mysqli_query($conexion, $query);
                         </svg>
                     </button>
                     <div class="informacion">
-                        <span class="lbl-informacion">ID PEDIDO: <?= $row['id_pedido'] ?></span>
-                        <span class="lbl-informacion">ID USUARIO: <?= $row['id_usuario'] ?></span>
-                        <span class="lbl-informacion">FECHA PEDIDO: <?= $row['fecha'] ?></span>
-                        <span class="lbl-informacion">PRECIO TOTAL: <?= $row['precio_total'] ?></span>
-                        <span class="lbl-informacion">METODO PAGO: <?= $row['metodo_pago'] ?></span>
-                        <span class="lbl-informacion">CANTIDAD: <?= $row['cantidad'] ?></span>
+                        <span class="lbl-informacion">ID PEDIDO: <?= $dato['id_pedido'] ?></span>
+                        <span class="lbl-informacion">ID USUARIO: <?= $dato['id_usuario'] ?></span>
+                        <span class="lbl-informacion">FECHA PEDIDO: <?= $dato['fecha'] ?></span>
+                        <span class="lbl-informacion">PRECIO TOTAL: <?= $dato['precio_total'] ?></span>
+                        <span class="lbl-informacion">METODO PAGO: <?= $dato['metodo_pago'] ?></span>
+                        <span class="lbl-informacion">CANTIDAD: <?= $dato['cantidad'] ?></span>
                     </div>
                     <div class="btns">
                         <form method="POST" action="actualizar-pedido.php">
-                            <input type="hidden" name="id_pedido" value="<?= $row['id_pedido'] ?>">
+                            <input type="hidden" name="id_pedido" value="<?= $dato['id_pedido'] ?>">
                             <button type="submit" name="accion" value="aprobar" class="btn-aprovar">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
                                     <path class="icon" fill="currentColor" d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"/>
@@ -62,10 +62,10 @@ $result = mysqli_query($conexion, $query);
                 <div class="detalles-producto oculto">
                     <div class="informacion-secundaria">
                         <div class="informacion">
-                            <span class="lbl-informacion">ID PRODUCTO: <?= $row['id_producto'] ?></span>
-                            <span class="lbl-informacion">NOMBRE PRODUCTO: <?= $row['nombre'] ?></span>
-                            <span class="lbl-informacion">DESCRIPCIÓN: <?= $row['descripcion'] ?></span>
-                            <span class="lbl-informacion">PRECIO: <?= $row['precio'] ?></span>
+                            <span class="lbl-informacion">ID PRODUCTO: <?= $dato['id_producto'] ?></span>
+                            <span class="lbl-informacion">NOMBRE PRODUCTO: <?= $dato['nombre'] ?></span>
+                            <span class="lbl-informacion">DESCRIPCIÓN: <?= $dato['descripcion'] ?></span>
+                            <span class="lbl-informacion">PRECIO: <?= $dato['precio'] ?></span>
                         </div>
                     </div>
                 </div>

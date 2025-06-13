@@ -2,7 +2,7 @@
 
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
-include('conexion.php'); // Asegúrate de que este archivo contiene la conexión a la base de datos
+include('conexion.php');
 
 // Consulta para obtener los pedidos entregados
 $query = "SELECT p.id_pedido, p.id_usuario, p.fecha, p.precio_total, p.metodo_pago, p.cantidad, pr.id_producto, pr.nombre, pr.descripcion, pr.precio 
@@ -25,7 +25,7 @@ $result = mysqli_query($conexion, $query);
         <a href="/Olimpiadas/Truway/php/admin/consultar-pedidos-rechazados.php" class="tipo-pedido rechazados">Rechazados</a>
     </div>
     <section class="section-tabla-productos">
-        <?php while ($row = mysqli_fetch_assoc($result)) { ?>
+        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
             <article class="producto">
                 <div class="informacion-principal">
                     <button class="btn-desplegable">
@@ -34,21 +34,21 @@ $result = mysqli_query($conexion, $query);
                         </svg>
                     </button>
                     <div class="informacion">
-                        <span class="lbl-informacion">ID PEDIDO: <?= $row['id_pedido'] ?></span>
-                        <span class="lbl-informacion">ID USUARIO: <?= $row['id_usuario'] ?></span>
-                        <span class="lbl-informacion">FECHA PEDIDO: <?= $row['fecha'] ?></span>
-                        <span class="lbl-informacion">PRECIO TOTAL: <?= $row['precio_total'] ?></span>
-                        <span class="lbl-informacion">METODO PAGO: <?= $row['metodo_pago'] ?></span>
-                        <span class="lbl-informacion">CANTIDAD: <?= $row['cantidad'] ?></span>
+                        <span class="lbl-informacion">ID PEDIDO: <?= $dato['id_pedido'] ?></span>
+                        <span class="lbl-informacion">ID USUARIO: <?= $dato['id_usuario'] ?></span>
+                        <span class="lbl-informacion">FECHA PEDIDO: <?= $dato['fecha'] ?></span>
+                        <span class="lbl-informacion">PRECIO TOTAL: <?= $dato['precio_total'] ?></span>
+                        <span class="lbl-informacion">METODO PAGO: <?= $dato['metodo_pago'] ?></span>
+                        <span class="lbl-informacion">CANTIDAD: <?= $dato['cantidad'] ?></span>
                     </div>
                 </div>
                 <div class="detalles-producto oculto">
                     <div class="informacion-secundaria">
                         <div class="informacion">
-                            <span class="lbl-informacion">ID PRODUCTO: <?= $row['id_producto'] ?></span>
-                            <span class="lbl-informacion">NOMBRE PRODUCTO: <?= $row['nombre'] ?></span>
-                            <span class="lbl-informacion">DESCRIPCIÓN: <?= $row['descripcion'] ?></span>
-                            <span class="lbl-informacion">PRECIO: <?= $row['precio'] ?></span>
+                            <span class="lbl-informacion">ID PRODUCTO: <?= $dato['id_producto'] ?></span>
+                            <span class="lbl-informacion">NOMBRE PRODUCTO: <?= $dato['nombre'] ?></span>
+                            <span class="lbl-informacion">DESCRIPCIÓN: <?= $dato['descripcion'] ?></span>
+                            <span class="lbl-informacion">PRECIO: <?= $dato|['precio'] ?></span>
                         </div>
                     </div>
                 </div>
@@ -78,4 +78,3 @@ $result = mysqli_query($conexion, $query);
     });
 </script>
 </body>
-</html>
