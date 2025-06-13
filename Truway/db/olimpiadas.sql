@@ -113,9 +113,6 @@ CREATE TABLE `excursiones` (
 -- Volcado de datos para la tabla `excursiones`
 --
 
-INSERT INTO `excursiones` (`id_excursion`, `id_producto`, `ubicacion_salida`, `duracion`, `guia`, `dificultad`) VALUES
-(7, 10, 'Traslado desde su hotel', '08:00:00', 1, 'baja');
-
 -- --------------------------------------------------------
 
 --
@@ -181,19 +178,6 @@ CREATE TABLE `productos` (
 --
 -- Volcado de datos para la tabla `productos`
 --
-
-INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `tipo_producto`) VALUES
-(2, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(3, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(4, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(5, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(6, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(7, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(8, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(9, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(10, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(11, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2),
-(12, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado.', 80000.00, 2);
 
 -- --------------------------------------------------------
 
