@@ -1,0 +1,207 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Mulish;
+}
+
+body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: var(--blanco-50);
+}
+
+main {
+    padding: 0 2rem;
+    height: auto;
+    background-color: var(--blanco-50);
+    margin-bottom: 2rem;
+}
+
+.producto-especifico {
+    overflow: hidden;
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    padding: 1rem;
+    border-bottom: 1px solid var(--terciario-50);
+    border-top: 1px solid var(--terciario-50);
+}
+
+.cont-general{
+    display: flex;  
+    flex-direction: column;
+    gap: .5rem;
+
+}
+
+.cont-general .nombre {
+    font-size: 2rem;
+    font-family: Noto_Sans;
+    font-weight: 900;
+    color: var(--terciario-50);
+}
+
+.cont-general .descripcion {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.cont-general .precio-unitario {
+    font-weight: 900;
+    font-size: 1.5rem;
+    color: var(--terciario-50);
+}
+
+.btn-realizar-reserva{
+    all: unset;
+    align-items: center;
+    justify-content: center;
+    width: 25%;
+    display: flex;
+    gap: 1rem;
+    padding: .4rem 1rem;
+    border: 2px solid var(--terciario-50);
+    background-color: var(--blanco-50);
+    color: var(--terciario-50);
+    font-size: 1.2;
+    font-weight: 700;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+.btn-realizar-reserva:hover{
+    border: 2px solid var(--terciario-50);
+    background-color: var(--terciario-50);
+    color: var(--blanco-50);
+}
+
+/*INFORMACION ESPECIFICA DE CADA PRODUCTO (SEGUN LO SELECCIONADO)*/
+.informacion-especifica {
+    padding-left: .2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.informacion-especifica .informacion-producto{
+    border: 1px solid var(--terciario-50);
+    border-radius: .5rem;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.informacion-producto .lbl-tipo-dato{
+    padding: 1rem .5rem;
+    border-bottom: 1px solid var(--terciario-50);
+    background-color: var(--blanco-100);
+    margin-bottom: .2rem;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--terciario-50);
+}
+
+.informacion-producto .dato{
+    padding: .5rem .5rem;
+    font-size: 1rem;
+}
+
+.subtitulo{
+    font-family: Noto_Sans;
+    color: var(--terciario-50);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+/*FORM DATOS DE PEDIDO (FECHA Y CANTIDAD)*/
+.section-frm-datos{
+    padding: 2rem 0rem;
+    display: flex;
+    padding: 1rem 0;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--blanco-100);
+    border-radius: 0 0 1rem 1rem;
+}
+
+.section-frm-datos .formulario-fecha-cant{
+    display: flex;
+    padding: 1rem 0;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    background-color: var(--blanco-100)
+}
+
+.formulario-fecha-cant .cont-input{
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.formulario-fecha-cant .cont-input .lbl-frm{
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--terciario-50);
+}
+
+.formulario-fecha-cant .cont-input .input-frm{
+    all: unset;
+    width: 100%;
+    padding: .4rem 1rem;
+    background-color: var(--blanco-50);
+    border-radius: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--terciario-50);
+
+    font-size: .9rem;
+    color: var(--terciario-50);
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    appearance: none;
+  -moz-appearance: textfield;
+}
+
+.formulario-fecha-cant .cont-input .btn-agregar{
+    all: unset;
+    background-color: var(--terciario-50);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blanco-50);
+    padding: .6rem 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+.formulario-fecha-cant .cont-input .btn-agregar:hover{
+    transform: scale(1.1);
+}
+
+/* Estilo resaltado temporal */
+.resaltar {
+  animation: resaltarAnimacion 1.5s ease-in-out;
+  box-shadow: 0 0 2rem var(--terciario-50);
+  border: 2px solid var(--terciario-50);
+  border-radius: 1rem;
+}
+
+@keyframes resaltarAnimacion {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}

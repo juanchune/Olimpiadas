@@ -25,10 +25,9 @@ $precio_final = $subtotal; // Aquí puedes aplicar descuentos o impuestos si es 
 // Si no hay productos en el carrito, mostramos un mensaje
 if (empty($productos)) { ?>
     <main>
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
-    </main>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
+        echo "<p>No hay productos en el carrito.</p>";?>
     <?php
-    echo "<p>No hay productos en el carrito.</p>";
     exit();
 }
 
