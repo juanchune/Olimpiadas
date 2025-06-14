@@ -319,7 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
-        <link rel="stylesheet" href="style.css">
+
         <div class="cont-btns">
             <button class="btn agregar" type="button">
                 <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Al cargar la página, aplico el estado inicial (por si están marcados algunos)
+  // Al cargar la pagina, aplico el estado inicial (por si están marcados algunos)
   toggles.forEach(checkbox => {
     const tipo = checkbox.dataset.target;
     const contenedor = document.getElementById('productos-' + tipo);

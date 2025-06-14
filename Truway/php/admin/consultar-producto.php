@@ -29,19 +29,10 @@ include('conexion.php');
     </div>
 
     <?php
-    //Seteamos las tablas que existen en nuestra bdd
-    $tablas = [
-        'productos' => 'productos',
-        'paquetes' => 'paquetes',
-        'excursiones' => 'excursiones',
-        'alquiler_vehiculos' => 'vehiculos',
-        'estadias' => 'estadias',
-        'boletos_avion' => 'pasajes'
-    ];
 
     $tabla_seleccionada = 'productos'; 
 
-    if (isset($_GET['tabla_seleccionada']) && array_key_exists($_GET['tabla_seleccionada'], $tablas)) {
+    if (isset($_GET['tabla_seleccionada'])) {
     $tabla_seleccionada = $_GET['tabla_seleccionada'];
       switch ($tabla_seleccionada) {
         case 'productos':
