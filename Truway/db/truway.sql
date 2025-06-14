@@ -1,8 +1,8 @@
--- Truway Database Schema
+
 
 CREATE DATABASE IF NOT EXISTS truway;
 USE truway;
---1. CREACIÓN DE TABLAS 
+
 CREATE TABLE `usuarios` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -135,7 +135,7 @@ CREATE TABLE `mails_automaticos` (
   `estado_envio` enum('pendiente','enviado','fallido') NOT NULL DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 2. ÍNDICES Y CLAVES PRIMARIAS
+
 ALTER TABLE `usuarios` ADD PRIMARY KEY (`id_usuario`);
 ALTER TABLE `productos` ADD PRIMARY KEY (`id_producto`);
 ALTER TABLE `tipo_producto` ADD PRIMARY KEY (`id_tipo`);
@@ -174,7 +174,7 @@ ALTER TABLE `mails_automaticos` MODIFY `id_mail` int(11) NOT NULL AUTO_INCREMENT
 ALTER TABLE `estado_facturacion` MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `ventas` MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
 
--- 4. DATOS INICIALES
+
 INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
 (1, 'Paquete'),
 (2, 'Excursión'),
@@ -182,7 +182,7 @@ INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
 (4, 'Alquiler de Vehículo'),
 (5, 'Estadía');
 
--- 5. CLAVES FORÁNEAS
+
 ALTER TABLE `carrito`
   ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
