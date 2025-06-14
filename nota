@@ -1,0 +1,146 @@
+(?)
+
+
+1. Entidades Principales
+Usuarios
+usuarios: Almacena información de los clientes/usuarios.
+
+id_usuario (PK)
+
+nombre, apellido, email, contraseña, fecha_nacimiento, teléfono
+
+Productos y Tipos
+productos: Catálogo general de productos ofertados (pueden ser paquetes, excursiones, pasajes, alquileres de vehículos o estadías).
+
+id_producto (PK)
+
+nombre, descripción, precio, tipo_producto
+
+tipo_producto: Catálogo de tipos de productos.
+
+id_tipo (PK)
+
+tipo (Paquete, Excursión, Pasaje, etc.)
+
+2. Especialización de Productos
+Cada producto puede ser de un tipo específico, por eso hay tablas que amplían la información según el tipo:
+
+paquetes: Relaciona un producto con un paquete turístico.
+
+id_paquete (PK)
+
+id_producto (FK)
+
+detalle_paquete: Productos incluidos en un paquete.
+
+id_detalle_paquete (PK)
+
+id_paquete (FK)
+
+id_producto (FK)
+
+estadias: Detalle de estadías en hoteles.
+
+id_estadia (PK)
+
+id_producto (FK)
+
+localidad, nombre_hotel, servicios, categoría
+
+excursiones: Detalle de excursiones.
+
+id_excursion (PK)
+
+id_producto (FK)
+
+ubicación_salida, duración, guía, dificultad
+
+pasajes: Detalle de pasajes (transporte).
+
+id_pasaje (PK)
+
+id_producto (FK)
+
+origen, destino, aerolínea, tipo_pasaje
+
+vehiculos: Detalle de alquiler de vehículos.
+
+id_vehiculo (PK)
+
+id_producto (FK)
+
+marca, modelo, capacidad, empresa_rentadora, tipo
+
+3. Carrito de Compras
+carrito: Cada usuario puede tener un carrito.
+
+id_carrito (PK)
+
+id_usuario (FK)
+
+detalle_carrito: Productos agregados al carrito.
+
+id_detalle_carrito (PK)
+
+id_carrito (FK)
+
+id_producto (FK)
+
+cantidad, precio_carrito
+
+4. Pedidos y Ventas
+pedidos: Pedido realizado por un usuario.
+
+id_pedido (PK)
+
+id_usuario (FK)
+
+fecha, precio_total, metodo_pago, cantidad
+
+pedidos_aprobados / pedidos_pendientes / pedidos_rechazados: Estado del pedido (cada tabla almacena los IDs de pedidos según su estado).
+
+id_pedido (PK, FK a pedidos)
+
+estado_facturacion: Estado de la facturación de una venta.
+
+id_estado (PK)
+
+estado (pago, pendiente)
+
+ventas: Registro de ventas aprobadas.
+
+id_venta (PK)
+
+id_pedido (FK a pedidos_aprobados)
+
+fecha_venta, estado_facturacion (FK)
+
+pedidos_historicos: Historial de pedidos entregados.
+
+id_historico (PK)
+
+id_pedido (FK a ventas)
+
+fecha_entrega
+
+5. Automatización y Notificaciones
+mails_automaticos: Correos automáticos enviados a los usuarios.
+
+id_mail (PK)
+
+destinatario, asunto, mensaje, fecha_envio, estado_envio
+
+6. Relaciones Clave
+Un usuario puede tener un carrito y realizar múltiples pedidos.
+
+Un carrito puede contener varios productos (detalle_carrito).
+
+Un producto puede ser parte de un paquete, una estadía, una excursión, un pasaje o un vehículo.
+
+Un pedido puede estar en estado pendiente, aprobado o rechazado (tablas separadas).
+
+Solo los pedidos aprobados generan una venta.
+
+Cada venta tiene un estado de facturación y puede pasar a histórico cuando se entrega.
+
+Los mails automáticos notifican a los usuarios sobre eventos importantes.
