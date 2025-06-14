@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-06-2025 a las 02:21:38
+-- Tiempo de generación: 13-06-2025 a las 04:16:15
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,11 +18,12 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `truway`
+-- Base de datos: `olimpiadas`
 --
 
-CREATE DATABASE truway;
-USE truway;
+CREATE DATABASE IF NOT EXISTS `olimpiadas` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `olimpiadas`;
+
 -- --------------------------------------------------------
 
 --
@@ -32,7 +33,7 @@ USE truway;
 CREATE TABLE `carrito` (
   `id_carrito` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -41,11 +42,11 @@ CREATE TABLE `carrito` (
 --
 
 CREATE TABLE `detalle_carrito` (
-  `id_detalle_carrito` int(11) NOT NULL,
+  `id_detalle` int(11) NOT NULL,
   `id_carrito` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL DEFAULT 1,
-  `precio_carrito` decimal(10,2) NOT NULL
+  `precio_unitario` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -56,17 +57,16 @@ CREATE TABLE `detalle_carrito` (
 
 CREATE TABLE `detalle_paquete` (
   `id_detalle_paquete` int(11) NOT NULL,
-  `id_paquete` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estadias`
+-- Estructura de tabla para la tabla `estadia`
 --
 
-CREATE TABLE `estadias` (
+CREATE TABLE `estadia` (
   `id_estadia` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `localidad` varchar(70) DEFAULT NULL,
@@ -78,24 +78,21 @@ CREATE TABLE `estadias` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `estado_facturacion`
+-- Estructura de tabla para la tabla `estado_pedido`
 --
 
-CREATE TABLE `estado_facturacion` (
+CREATE TABLE `estado_pedido` (
   `id_estado` int(11) NOT NULL,
-  `estado` enum('pago','pendiente') NOT NULL DEFAULT 'pendiente'
+  `estado` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
-
 --
--- Estructura de tabla para la tabla `estado_pedidos`
+-- Volcado de datos para la tabla `estado_pedido`
 --
 
-CREATE TABLE `estado_pedidos` (
-  `id_estado` int(11) NOT NULL,
-  `estado` enum('pendiente','aprobado','rechazado') NOT NULL DEFAULT 'pendiente'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `estado_pedido` (`id_estado`, `estado`) VALUES
+(1, 'entregado'),
+(2, 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -107,10 +104,14 @@ CREATE TABLE `excursiones` (
   `id_excursion` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `ubicacion_salida` varchar(70) DEFAULT NULL,
-  `duracion` int(11) NOT NULL,
+  `duracion` time NOT NULL,
   `guia` tinyint(1) DEFAULT NULL,
   `dificultad` enum('alta','media','baja') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `excursiones`
+--
 
 -- --------------------------------------------------------
 
@@ -120,22 +121,28 @@ CREATE TABLE `excursiones` (
 
 CREATE TABLE `paquetes` (
   `id_paquete` int(11) NOT NULL,
-  `id_producto` int(11) DEFAULT NULL
+  `id_producto` int(11) NOT NULL,
+  `id_detalle_paquete` int(11) NOT NULL,
+  `id_estadia` int(11) DEFAULT NULL,
+  `id_pasaje` int(11) DEFAULT NULL,
+  `id_vehiculo` int(11) DEFAULT NULL,
+  `id_excursion` int(11) DEFAULT NULL,
+  `pais` enum('Argentina','Uruguay','Chile','Brasil','Perú','Colombia') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `pasajes`
+-- Estructura de tabla para la tabla `pasaje`
 --
 
-CREATE TABLE `pasajes` (
+CREATE TABLE `pasaje` (
   `id_pasaje` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `origen` varchar(70) DEFAULT NULL,
   `destino` varchar(70) DEFAULT NULL,
   `aerolinea` varchar(70) DEFAULT NULL,
-  `tipo_pasaje` enum('solo_ida','ida_y_vuelta') DEFAULT NULL
+  `tipo_pasaje` enum('ida','ida_vuelta') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -151,8 +158,7 @@ CREATE TABLE `pedidos` (
   `precio_total` float(11,2) NOT NULL,
   `metodo_pago` enum('Tarjeta_debito','Tarjeta_credito','Debito','Transferencia_bancaria') DEFAULT NULL,
   `cantidad` int(11) NOT NULL,
-  `estado_pedido` int(11) DEFAULT NULL,
-  `estado_facturacion` int(11) DEFAULT NULL
+  `estado` enum('pendiente','aprobado','rechazado') NOT NULL DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -166,8 +172,12 @@ CREATE TABLE `productos` (
   `nombre` varchar(50) DEFAULT NULL,
   `descripcion` varchar(150) DEFAULT NULL,
   `precio` float(11,2) DEFAULT NULL,
-  `tipo_producto` varchar(50) DEFAULT NULL
+  `tipo_producto` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `productos`
+--
 
 -- --------------------------------------------------------
 
@@ -177,19 +187,20 @@ CREATE TABLE `productos` (
 
 CREATE TABLE `tipo_producto` (
   `id_tipo` int(11) NOT NULL,
-  `tipo` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `tipo` varchar(50) NOT NULL,
+  `descripcion` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 --
 -- Volcado de datos para la tabla `tipo_producto`
 --
 
-INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
-(1, 'Paquete'),
-(2, 'Excursión'),
-(3, 'Pasaje'),
-(4, 'Alquiler de Vehículo'),
-(5, 'Estadía');
+INSERT INTO `tipo_producto` (`id_tipo`, `tipo`, `descripcion`) VALUES
+(1, 'Paquete', ''),
+(2, 'Excursión', ''),
+(3, 'Pasaje', ''),
+(4, 'Alquiler de Vehículo', ''),
+(5, 'Estadía', '');
 
 -- --------------------------------------------------------
 
@@ -205,15 +216,22 @@ CREATE TABLE `usuarios` (
   `contrasena` varchar(50) NOT NULL,
   `fecha_nacimiento` date NOT NULL,
   `telefono` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `nombre`, `apellido`, `email`, `contrasena`, `fecha_nacimiento`, `telefono`) VALUES
+(1, 'Joaquin', 'Roldan', 'roldanjoaquind42@gmail.com', 'c2e38e55597ae43748ae552b614f5317', '2006-09-12', '+542262540188');
 
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `vehiculos`
+-- Estructura de tabla para la tabla `vehiculo`
 --
 
-CREATE TABLE `vehiculos` (
+CREATE TABLE `vehiculo` (
   `id_vehiculo` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `marca` varchar(70) DEFAULT NULL,
@@ -238,7 +256,7 @@ ALTER TABLE `carrito`
 -- Indices de la tabla `detalle_carrito`
 --
 ALTER TABLE `detalle_carrito`
-  ADD PRIMARY KEY (`id_detalle_carrito`),
+  ADD PRIMARY KEY (`id_detalle`),
   ADD KEY `id_carrito` (`id_carrito`),
   ADD KEY `id_producto` (`id_producto`);
 
@@ -247,26 +265,19 @@ ALTER TABLE `detalle_carrito`
 --
 ALTER TABLE `detalle_paquete`
   ADD PRIMARY KEY (`id_detalle_paquete`),
-  ADD KEY `id_paquete` (`id_paquete`),
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indices de la tabla `estadias`
+-- Indices de la tabla `estadia`
 --
-ALTER TABLE `estadias`
+ALTER TABLE `estadia`
   ADD PRIMARY KEY (`id_estadia`),
   ADD KEY `id_producto` (`id_producto`);
 
 --
--- Indices de la tabla `estado_facturacion`
+-- Indices de la tabla `estado_pedido`
 --
-ALTER TABLE `estado_facturacion`
-  ADD PRIMARY KEY (`id_estado`);
-
---
--- Indices de la tabla `estado_pedidos`
---
-ALTER TABLE `estado_pedidos`
+ALTER TABLE `estado_pedido`
   ADD PRIMARY KEY (`id_estado`);
 
 --
@@ -281,12 +292,13 @@ ALTER TABLE `excursiones`
 --
 ALTER TABLE `paquetes`
   ADD PRIMARY KEY (`id_paquete`),
-  ADD KEY `id_producto` (`id_producto`);
+  ADD KEY `id_producto` (`id_producto`),
+  ADD KEY `id_detalle_paquete` (`id_detalle_paquete`);
 
 --
--- Indices de la tabla `pasajes`
+-- Indices de la tabla `pasaje`
 --
-ALTER TABLE `pasajes`
+ALTER TABLE `pasaje`
   ADD PRIMARY KEY (`id_pasaje`),
   ADD KEY `id_producto` (`id_producto`);
 
@@ -295,15 +307,14 @@ ALTER TABLE `pasajes`
 --
 ALTER TABLE `pedidos`
   ADD PRIMARY KEY (`id_pedido`),
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `estado_pedido` (`estado_pedido`),
-  ADD KEY `estado_facturacion` (`estado_facturacion`);
+  ADD KEY `id_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `productos`
 --
 ALTER TABLE `productos`
-  ADD PRIMARY KEY (`id_producto`);
+  ADD PRIMARY KEY (`id_producto`),
+  ADD KEY `tipo_producto` (`tipo_producto`);
 
 --
 -- Indices de la tabla `tipo_producto`
@@ -318,9 +329,9 @@ ALTER TABLE `usuarios`
   ADD PRIMARY KEY (`id_usuario`);
 
 --
--- Indices de la tabla `vehiculos`
+-- Indices de la tabla `vehiculo`
 --
-ALTER TABLE `vehiculos`
+ALTER TABLE `vehiculo`
   ADD PRIMARY KEY (`id_vehiculo`),
   ADD KEY `id_producto` (`id_producto`);
 
@@ -329,34 +340,40 @@ ALTER TABLE `vehiculos`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `carrito`
+--
+ALTER TABLE `carrito`
+  MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `detalle_carrito`
+--
+ALTER TABLE `detalle_carrito`
+  MODIFY `id_detalle` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `detalle_paquete`
 --
 ALTER TABLE `detalle_paquete`
   MODIFY `id_detalle_paquete` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `estadias`
+-- AUTO_INCREMENT de la tabla `estadia`
 --
-ALTER TABLE `estadias`
+ALTER TABLE `estadia`
   MODIFY `id_estadia` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `estado_facturacion`
+-- AUTO_INCREMENT de la tabla `estado_pedido`
 --
-ALTER TABLE `estado_facturacion`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `estado_pedidos`
---
-ALTER TABLE `estado_pedidos`
-  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `estado_pedido`
+  MODIFY `id_estado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `excursiones`
 --
 ALTER TABLE `excursiones`
-  MODIFY `id_excursion` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_excursion` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `paquetes`
@@ -365,22 +382,22 @@ ALTER TABLE `paquetes`
   MODIFY `id_paquete` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `pasajes`
+-- AUTO_INCREMENT de la tabla `pasaje`
 --
-ALTER TABLE `pasajes`
+ALTER TABLE `pasaje`
   MODIFY `id_pasaje` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `productos`
 --
 ALTER TABLE `productos`
-  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
@@ -392,13 +409,13 @@ ALTER TABLE `tipo_producto`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `vehiculos`
+-- AUTO_INCREMENT de la tabla `vehiculo`
 --
-ALTER TABLE `vehiculos`
-  MODIFY `id_vehiculo` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `vehiculo`
+  MODIFY `id_vehiculo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -408,59 +425,63 @@ ALTER TABLE `vehiculos`
 -- Filtros para la tabla `carrito`
 --
 ALTER TABLE `carrito`
-  ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+  ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `detalle_carrito`
 --
 ALTER TABLE `detalle_carrito`
-  ADD CONSTRAINT `detalle_carrito_ibfk_1` FOREIGN KEY (`id_carrito`) REFERENCES `carrito` (`id_carrito`),
-  ADD CONSTRAINT `detalle_carrito_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+  ADD CONSTRAINT `detalle_carrito_ibfk_1` FOREIGN KEY (`id_carrito`) REFERENCES `carrito` (`id_carrito`) ON DELETE CASCADE,
+  ADD CONSTRAINT `detalle_carrito_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `detalle_paquete`
 --
 ALTER TABLE `detalle_paquete`
-  ADD CONSTRAINT `detalle_paquete_ibfk_1` FOREIGN KEY (`id_paquete`) REFERENCES `paquetes` (`id_paquete`),
-  ADD CONSTRAINT `detalle_paquete_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+  ADD CONSTRAINT `detalle_paquete_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `estadias`
+-- Filtros para la tabla `estadia`
 --
-ALTER TABLE `estadias`
-  ADD CONSTRAINT `estadias_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+ALTER TABLE `estadia`
+  ADD CONSTRAINT `estadia_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `excursiones`
 --
 ALTER TABLE `excursiones`
-  ADD CONSTRAINT `excursiones_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+  ADD CONSTRAINT `excursiones_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `paquetes`
 --
 ALTER TABLE `paquetes`
-  ADD CONSTRAINT `paquetes_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+  ADD CONSTRAINT `paquetes_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE,
+  ADD CONSTRAINT `paquetes_ibfk_2` FOREIGN KEY (`id_detalle_paquete`) REFERENCES `detalle_paquete` (`id_detalle_paquete`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `pasajes`
+-- Filtros para la tabla `pasaje`
 --
-ALTER TABLE `pasajes`
-  ADD CONSTRAINT `pasajes_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+ALTER TABLE `pasaje`
+  ADD CONSTRAINT `pasaje_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `pedidos`
 --
 ALTER TABLE `pedidos`
-  ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
-  ADD CONSTRAINT `pedidos_ibfk_2` FOREIGN KEY (`estado_pedido`) REFERENCES `estado_pedidos` (`id_estado`),
-  ADD CONSTRAINT `pedidos_ibfk_3` FOREIGN KEY (`estado_facturacion`) REFERENCES `estado_facturacion` (`id_estado`);
+  ADD CONSTRAINT `pedidos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE;
 
 --
--- Filtros para la tabla `vehiculos`
+-- Filtros para la tabla `productos`
 --
-ALTER TABLE `vehiculos`
-  ADD CONSTRAINT `vehiculos_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+ALTER TABLE `productos`
+  ADD CONSTRAINT `productos_ibfk_1` FOREIGN KEY (`tipo_producto`) REFERENCES `tipo_producto` (`id_tipo`) ON DELETE SET NULL;
+
+--
+-- Filtros para la tabla `vehiculo`
+--
+ALTER TABLE `vehiculo`
+  ADD CONSTRAINT `vehiculo_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
