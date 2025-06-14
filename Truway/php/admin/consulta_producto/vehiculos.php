@@ -1,62 +1,7 @@
-<?php
-
-session_start();
-include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
-include('conexion.php');
-
-// Consulta inicial para obtener todos los vehículos
-$query = "SELECT * FROM vehiculo";
-$filters = [];
-
-// Aplicar filtros si se envían por GET
-if (isset($_GET['capacidad']) && $_GET['capacidad'] !== '') {
-    $filters[] = "capacidad = " . intval($_GET['capacidad']);
-}
-if (isset($_GET['tipo']) && $_GET['tipo'] !== '') {
-    $filters[] = "tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo']) . "'";
-}
-
-// Si hay filtros, añadirlos a la consulta
-if (!empty($filters)) {
-    $query .= " WHERE " . implode(" AND ", $filters);
-}
-
-$result = mysqli_query($conexion, $query);
-
-// Obtener valores únicos para los filtros
-$capacidadQuery = "SELECT DISTINCT capacidad FROM vehiculo ORDER BY capacidad ASC";
-$capacidadResult = mysqli_query($conexion, $capacidadQuery);
-
-$tipoQuery = "SELECT DISTINCT tipo FROM vehiculo ORDER BY tipo ASC";
-$tipoResult = mysqli_query($conexion, $tipoQuery);
-?>
-
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; ?>
-<main>
-    <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos-alquiler-autos.css">
-    <div class="cont-titulo-btn">
-        <h2 class="subtitulo">Consultar productos</h2>
-        <div class="cont-btns">
-            <a href="/Olimpiadas/Truway/php/admin/agregar-producto.php" class="btn-agregar">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
-                    <path fill="currentColor" class="icon"
-                        d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z" />
-                </svg>
-                Agregar
-            </a>
-        </div>
-    </div>
-    <div class="seleccionar-tipo-tabla">
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto.php" class="tabla">Productos general</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-paquetes.php" class="tabla">Paquetes</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-excursiones.php" class="tabla">Excursiones</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-alquiler-autos.php" class="tabla seleccionado">Alquiler vehiculos</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-estadias.php" class="tabla">Estadías</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-boletos-avion.php" class="tabla">Boletos de avión</a>
-    </div>
 
     <div class="cont-filtros">
         <form method="get" action="" class="form-filtros">
+             <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
             <div class="filtros">
                 <select class="select-filtro" name="capacidad">
                     <option value="" disabled selected>Seleccione una capacidad</option>
@@ -76,7 +21,7 @@ $tipoResult = mysqli_query($conexion, $tipoQuery);
         </form>
     </div>
 
-    <section class="section-tabla-productos">
+    <section class="section-tabla-productos vehiculos">
         <!-- Información principal fija como guía -->
         <article class="producto guia">
             <div class="informacion-principal">
@@ -88,6 +33,7 @@ $tipoResult = mysqli_query($conexion, $tipoQuery);
                     <span class="lbl-informacion">CAPACIDAD</span>
                     <span class="lbl-informacion">EMPRESA RENTADORA</span>
                     <span class="lbl-informacion">TIPO</span>
+                    <span class="lbl-informacion">ACCIONES</span>
                 </div>
             </div>
         </article>
@@ -104,8 +50,7 @@ $tipoResult = mysqli_query($conexion, $tipoQuery);
                         <span class="lbl-informacion"><?= $dato['capacidad'] ?></span>
                         <span class="lbl-informacion"><?= $dato['empresa_rentadora'] ?></span>
                         <span class="lbl-informacion"><?= $dato['tipo'] ?></span>
-                    </div>
-                    <div class="btns">
+                        <div class="btns">
                         <button class="btn-modificar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -123,6 +68,7 @@ $tipoResult = mysqli_query($conexion, $tipoQuery);
                                     d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17" />
                             </svg>
                         </button>
+                    </div>
                     </div>
                 </div>
             </article>

@@ -1,65 +1,7 @@
-<?php
-
-session_start();
-include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
-include('conexion.php');
-
-// Consulta inicial para obtener todos los paquetes
-$query = "SELECT p.id_producto, p.id_paquete, pr.nombre, pr.descripcion, pr.precio, p.pais 
-          FROM paquetes p
-          JOIN productos pr ON p.id_producto = pr.id_producto";
-$filters = [];
-
-// Aplicar filtros si se envían por GET
-if (isset($_GET['pais']) && $_GET['pais'] !== '') {
-    $filters[] = "p.pais = '" . mysqli_real_escape_string($conexion, $_GET['pais']) . "'";
-}
-if (isset($_GET['precio']) && $_GET['precio'] !== '') {
-    $filters[] = "pr.precio <= " . intval($_GET['precio']);
-}
-
-// Si hay filtros, añadirlos a la consulta
-if (!empty($filters)) {
-    $query .= " WHERE " . implode(" AND ", $filters);
-}
-
-$result = mysqli_query($conexion, $query);
-?>
-
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; ?>
-<main>
-    <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos-paquetes.css">
-    <div class="cont-titulo-btn">
-        <h2 class="subtitulo">Consultar productos</h2>
-        <div class="cont-btns">
-            <a href="/Olimpiadas/Truway/php/admin/agregar-producto.php" class="btn-agregar">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
-                    <path fill="currentColor" class="icon"
-                        d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z" />
-                </svg>
-                Agregar
-            </a>
-        </div>
-    </div>
-    <div class="seleccionar-tipo-tabla">
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto.php" class="tabla">Productos general</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-paquetes.php" class="tabla seleccionado">Paquetes</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-excursiones.php" class="tabla">Excursiones</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-alquiler-autos.php" class="tabla">Alquiler vehiculos</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-estadias.php" class="tabla">Estadías</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-boletos-avion.php" class="tabla">Boletos de avión</a>
-    </div>
-
-    <div class="cont-filtros">
+<div class="cont-filtros">
         <form method="get" action="" class="form-filtros">
+             <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
             <div class="filtros">
-                <select class="select-filtro" name="pais">
-                    <option value="" disabled selected>Seleccione un país</option>
-                    <option value="Argentina">Argentina</option>
-                    <option value="Chile">Chile</option>
-                    <option value="Brasil">Brasil</option>
-                </select>
-
                 <select class="select-filtro" name="precio">
                     <option value="" disabled selected>Seleccione un rango de precio</option>
                     <option value="50000">Hasta $50,000</option>
@@ -71,7 +13,7 @@ $result = mysqli_query($conexion, $query);
         </form>
     </div>
 
-    <section class="section-tabla-productos">
+    <section class="section-tabla-productos paquetes">
         <!-- Información principal fija como guía -->
         <article class="producto guia">
             <div class="informacion-principal">
@@ -91,14 +33,15 @@ $result = mysqli_query($conexion, $query);
             <article class="producto">
                 <div class="informacion-principal">
                     <div class="informacion">
+                        <button class="btn-desplegable">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                        </button>
                         <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
                         <span class="lbl-informacion"><?= $dato['id_paquete'] ?></span>
                         <span class="lbl-informacion"><?= $dato['nombre'] ?></span>
                         <span class="lbl-informacion"><?= $dato['descripcion'] ?></span>
                         <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
-                        <span class="lbl-informacion"><?= $dato['pais'] ?></span>
-                    </div>
-                    <div class="btns">
+                        <div class="btns">
                         <button class="btn-modificar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -117,9 +60,15 @@ $result = mysqli_query($conexion, $query);
                             </svg>
                         </button>
                     </div>
+                    </div>
+                
+                </div>
+                <div class="detalles-producto oculto">
+                    <div class="cont-descripcion">
+                        <h5>Descripción</h5>
+                        <p class="descripcion"><?= $dato['descripcion'] ?></p>
+                    </div>
                 </div>
             </article>
         <?php } ?>
     </section>
-</main>
-</body>

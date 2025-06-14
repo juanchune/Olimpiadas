@@ -1,62 +1,7 @@
-<?php
-
-session_start();
-include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
-include('conexion.php');
-
-// Consulta inicial para obtener todas las estadías
-$query = "SELECT * FROM estadia";
-$filters = [];
-
-// Aplicar filtros si se envían por GET
-if (isset($_GET['categoria']) && $_GET['categoria'] !== '') {
-    $filters[] = "categoria = '" . mysqli_real_escape_string($conexion, $_GET['categoria']) . "'";
-}
-if (isset($_GET['localidad']) && $_GET['localidad'] !== '') {
-    $filters[] = "localidad = '" . mysqli_real_escape_string($conexion, $_GET['localidad']) . "'";
-}
-
-// Si hay filtros, añadirlos a la consulta
-if (!empty($filters)) {
-    $query .= " WHERE " . implode(" AND ", $filters);
-}
-
-$result = mysqli_query($conexion, $query);
-
-// Obtener valores únicos para los filtros
-$categoriaQuery = "SELECT DISTINCT categoria FROM estadia ORDER BY categoria ASC";
-$categoriaResult = mysqli_query($conexion, $categoriaQuery);
-
-$localidadQuery = "SELECT DISTINCT localidad FROM estadia ORDER BY localidad ASC";
-$localidadResult = mysqli_query($conexion, $localidadQuery);
-?>
-
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; ?>
-<main>
-    <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos-estadia.css">
-    <div class="cont-titulo-btn">
-        <h2 class="subtitulo">Consultar productos</h2>
-        <div class="cont-btns">
-            <a href="/Olimpiadas/Truway/php/admin/agregar-producto.php" class="btn-agregar">
-                <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
-                    <path fill="currentColor" class="icon"
-                        d="M11 13H6q-.425 0-.712-.288T5 12t.288-.712T6 11h5V6q0-.425.288-.712T12 5t.713.288T13 6v5h5q.425 0 .713.288T19 12t-.288.713T18 13h-5v5q0 .425-.288.713T12 19t-.712-.288T11 18z" />
-                </svg>
-                Agregar
-            </a>
-        </div>
-    </div>
-    <div class="seleccionar-tipo-tabla">
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto.php" class="tabla">Productos general</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-paquetes.php" class="tabla">Paquetes</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-excursiones.php" class="tabla">Excursiones</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-alquiler-autos.php" class="tabla">Alquiler vehiculos</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-estadias.php" class="tabla seleccionado">Estadías</a>
-        <a href="/Olimpiadas/Truway/php/admin/consultar-producto-boletos-avion.php" class="tabla">Boletos de avión</a>
-    </div>
 
     <div class="cont-filtros">
         <form method="get" action="" class="form-filtros">
+            <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
             <div class="filtros">
                 <select class="select-filtro" name="categoria">
                     <option value="" disabled selected>Seleccione una categoría</option>
@@ -76,7 +21,7 @@ $localidadResult = mysqli_query($conexion, $localidadQuery);
         </form>
     </div>
 
-    <section class="section-tabla-productos">
+    <section class="section-tabla-productos estadias">
         <!-- Información principal fija como guía -->
         <article class="producto guia">
             <div class="informacion-principal">
@@ -87,6 +32,7 @@ $localidadResult = mysqli_query($conexion, $localidadQuery);
                     <span class="lbl-informacion">NOMBRE HOTEL</span>
                     <span class="lbl-informacion">SERVICIOS</span>
                     <span class="lbl-informacion">CATEGORÍA</span>
+                    <span class="lbl-informacion">ACCIONES</span>
                 </div>
             </div>
         </article>
