@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 14-06-2025 a las 01:51:40
+-- Tiempo de generación: 14-06-2025 a las 02:21:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,9 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `truway`
 --
-
-CREATE DATABASE IF NOT EXISTS `truway` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `truway`;
 
 -- --------------------------------------------------------
 
@@ -108,7 +105,7 @@ CREATE TABLE `excursiones` (
   `id_excursion` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `ubicacion_salida` varchar(70) DEFAULT NULL,
-  `duracion` time NOT NULL,
+  `duracion` int(11) NOT NULL,
   `guia` tinyint(1) DEFAULT NULL,
   `dificultad` enum('alta','media','baja') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -136,7 +133,7 @@ CREATE TABLE `pasajes` (
   `origen` varchar(70) DEFAULT NULL,
   `destino` varchar(70) DEFAULT NULL,
   `aerolinea` varchar(70) DEFAULT NULL,
-  `tipo_pasaje` enum('ida','ida_vuelta') DEFAULT NULL
+  `tipo_pasaje` enum('solo_ida','ida_y_vuelta') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -167,7 +164,7 @@ CREATE TABLE `productos` (
   `nombre` varchar(50) DEFAULT NULL,
   `descripcion` varchar(150) DEFAULT NULL,
   `precio` float(11,2) DEFAULT NULL,
-  `tipo_producto` int(11) DEFAULT NULL
+  `tipo_producto` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
