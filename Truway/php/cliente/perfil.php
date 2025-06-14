@@ -5,8 +5,8 @@ include('conexion.php');
 
 // Verificar si el usuario está autenticado
 if (!isset($_SESSION['id'])) {
-    echo "Debes iniciar sesión para ver tus pedidos.";
-    exit;
+    header("Location: /Olimpiadas/Truway/php/general/iniciar-sesion.php");
+exit();
 }
 /*Obtiene nombre y apellido para mostrarlos*/
 $id_usuario = (int)$_SESSION['id'];
@@ -47,9 +47,31 @@ if ($resultado_usuario) {
     <section class="section-informacion-user">
         <span class="nombre-apellido"><?php echo $nombre ?> <?php echo $apellido ?></span>
     </section>
+    <h2 class="subtitulo">Mis pedidos</h2>
     <section class="section-pedidos-realizados">
-        <h2 class="subtitulo">Mis pedidos</h2>
+    <div class=cont-filtros>
+            <h2 class="subtitulo">Tipo de pedido</h2>
+            <form class="filtros" method="get" action="">
+                <div class="input-filtro">
+                    <input type="checkbox" id="todos" name="tipo-pedido" value="todos">
+                    <label for="todos" class="lbl">Todos los pedidos</label>
+                </div>
+                <div class="input-filtro">
+                    <input type="checkbox" id="apobados" name="tipo-pedido" value="apobados">
+                    <label for="apobados" class="lbl">Aprobados</label>
+                </div>
+                <div class="input-filtro">
+                    <input type="checkbox" id="pendientes" name="tipo-pedido" value="pendientes">
+                    <label for="pendientes" class="lbl">Pendientes</label>
+                </div>
+                <div class="input-filtro">
+                    <input type="checkbox" id="rechazados" name="tipo-pedido" value="rechazados">
+                    <label for="rechazados" class="lbl">Rechazados</label>
+                </div>
 
+            </form>
+        </div>
+    <div class="pedidos">
         <?php
         $query = "SELECT * FROM pedidos WHERE id_usuario = $id_usuario ORDER BY fecha DESC";
         $resultado = mysqli_query($conexion, $query);
@@ -145,9 +167,15 @@ if ($resultado_usuario) {
                 }
             }
         ?>
-           
-        </div>
-        
+    </div> 
     </section>
 </main>
+<script>
+    // Envía automáticamente el formulario cuando se hace click en un checkbox
+    document.querySelectorAll('.filtros input[type="checkbox"]').forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+</script>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/footer.php'; ?>
