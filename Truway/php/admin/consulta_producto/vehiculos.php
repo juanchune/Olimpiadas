@@ -1,56 +1,93 @@
+<?php
 
-    <div class="cont-filtros">
-        <form method="get" action="" class="form-filtros">
-             <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
-            <div class="filtros">
-                <select class="select-filtro" name="capacidad">
-                    <option value="" disabled selected>Seleccione una capacidad</option>
-                    <?php while ($capacidadRow = mysqli_fetch_assoc($capacidadResult)) { ?>
-                        <option value="<?= $capacidadRow['capacidad'] ?>"><?= $capacidadRow['capacidad'] ?></option>
-                    <?php } ?>
-                </select>
+include ('conexion.php');
 
-                <select class="select-filtro" name="tipo">
-                    <option value="" disabled selected>Seleccione un tipo</option>
-                    <?php while ($tipoRow = mysqli_fetch_assoc($tipoResult)) { ?>
-                        <option value="<?= $tipoRow['tipo'] ?>"><?= $tipoRow['tipo'] ?></option>
-                    <?php } ?>
-                </select>
+$tabla_seleccionada = 'vehiculos';
+
+// Obtener valores únicos para los filtros
+$capacidadResult = mysqli_query($conexion, "SELECT DISTINCT capacidad FROM vehiculos ORDER BY capacidad");
+$tipoResult = mysqli_query($conexion, "SELECT DISTINCT tipo FROM vehiculos ORDER BY tipo");
+
+// Filtros
+$where = [];
+if (!empty($_GET['capacidad'])) {
+    $capacidad = intval($_GET['capacidad']);
+    $where[] = "v.capacidad = $capacidad";
+}
+if (!empty($_GET['tipo'])) {
+    $tipo = mysqli_real_escape_string($conexion, $_GET['tipo']);
+    $where[] = "v.tipo = '$tipo'";
+}
+$whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+// Consulta principal con JOIN para traer la descripción del producto
+$sql = "SELECT v.*, p.descripcion 
+        FROM vehiculos v
+        JOIN productos p ON v.id_producto = p.id_producto
+        $whereSQL
+        ORDER BY v.id_vehiculo DESC";
+$result = mysqli_query($conexion, $sql);
+?>
+
+<div class="cont-filtros">
+    <form method="get" action="" class="form-filtros">
+        <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
+        <div class="filtros">
+            <select class="select-filtro" name="capacidad">
+                <option value="" disabled selected>Seleccione una capacidad</option>
+                <?php while ($capacidadRow = mysqli_fetch_assoc($capacidadResult)) { ?>
+                    <option value="<?= $capacidadRow['capacidad'] ?>" <?= (isset($_GET['capacidad']) && $_GET['capacidad'] == $capacidadRow['capacidad']) ? 'selected' : '' ?>>
+                        <?= $capacidadRow['capacidad'] ?>
+                    </option>
+                <?php } ?>
+            </select>
+
+            <select class="select-filtro" name="tipo">
+                <option value="" disabled selected>Seleccione un tipo</option>
+                <?php while ($tipoRow = mysqli_fetch_assoc($tipoResult)) { ?>
+                    <option value="<?= $tipoRow['tipo'] ?>" <?= (isset($_GET['tipo']) && $_GET['tipo'] == $tipoRow['tipo']) ? 'selected' : '' ?>>
+                        <?= $tipoRow['tipo'] ?>
+                    </option>
+                <?php } ?>
+            </select>
+        </div>
+        <button class="btn-filtrar" name="filtrar">Filtrar</button>
+    </form>
+</div>
+
+<section class="section-tabla-productos vehiculos">
+    <!-- Información principal fija como guía -->
+    <article class="producto guia">
+        <div class="informacion-principal">
+            <div class="informacion">
+                <span class="lbl-informacion">ID VEHICULO</span>
+                <span class="lbl-informacion">ID PRODUCTO</span>
+                <span class="lbl-informacion">MARCA</span>
+                <span class="lbl-informacion">MODELO</span>
+                <span class="lbl-informacion">CAPACIDAD</span>
+                <span class="lbl-informacion">EMPRESA RENTADORA</span>
+                <span class="lbl-informacion">TIPO</span>
+                <span class="lbl-informacion">ACCIONES</span>
             </div>
-            <button class="btn-filtrar" name="filtrar">Filtrar</button>
-        </form>
-    </div>
+        </div>
+    </article>
 
-    <section class="section-tabla-productos vehiculos">
-        <!-- Información principal fija como guía -->
-        <article class="producto guia">
+    <!-- Vehículos dinámicos -->
+    <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
+        <article class="producto">
             <div class="informacion-principal">
                 <div class="informacion">
-                    <span class="lbl-informacion">ID VEHICULO</span>
-                    <span class="lbl-informacion">ID PRODUCTO</span>
-                    <span class="lbl-informacion">MARCA</span>
-                    <span class="lbl-informacion">MODELO</span>
-                    <span class="lbl-informacion">CAPACIDAD</span>
-                    <span class="lbl-informacion">EMPRESA RENTADORA</span>
-                    <span class="lbl-informacion">TIPO</span>
-                    <span class="lbl-informacion">ACCIONES</span>
-                </div>
-            </div>
-        </article>
-
-        <!-- Productos dinámicos -->
-        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
-            <article class="producto">
-                <div class="informacion-principal">
-                    <div class="informacion">
-                        <span class="lbl-informacion"><?= $dato['id_vehiculo'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['marca'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['modelo'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['capacidad'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['empresa_rentadora'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['tipo'] ?></span>
-                        <div class="btns">
+                    <button class="btn-desplegable">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                    </button>
+                    <span class="lbl-informacion"><?= $dato['id_vehiculo'] ?></span>
+                    <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($dato['marca']) ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($dato['modelo']) ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($dato['capacidad']) ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($dato['empresa_rentadora']) ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($dato['tipo']) ?></span>
+                    <div class="btns">
                         <button class="btn-modificar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -69,11 +106,30 @@
                             </svg>
                         </button>
                     </div>
-                    </div>
                 </div>
-            </article>
-        <?php } ?>
-    </section>
-</main>
-</body>
-</html>
+            </div>
+            <div class="detalles-producto oculto">
+                <div class="cont-descripcion">
+                    <h5>Descripción</h5>
+                    <p class="descripcion"><?= htmlspecialchars($dato['descripcion']) ?></p>
+                </div>
+            </div>
+        </article>
+    <?php } ?>
+</section>
+<script>
+    document.querySelectorAll('.btn-desplegable').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const producto = btn.closest('.producto');
+            const detalleActual = producto.querySelector('.detalles-producto');
+            document.querySelectorAll('.detalles-producto').forEach(detalle => {
+                if (detalle !== detalleActual) {
+                    detalle.classList.remove('activo');
+                    detalle.classList.add('oculto');
+                }
+            });
+            detalleActual.classList.toggle('activo');
+            detalleActual.classList.toggle('oculto');
+        });
+    });
+</script>

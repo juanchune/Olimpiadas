@@ -1,47 +1,70 @@
-<div class="cont-filtros">
-        <form method="get" action="" class="form-filtros">
-             <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
-            <div class="filtros">
-                <select class="select-filtro" name="precio">
-                    <option value="" disabled selected>Seleccione un rango de precio</option>
-                    <option value="50000">Hasta $50,000</option>
-                    <option value="100000">Hasta $100,000</option>
-                    <option value="150000">Hasta $150,000</option>
-                </select>
-            </div>
-            <button class="btn-filtrar" name="filtrar">Filtrar</button>
-        </form>
-    </div>
+<?php
 
-    <section class="section-tabla-productos paquetes">
-        <!-- Información principal fija como guía -->
-        <article class="producto guia">
+include ('conexion.php');
+
+// Para mantener el filtro seleccionado
+$tabla_seleccionada = 'paquetes';
+
+// Filtro de precio
+$where = [];
+if (!empty($_GET['precio'])) {
+    $precio = floatval($_GET['precio']);
+    $where[] = "pr.precio <= $precio";
+}
+$whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+// Consulta principal: trae datos de paquetes y su producto asociado
+$sql = "SELECT paq.id_paquete, pr.id_producto, pr.nombre, pr.descripcion, pr.precio
+        FROM paquetes paq
+        JOIN productos pr ON paq.id_producto = pr.id_producto
+        $whereSQL
+        ORDER BY paq.id_paquete DESC";
+$result = mysqli_query($conexion, $sql);
+?>
+
+<div class="cont-filtros">
+    <form method="get" action="" class="form-filtros">
+        <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
+        <div class="filtros">
+            <select class="select-filtro" name="precio">
+                <option value="" disabled selected>Seleccione un rango de precio</option>
+                <option value="50000" <?= (isset($_GET['precio']) && $_GET['precio'] == 50000) ? 'selected' : '' ?>>Hasta $50,000</option>
+                <option value="100000" <?= (isset($_GET['precio']) && $_GET['precio'] == 100000) ? 'selected' : '' ?>>Hasta $100,000</option>
+                <option value="150000" <?= (isset($_GET['precio']) && $_GET['precio'] == 150000) ? 'selected' : '' ?>>Hasta $150,000</option>
+            </select>
+        </div>
+        <button class="btn-filtrar" name="filtrar">Filtrar</button>
+    </form>
+</div>
+
+<section class="section-tabla-productos paquetes">
+    <!-- Información principal fija como guía -->
+    <article class="producto guia">
+        <div class="informacion-principal">
+            <div class="informacion">
+                <span class="lbl-informacion">ID PRODUCTO</span>
+                <span class="lbl-informacion">ID PAQUETE</span>
+                <span class="lbl-informacion">NOMBRE</span>
+                <span class="lbl-informacion">DESCRIPCIÓN</span>
+                <span class="lbl-informacion">PRECIO TOTAL</span>
+            </div>
+        </div>
+    </article>
+
+    <!-- Paquetes dinámicos -->
+    <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
+        <article class="producto">
             <div class="informacion-principal">
                 <div class="informacion">
-                    <span class="lbl-informacion">ID PRODUCTO</span>
-                    <span class="lbl-informacion">ID PAQUETE</span>
-                    <span class="lbl-informacion">NOMBRE</span>
-                    <span class="lbl-informacion">DESCRIPCIÓN</span>
-                    <span class="lbl-informacion">PRECIO TOTAL</span>
-                    <span class="lbl-informacion">PAÍS</span>
-                </div>
-            </div>
-        </article>
-
-        <!-- Paquetes dinámicos -->
-        <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
-            <article class="producto">
-                <div class="informacion-principal">
-                    <div class="informacion">
-                        <button class="btn-desplegable">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
-                        </button>
-                        <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['id_paquete'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['nombre'] ?></span>
-                        <span class="lbl-informacion"><?= $dato['descripcion'] ?></span>
-                        <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
-                        <div class="btns">
+                    <button class="btn-desplegable">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                    </button>
+                    <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                    <span class="lbl-informacion"><?= $dato['id_paquete'] ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($dato['nombre']) ?></span>
+                    <span class="lbl-informacion"></span>
+                    <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
+                    <div class="btns">
                         <button class="btn-modificar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <g fill="none">
@@ -60,15 +83,54 @@
                             </svg>
                         </button>
                     </div>
-                    </div>
-                
                 </div>
-                <div class="detalles-producto oculto">
-                    <div class="cont-descripcion">
-                        <h5>Descripción</h5>
-                        <p class="descripcion"><?= $dato['descripcion'] ?></p>
-                    </div>
+            </div>
+            <div class="detalles-producto oculto">
+                <div class="cont-descripcion">
+                    <h5>Descripción</h5>
+                    <p class="descripcion"><?= htmlspecialchars($dato['descripcion']) ?></p>
                 </div>
-            </article>
-        <?php } ?>
-    </section>
+                <div class="cont-productos-paquete">
+                    <h5>Productos incluidos en el paquete</h5>
+                    <ul>
+                        <?php
+                        // Consulta productos que componen el paquete
+                        $id_paquete = intval($dato['id_paquete']);
+                        $sql_detalle = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio
+                                        FROM detalle_paquete dp
+                                        JOIN productos p ON dp.id_producto = p.id_producto
+                                        WHERE dp.id_paquete = $id_paquete";
+                        $res_detalle = mysqli_query($conexion, $sql_detalle);
+                        if (mysqli_num_rows($res_detalle) > 0) {
+                            while ($prod = mysqli_fetch_assoc($res_detalle)) {
+                                echo '<li>';
+                                echo '<strong>' . htmlspecialchars($prod['nombre']) . '</strong> (ID: ' . $prod['id_producto'] . ') - $' . number_format($prod['precio'], 2) . '<br>';
+                                echo '<span>' . htmlspecialchars($prod['descripcion']) . '</span>';
+                                echo '</li>';
+                            }
+                        } else {
+                            echo '<li>No hay productos asociados a este paquete.</li>';
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </article>
+    <?php } ?>
+</section>
+<script>
+    document.querySelectorAll('.btn-desplegable').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const producto = btn.closest('.producto');
+            const detalleActual = producto.querySelector('.detalles-producto');
+            document.querySelectorAll('.detalles-producto').forEach(detalle => {
+                if (detalle !== detalleActual) {
+                    detalle.classList.remove('activo');
+                    detalle.classList.add('oculto');
+                }
+            });
+            detalleActual.classList.toggle('activo');
+            detalleActual.classList.toggle('oculto');
+        });
+    });
+</script>
