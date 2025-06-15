@@ -1,6 +1,8 @@
--- ...existing code...
 
--- 1. CREACIÓN DE TABLAS (sin claves foráneas)
+
+CREATE DATABASE IF NOT EXISTS `truway` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `truway`;
+
 CREATE TABLE `usuarios` (
   `id_usuario` int(11) NOT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -142,7 +144,7 @@ CREATE TABLE `mails_automaticos` (
   `estado_envio` enum('pendiente','enviado','fallido') NOT NULL DEFAULT 'pendiente'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- 2. ÍNDICES Y PRIMARY KEYS
+
 ALTER TABLE `usuarios` ADD PRIMARY KEY (`id_usuario`);
 ALTER TABLE `productos` ADD PRIMARY KEY (`id_producto`);
 ALTER TABLE `carrito` ADD PRIMARY KEY (`id_carrito`), ADD KEY `id_usuario` (`id_usuario`);
@@ -164,7 +166,7 @@ ALTER TABLE `ventas` ADD PRIMARY KEY (`id_venta`), ADD UNIQUE KEY `id_pedido_UNI
 ALTER TABLE `pedidos_historicos` ADD PRIMARY KEY (`id_historico`), ADD UNIQUE KEY `id_pedido_UNIQUE` (`id_pedido`);
 ALTER TABLE `mails_automaticos` ADD PRIMARY KEY (`id_mail`);
 
--- 3. AUTO_INCREMENT
+
 ALTER TABLE `usuarios` MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `productos` MODIFY `id_producto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 ALTER TABLE `carrito` MODIFY `id_carrito` int(11) NOT NULL AUTO_INCREMENT;
@@ -183,7 +185,7 @@ ALTER TABLE `estado_facturacion` MODIFY `id_estado` int(11) NOT NULL AUTO_INCREM
 ALTER TABLE `ventas` MODIFY `id_venta` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `mails_automaticos` MODIFY `id_mail` int(11) NOT NULL AUTO_INCREMENT;
 
--- 4. CLAVES FORÁNEAS (todas al final)
+
 ALTER TABLE `carrito` ADD CONSTRAINT `carrito_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 ALTER TABLE `detalle_carrito` ADD CONSTRAINT `detalle_carrito_ibfk_1` FOREIGN KEY (`id_carrito`) REFERENCES `carrito` (`id_carrito`);
 ALTER TABLE `detalle_carrito` ADD CONSTRAINT `detalle_carrito_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
@@ -210,26 +212,25 @@ INSERT INTO `detalle_paquete` (`id_detalle_paquete`, `id_paquete`, `id_producto`
 (3, 1, 5),
 (4, 1, 6);
 
--- estadias
+
 INSERT INTO `estadias` (`id_estadia`, `id_producto`, `localidad`, `nombre_hotel`, `servicios`, `categoria`) VALUES
 (1, 4, 'Tierra del fuego', 'Hotel del fin del mundo', ' Habitaciones estándar con caja fuerte, TV por cable, teléfono, baño privado con bañera, restaurante y bar/confitería, conexión Wi-Fi, estacionamiento', '4'),
 (2, 7, 'Usuahia', 'Los Acebos Ushuaia Hotel', 'Recepción 24 horas, Información turística y servicio de conserjería, Wi-Fi gratuito e Internet Point, Servicio de shuttle al centro de la ciudad (sin ', '4');
 
--- excursiones
+
 INSERT INTO `excursiones` (`id_excursion`, `id_producto`, `ubicacion_salida`, `duracion`, `guia`, `dificultad`) VALUES
 (1, 1, 'Traslado ida y vuelta desde hotel', 10, 1, 'baja'),
 (2, 8, 'Traslado ida y vuelta desde hotel', 5, 1, 'media'),
 (6, 16, '', 0, 0, 'baja');
 
--- paquetes
 INSERT INTO `paquetes` (`id_paquete`, `id_producto`) VALUES
 (1, 9);
 
--- pasajes
+
 INSERT INTO `pasajes` (`id_pasaje`, `id_producto`, `origen`, `destino`, `aerolinea`, `tipo_pasaje`) VALUES
 (1, 5, 'Buenos Aires', 'Ushuaia', 'Aerolíneas Argentinas', 'solo_ida');
 
--- productos
+
 INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `tipo_producto`) VALUES
 (1, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado', 80000.00, 'Excursión'),
 (4, 'Estadia Ushuaia', 'Una estadía confortable en Ushuaia, la ciudad más austral del mundo, que combina naturaleza, aventura y comodidad.', 90288.00, 'Estadía'),
@@ -240,7 +241,7 @@ INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `tipo
 (9, 'Paquete Usuahia', 'Un paquete turístico a Ushuaia ofrece una experiencia completa para descubrir los impresionantes paisajes de la Patagonia y Tierra del Fuego', 790.00, 'Paquete'),
 (16, '', '', 0.00, 'Excursión');
 
--- tipo_producto
+
 INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
 (1, 'Paquete'),
 (2, 'Excursión'),
@@ -248,6 +249,6 @@ INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
 (4, 'Alquiler de Vehículo'),
 (5, 'Estadía');
 
--- vehiculos
+
 INSERT INTO `vehiculos` (`id_vehiculo`, `id_producto`, `marca`, `modelo`, `capacidad`, `empresa_rentadora`, `tipo`) VALUES
 (1, 6, 'Toyota ', 'Corolla', 5, 'Rentacar Ushuaia', 'auto');
