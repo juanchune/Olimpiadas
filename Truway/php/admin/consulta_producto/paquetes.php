@@ -42,11 +42,12 @@ $result = mysqli_query($conexion, $sql);
     <article class="producto guia">
         <div class="informacion-principal">
             <div class="informacion">
+                <span class="lbl-informacion"> </span>
                 <span class="lbl-informacion">ID PRODUCTO</span>
                 <span class="lbl-informacion">ID PAQUETE</span>
                 <span class="lbl-informacion">NOMBRE</span>
-                <span class="lbl-informacion">DESCRIPCIÓN</span>
                 <span class="lbl-informacion">PRECIO TOTAL</span>
+                <span class="lbl-informacion">ACCIONES</span>
             </div>
         </div>
     </article>
@@ -62,7 +63,6 @@ $result = mysqli_query($conexion, $sql);
                     <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
                     <span class="lbl-informacion"><?= $dato['id_paquete'] ?></span>
                     <span class="lbl-informacion"><?= htmlspecialchars($dato['nombre']) ?></span>
-                    <span class="lbl-informacion"></span>
                     <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
                     <div class="btns">
                         <button class="btn-modificar">
@@ -86,34 +86,35 @@ $result = mysqli_query($conexion, $sql);
                 </div>
             </div>
             <div class="detalles-producto oculto">
-                <div class="cont-descripcion">
-                    <h5>Descripción</h5>
-                    <p class="descripcion"><?= htmlspecialchars($dato['descripcion']) ?></p>
+    <?php
+    $id_paquete = intval($dato['id_paquete']);
+    $sql_detalle = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio
+                    FROM detalle_paquete dp
+                    JOIN productos p ON dp.id_producto = p.id_producto
+                    WHERE dp.id_paquete = $id_paquete";
+    $res_detalle = mysqli_query($conexion, $sql_detalle);
+    if (mysqli_num_rows($res_detalle) > 0) {
+    ?>
+        <div class="cont-productos-paquete">
+            <div class="informacion">
+                <span class="lbl-informacion">ID</span>
+                <span class="lbl-informacion">Nombre</span>
+                <span class="lbl-informacion">Precio</span>
+                <span class="lbl-informacion">Descripción</span>
+            </div>
+            <?php while ($prod = mysqli_fetch_assoc($res_detalle)) { ?>
+                <div class="informacion">
+                    <span class="lbl-informacion"><?= $prod['id_producto'] ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($prod['nombre']) ?></span>
+                    <span class="lbl-informacion">$<?= number_format($prod['precio'], 2) ?></span>
+                    <span class="lbl-informacion"><?= htmlspecialchars($prod['descripcion']) ?></span>
                 </div>
-                <div class="cont-productos-paquete">
-                    <h5>Productos incluidos en el paquete</h5>
-                    <ul>
-                        <?php
-                        // Consulta productos que componen el paquete
-                        $id_paquete = intval($dato['id_paquete']);
-                        $sql_detalle = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio
-                                        FROM detalle_paquete dp
-                                        JOIN productos p ON dp.id_producto = p.id_producto
-                                        WHERE dp.id_paquete = $id_paquete";
-                        $res_detalle = mysqli_query($conexion, $sql_detalle);
-                        if (mysqli_num_rows($res_detalle) > 0) {
-                            while ($prod = mysqli_fetch_assoc($res_detalle)) {
-                                echo '<li>';
-                                echo '<strong>' . htmlspecialchars($prod['nombre']) . '</strong> (ID: ' . $prod['id_producto'] . ') - $' . number_format($prod['precio'], 2) . '<br>';
-                                echo '<span>' . htmlspecialchars($prod['descripcion']) . '</span>';
-                                echo '</li>';
-                            }
-                        } else {
-                            echo '<li>No hay productos asociados a este paquete.</li>';
-                        }
-                        ?>
-                    </ul>
-                </div>
+            <?php } ?>
+        </div>
+    <?php } else {
+        echo '<p>No hay productos asociados a este paquete.</p>';
+    } ?>
+</div>
             </div>
         </article>
     <?php } ?>

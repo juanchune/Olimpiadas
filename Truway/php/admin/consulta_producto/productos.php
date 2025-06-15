@@ -55,6 +55,7 @@ $result = mysqli_query($conexion, $sql);
     <article class="producto guia">
         <div class="informacion-principal">
             <div class="informacion">
+                <span class="lbl-informacion"> </span>
                 <span class="lbl-informacion">ID</span>
                 <span class="lbl-informacion">NOMBRE</span>
                 <span class="lbl-informacion">TIPO</span>
