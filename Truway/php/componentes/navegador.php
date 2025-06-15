@@ -221,9 +221,9 @@ else: ?>
             </div>
             <div class="cont-btns">
                 <ul class="nav-lista-btns">
-                    <li class="btns"><a href>Inicio</a></li>
-                    <li class="btns"><a href>Sobre nosotros</a></li>
-                    <li class="btns"><a href>Productos</a></li>
+                    <li class="btns"><a href="/Olimpiadas/Truway/index.php">Inicio</a></li>
+                    <li class="btns"><a href="#">Sobre nosotros</a></li>
+                    <li class="btns"><a href="/Olimpiadas/Truway/php/cliente/catalogo.php">Productos</a></li>
                 </ul>
             </div>
             <div class="cont-btns cont-usuario">

@@ -216,9 +216,9 @@ header .contenido{
     color: var(--terciario-50);
 }
 
-.cont-tiempo-btn{
+.cont-tiempo-btn {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
 }
 
 .cont-tiempo-btn .cont-tiempo{
@@ -246,8 +246,9 @@ header .contenido{
     border-radius: 1.25rem;
     color: var(--terciario-50);
     cursor: pointer;
-    transition: .6s ease;
+    transition: .5s ease;
     border: 1px solid var(--terciario-50);
+    margin-left: auto; 
 }
 
 .btn-ver-mas:hover{

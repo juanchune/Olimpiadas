@@ -1,6 +1,4 @@
 footer {
-  position: relative;
-  bottom: 0;
   background-color: var(--terciario-50);
   border-radius: 1.25rem 1.25rem 0rem 0rem;
   padding: 1.875rem 0.625rem 1rem;
