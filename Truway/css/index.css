@@ -163,6 +163,9 @@ header .contenido{
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;
+
+      line-height: 1.4;         /* Ajusta según tipografía */
+    min-height: calc(1.4em * 2); /* Asegura 2 líneas de alto como mínimo */
 }
 
 .producto .svg-icon{
@@ -189,7 +192,7 @@ header .contenido{
     align-items: center;
     gap: .5rem;
     border-radius: 1.25rem;
-    padding: .2rem .5rem;
+    padding: .3rem .8rem;
 }
 
 .categoria span{
@@ -210,9 +213,16 @@ header .contenido{
     text-align: end;
 }
 
-.producto .descripcion-producto{
-    text-align:start;
+.producto .descripcion-producto {
+    height: auto;
+    text-align: start;
     font-size: .9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;         /* Futuro soporte estandar */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    word-break: break-word;
     color: var(--terciario-50);
 }
 
@@ -254,4 +264,26 @@ header .contenido{
 .btn-ver-mas:hover{
     background-color: var(--secundario-50);
     color: var(--blanco-50);
+}
+
+.cont-btn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cont-btn .btn-explorar-mas{
+    text-decoration: none;
+    color: var(--blanco-50);
+    background-color: var(--terciario-50);
+    padding: .5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .5s ease;
+}
+
+.cont-btn .btn-explorar-mas:hover{
+    transform: scale(1.1);
 }
