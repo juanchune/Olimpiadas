@@ -18,20 +18,39 @@ if (!$result) {
             <h2 class="subtitulo">Consultar ventas</h2>
         </div>
         <div class="seleccionar-tipo-venta">
-            <a href="/Olimpiadas/Truway/php/admin/ventas-pagas.php" class="tipo-venta pagas seleccionado">Pagas</a>
-            <a href="/Olimpiadas/Truway/php/admin/ventas-pendientes.php" class="tipo-venta pendientes">Pendientes de pago</a></span>
+            <a href="ventas?tipo_venta=pagas.php" class="tipo-venta pagas">Pagas</a>
+            <a href="ventas?tipo_venta=pendientes.php"  class="tipo-venta pendientes">Pendientes de pago</a></span>
         </div>
 
+        <?php
+            $tipo_venta='pagas';
+            if (isset($_GET['tipo_venta'])) {
+            $venta_seleccionada = $_GET['tipo_venta'];
+            switch ($venta_seleccionada) {
+                case('pagas'):
+
+                    
+                    break;
+                    //REALIZAR ACA LA CONSULA PARA MOSTRAR LAS VENTAS PAGAS
+                case('pendientes'):
+                    //REALIZAR ACA LA CONSULA PARA MOSTRAR LAS VENTAS PENDIENTES
+                    
+                    break;
+             }
+            }
+        ?>
+        
          <section class="section-tabla-productos">
                 <article class="producto">
                     <div class="informacion-principal">
                         <div class="informacion">
                             <span class="lbl-informacion">ID PEDIDO</span>
                             <span class="lbl-informacion">ID USUARIO</span>
-                            <span class="lbl-informacion">FECHA</span>
+                            <span class="lbl-informacion">FECHA_PEDIDO</span>
+                            <span class="lbl-informacion">FEHCA_VIAJE</span>
                             <span class="lbl-informacion">PRECIO_TOTAL</span>
                             <span class="lbl-informacion">METODO_PAGO</span>
-                            <span class="lbl-informacion">CANTIDAD</span>
+                            <span class="lbl-informacion">CANTIDAD_PRO</span>
                         </div>
                     </div>
                 </article>

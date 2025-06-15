@@ -129,6 +129,10 @@ main {
     border:1px solid var(--terciario-50);
 }
 
+.form-filtros .input-buscar{
+    
+}
+
 .form-filtros .btn-filtrar{
     all:unset;
     width: 10rem;

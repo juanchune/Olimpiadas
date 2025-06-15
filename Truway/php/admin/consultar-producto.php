@@ -35,8 +35,8 @@ include('conexion.php');
     if (isset($_GET['tabla_seleccionada'])) {
     $tabla_seleccionada = $_GET['tabla_seleccionada'];
       switch ($tabla_seleccionada) {
-        case 'productos':
-            // Consulta inicial para obtener todos los productos
+        case('productos'):
+             // Consulta inicial para obtener todos los productos
             $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
                     FROM productos p
                     JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
@@ -67,7 +67,6 @@ include('conexion.php');
 
             include 'consulta_producto/productos.php';
             break;
-
         case('paquetes'):
             // Consulta inicial para obtener todos los paquetes
             $query = "SELECT p.id_producto, p.id_paquete, pr.nombre, pr.descripcion, pr.precio 
@@ -211,7 +210,36 @@ include('conexion.php');
         }
     
     }else{
-        echo"No muestra nada";
+         // Consulta inicial para obtener todos los productos
+            $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
+                    FROM productos p
+                    JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
+            $filters = [];
+
+            // Aplicar filtros si se envían por GET
+            if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {
+                $filters[] = "tp.tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo-producto']) . "'";
+            }
+
+            if (isset($_GET['precio']) && $_GET['precio'] !== '') {
+                $filters[] = "p.precio <= " . intval($_GET['precio']);
+            }
+
+            // Si hay filtros, añadirlos a la consulta
+            if (!empty($filters)) {
+                $query .= " WHERE " . implode(" AND ", $filters);
+            }
+
+            $result = mysqli_query($conexion, $query);
+
+            // Obtener valores únicos para los filtros
+            $tipoProductoQuery = "SELECT DISTINCT tipo FROM tipo_producto ORDER BY tipo ASC";
+            $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
+
+            $precioQuery = "SELECT DISTINCT precio FROM productos ORDER BY precio ASC";
+            $precioResult = mysqli_query($conexion, $precioQuery);
+
+            include 'consulta_producto/productos.php';
     }?>
  
 </main>
