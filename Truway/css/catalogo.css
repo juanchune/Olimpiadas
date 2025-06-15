@@ -41,54 +41,56 @@ main {
 .cont-filtros {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
+    gap: 1rem;
     border-right: 1px solid var(--terciario-50);
     padding-right: 1rem;
 }
 
-.filtros {
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+.cont-filtros .subtitulo{
+    padding-bottom: .3rem;
+    border-bottom: 1px solid var(--terciario-50);
 }
 
-.input-filtro {
+
+.seleccionar-tipo-producto{
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    gap: 1.3rem;
+}
+
+.seleccionar-tipo-producto .tipo-producto {
     position: relative;
-}
-
-.input-filtro input[type="checkbox"] {
-    display: none;
-}
-
-.lbl {
-    display: inline-block;
-    padding: .5rem .7rem;
-    background-color: var(--blanco-50);
+    text-decoration: none;
+    display: flex;
+    gap:.5rem;
+    align-items: center;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
+
+    font-family: 1.2rem;
+    font-weight: 800;
+    color: var(--terciario-50);
+    transition: all .5s ease;
 }
 
-.lbl::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0%;
-    height: 1px;
-    background-color: var(--terciario-50);
-    transform: translateX(-50%);
-    transition: width 0.4s ease;
+.tipo-producto .icon{
+    color: var(--terciario-50);
 }
 
-.input-filtro:hover .lbl::after {
-    width: 100%;
+.seleccionar-tipo-producto .tipo-producto::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -4px;
+  width: 0;
+  height: 1px;
+  background-color: var(--terciario-50);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
+.seleccionar-tipo-producto .tipo-producto:hover::after {
+  width: 100%;
+}
 
 
 .subtitulo {
@@ -109,6 +111,8 @@ main {
 
 .productos-grid .producto {
     width: 100%;
+    max-height: 15rem;
+    min-height: 10rem;
     height: auto;
     background-color: var(--blanco-50);
     border-bottom: 1px solid var(--terciario-50);
@@ -157,7 +161,7 @@ main {
     align-items: center;
     gap: .5rem;
     border-radius: 1.25rem;
-    padding: .2rem .5rem;
+    padding: .3rem .8rem;
 }
 
 .categoria span {
@@ -179,9 +183,17 @@ main {
 }
 
 .producto .descripcion-producto {
+    height: auto;
     text-align: start;
-    font-size: .9rem;
+    font-size: 1rem;
+    overflow: hidden;
+    word-break: break-word;
     color: var(--terciario-50);
+}
+
+.producto .svg-icon{
+    height: 1.5rem;
+    width: 1.5rem;
 }
 
 .cont-tiempo-btn {

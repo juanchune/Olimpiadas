@@ -56,7 +56,6 @@ main {
 
 /*GRID DE TODOS LOS PEDIDOS*/
 .section-pedidos-realizados {
-  background-color: blue;
   width: 100%;
   height: auto;
   display: grid;
@@ -67,54 +66,50 @@ main {
 }
 
 .cont-filtros {
-  background-color: red;
   display: flex;
   flex-direction: column;
-  gap: .5rem;
+  gap: 1rem;
   border-right: 1px solid var(--terciario-50);
   padding-right: 1rem;
 }
 
-.filtros {
-  display: flex;
-  flex-direction: column;
-  gap: .5rem;
+.cont-filtros .subtitulo {
+  padding-bottom: .3rem;
+  border-bottom: 1px solid var(--terciario-50);
 }
 
-.input-filtro {
+
+.seleccionar-tipo-pedido{
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.3rem;
+}
+
+.seleccionar-tipo-pedido .tipo-pedido {
   position: relative;
-}
-
-.input-filtro input[type="checkbox"] {
-  display: none;
-}
-
-.lbl {
-  display: inline-block;
-  padding: .5rem .7rem;
-  background-color: var(--blanco-50);
+  text-decoration: none;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+
+  font-family: 1.2rem;
+  font-weight: 800;
+  color: var(--terciario-50);
+  transition: all .5s ease;
 }
 
-.lbl::after {
-  content: '';
+
+.seleccionar-tipo-pedido .tipo-pedido::after {
+  content: "";
   position: absolute;
-  bottom: 0;
   left: 50%;
-  width: 0%;
+  bottom: -4px;
+  width: 0;
   height: 1px;
   background-color: var(--terciario-50);
+  transition: all 0.3s ease;
   transform: translateX(-50%);
-  transition: width 0.4s ease;
 }
 
-.input-filtro:hover .lbl::after {
+.seleccionar-tipo-pedido .tipo-pedido:hover::after {
   width: 100%;
 }
 
