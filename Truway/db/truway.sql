@@ -206,31 +206,6 @@ ALTER TABLE `ventas` ADD CONSTRAINT `fk_ventas_pedido` FOREIGN KEY (`id_pedido`)
 ALTER TABLE `ventas` ADD CONSTRAINT `ventas_ibfk_1` FOREIGN KEY (`estado_facturacion`) REFERENCES `estado_facturacion` (`id_estado`);
 ALTER TABLE `pedidos_historicos` ADD CONSTRAINT `fk_historico_pedido` FOREIGN KEY (`id_pedido`) REFERENCES `ventas` (`id_pedido`) ON DELETE CASCADE;
 
-INSERT INTO `detalle_paquete` (`id_detalle_paquete`, `id_paquete`, `id_producto`) VALUES
-(1, 1, 8),
-(2, 1, 4),
-(3, 1, 5),
-(4, 1, 6);
-
-
-INSERT INTO `estadias` (`id_estadia`, `id_producto`, `localidad`, `nombre_hotel`, `servicios`, `categoria`) VALUES
-(1, 4, 'Tierra del fuego', 'Hotel del fin del mundo', ' Habitaciones estándar con caja fuerte, TV por cable, teléfono, baño privado con bañera, restaurante y bar/confitería, conexión Wi-Fi, estacionamiento', '4'),
-(2, 7, 'Usuahia', 'Los Acebos Ushuaia Hotel', 'Recepción 24 horas, Información turística y servicio de conserjería, Wi-Fi gratuito e Internet Point, Servicio de shuttle al centro de la ciudad (sin ', '4');
-
-
-INSERT INTO `excursiones` (`id_excursion`, `id_producto`, `ubicacion_salida`, `duracion`, `guia`, `dificultad`) VALUES
-(1, 1, 'Traslado ida y vuelta desde hotel', 10, 1, 'baja'),
-(2, 8, 'Traslado ida y vuelta desde hotel', 5, 1, 'media'),
-(6, 16, '', 0, 0, 'baja');
-
-INSERT INTO `paquetes` (`id_paquete`, `id_producto`) VALUES
-(1, 9);
-
-
-INSERT INTO `pasajes` (`id_pasaje`, `id_producto`, `origen`, `destino`, `aerolinea`, `tipo_pasaje`) VALUES
-(1, 5, 'Buenos Aires', 'Ushuaia', 'Aerolíneas Argentinas', 'solo_ida');
-
-
 INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `tipo_producto`) VALUES
 (1, 'Visita al Glaciar Perito Moreno', 'Explora el majestuoso Perito Moreno con nuestro tour guiado', 80000.00, 'Excursión'),
 (4, 'Estadia Ushuaia', 'Una estadía confortable en Ushuaia, la ciudad más austral del mundo, que combina naturaleza, aventura y comodidad.', 90288.00, 'Estadía'),
@@ -239,8 +214,7 @@ INSERT INTO `productos` (`id_producto`, `nombre`, `descripcion`, `precio`, `tipo
 (7, 'Los Acebos Ushuaia Hotel', 'Un alojamiento de 4 estrellas muy valorado por su hermosa ubicación y vistas, habitaciones lujosas y confortables', 75000.00, 'Estadía'),
 (8, 'Trekking Laguna Esmeralda', 'Conquista el sendero hacia la Laguna Esmeralda, una experiencia guiada única en el corazón de la naturaleza.', 143750.00, 'Excursión'),
 (9, 'Paquete Usuahia', 'Un paquete turístico a Ushuaia ofrece una experiencia completa para descubrir los impresionantes paisajes de la Patagonia y Tierra del Fuego', 790.00, 'Paquete'),
-(16, '', '', 0.00, 'Excursión');
-
+(16, 'Excursión Extra', 'Excursión adicional', 0.00, 'Excursión');
 
 INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
 (1, 'Paquete'),
@@ -250,5 +224,30 @@ INSERT INTO `tipo_producto` (`id_tipo`, `tipo`) VALUES
 (5, 'Estadía');
 
 
+INSERT INTO `paquetes` (`id_paquete`, `id_producto`) VALUES
+(1, 9);
+
+INSERT INTO `detalle_paquete` (`id_detalle_paquete`, `id_paquete`, `id_producto`) VALUES
+(1, 1, 8),
+(2, 1, 4),
+(3, 1, 5),
+(4, 1, 6);
+
+
+INSERT INTO `estadias` (`id_estadia`, `id_producto`, `localidad`, `nombre_hotel`, `servicios`, `categoria`) VALUES
+(1, 4, 'Tierra del fuego', 'Hotel del fin del mundo', 'Habitaciones estándar con caja fuerte, TV por cable, teléfono, baño privado con bañera, restaurante y bar/confitería, conexión Wi-Fi, estacionamiento', '4'),
+(2, 7, 'Usuahia', 'Los Acebos Ushuaia Hotel', 'Recepción 24 horas, Información turística y servicio de conserjería, Wi-Fi gratuito e Internet Point, Servicio de shuttle al centro de la ciudad', '4');
+
+
+INSERT INTO `excursiones` (`id_excursion`, `id_producto`, `ubicacion_salida`, `duracion`, `guia`, `dificultad`) VALUES
+(1, 1, 'Traslado ida y vuelta desde hotel', 10, 1, 'baja'),
+(2, 8, 'Traslado ida y vuelta desde hotel', 5, 1, 'media'),
+(3, 16, '', 0, 0, 'baja');
+
+
+INSERT INTO `pasajes` (`id_pasaje`, `id_producto`, `origen`, `destino`, `aerolinea`, `tipo_pasaje`) VALUES
+(1, 5, 'Buenos Aires', 'Ushuaia', 'Aerolíneas Argentinas', 'solo_ida');
+
+
 INSERT INTO `vehiculos` (`id_vehiculo`, `id_producto`, `marca`, `modelo`, `capacidad`, `empresa_rentadora`, `tipo`) VALUES
-(1, 6, 'Toyota ', 'Corolla', 5, 'Rentacar Ushuaia', 'auto');
+(1, 6, 'Toyota', 'Corolla', 5, 'Rentacar Ushuaia', 'auto');
