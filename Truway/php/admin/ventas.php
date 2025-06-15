@@ -3,41 +3,26 @@ session_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 
-$query = "SELECT * FROM `pedidos` WHERE pedidos.estado_facturacion = 2";
-
-include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
-$result = mysqli_query($conexion, $query);
-if (!$result) {
-    die("Error en la consulta: " . mysqli_error($conexion));
-}
 
 ?>
 <main>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
+    $tipo_venta= $_GET['tipo_venta'] ?? 'pagas';
+    ?>
+
     <link rel="stylesheet" href="/Olimpiadas/Truway/css/ventas.css">
         <div class="cont-titulo-btn">
             <h2 class="subtitulo">Consultar ventas</h2>
         </div>
-        <div class="seleccionar-tipo-venta">
-            <a href="ventas?tipo_venta=pagas.php" class="tipo-venta pagas">Pagas</a>
-            <a href="ventas?tipo_venta=pendientes.php"  class="tipo-venta pendientes">Pendientes de pago</a></span>
+          <div class="seleccionar-tipo-venta">
+            <a href="ventas.php?tipo_venta=pagas" class="tipo-venta pagas <?php echo ($tipo_venta === 'pagas') ? 'seleccionado' : ''; ?>">Pagas</a>
+            <a href="ventas.php?tipo_venta=pendientes" class="tipo-venta pendientes <?php echo ($tipo_venta === 'pendientes') ? 'seleccionado' : ''; ?>">Pendientes de pago</a>
         </div>
 
         <?php
-            $tipo_venta='pagas';
-            if (isset($_GET['tipo_venta'])) {
-            $venta_seleccionada = $_GET['tipo_venta'];
-            switch ($venta_seleccionada) {
-                case('pagas'):
-
-                    
-                    break;
-                    //REALIZAR ACA LA CONSULA PARA MOSTRAR LAS VENTAS PAGAS
-                case('pendientes'):
-                    //REALIZAR ACA LA CONSULA PARA MOSTRAR LAS VENTAS PENDIENTES
-                    
-                    break;
-             }
-            }
+            $estado = ($tipo_venta === 'pendientes') ? 2 : 1;
+            $query = "SELECT * FROM `ventas` WHERE estado_facturacion = $estado";
+            $result = mysqli_query($conexion, $query);
         ?>
         
          <section class="section-tabla-productos">
@@ -45,12 +30,9 @@ if (!$result) {
                     <div class="informacion-principal">
                         <div class="informacion">
                             <span class="lbl-informacion">ID PEDIDO</span>
-                            <span class="lbl-informacion">ID USUARIO</span>
-                            <span class="lbl-informacion">FECHA_PEDIDO</span>
-                            <span class="lbl-informacion">FEHCA_VIAJE</span>
-                            <span class="lbl-informacion">PRECIO_TOTAL</span>
-                            <span class="lbl-informacion">METODO_PAGO</span>
-                            <span class="lbl-informacion">CANTIDAD_PRO</span>
+                            <span class="lbl-informacion">ID VENTA</span>
+                            <span class="lbl-informacion">FECHA VENTA</span>
+                            <span class="lbl-informacion">ESTADO FACTURACION</span>
                         </div>
                     </div>
                 </article>
@@ -60,15 +42,13 @@ if (!$result) {
                     <div class='informacion-principal'>
                         <div class='informacion'>
                             <span class='lbl-informacion'>". $row['id_pedido']. "</span>
-                            <span class='lbl-informacion'>". $row['id_usuario']. "</span>
-                            <span class='lbl-informacion'>". $row['fecha']. "</span>
-                            <span class='lbl-informacion'>". $row['precio_total']. "</span>
-                            <span class='lbl-informacion'>". $row['metodo_pago']. "</span>
-                            <span class='lbl-informacion'>". $row['cantidad']. "</span>
+                            <span class='lbl-informacion'>". $row['id_venta']. "</span>
+                            <span class='lbl-informacion'>". $row['fecha_venta']. "</span>
+                            <span class='lbl-informacion'>". $row['estado_facturacion']. "</span>
                         </div>
-                    </div>";
+                    </div>
+                 </article>";
                     }?>
-                </article>
         </section>
 </main>
 

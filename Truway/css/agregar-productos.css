@@ -95,6 +95,9 @@ main {
     border: 1px solid var(--terciario-50);
     padding: 1rem;
     border-radius: 1.25rem;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap:1rem;
 }
 
 .cont-formulario-general-producto{
@@ -108,12 +111,6 @@ main {
     height: 100%;
 }
 
-.section-agregar-productos .frm-productos{
-    height: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap:1rem;
-}
 
 .frm-productos .cont-input{
     width: 100%;

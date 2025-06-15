@@ -4,7 +4,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
 include('conexion.php');
 ?>
 
-<?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; ?>
+<?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; 
+$tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
+?>
 <main>
     <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos.css">
     <div class="cont-titulo-btn">
@@ -20,17 +22,15 @@ include('conexion.php');
         </div>
     </div>
    <div class="seleccionar-tipo-tabla">
-        <a href="consultar-producto.php?tabla_seleccionada=productos" class="tabla">Productos general</a>
-        <a href="consultar-producto.php?tabla_seleccionada=paquetes" class="tabla">Paquetes</a>
-        <a href="consultar-producto.php?tabla_seleccionada=excursiones" class="tabla">Excursiones</a>
-        <a href="consultar-producto.php?tabla_seleccionada=alquiler_vehiculos" class="tabla">Alquiler vehiculos</a>
-        <a href="consultar-producto.php?tabla_seleccionada=estadias" class="tabla">Estadías</a>
-        <a href="consultar-producto.php?tabla_seleccionada=boletos_avion" class="tabla">Boletos de avión</a>
+        <a href="consultar-producto.php?tabla_seleccionada=productos" class="tabla <?php echo ($tabla_seleccionada === 'productos') ? 'seleccionado' : ''; ?>">Productos general</a>
+        <a href="consultar-producto.php?tabla_seleccionada=paquetes" class="tabla <?php echo ($tabla_seleccionada === 'paquetes') ? 'seleccionado' : ''; ?>">Paquetes</a>
+        <a href="consultar-producto.php?tabla_seleccionada=excursiones" class="tabla  <?php echo ($tabla_seleccionada === 'excursiones') ? 'seleccionado' : ''; ?>">Excursiones</a>
+        <a href="consultar-producto.php?tabla_seleccionada=alquiler_vehiculos" class="tabla  <?php echo ($tabla_seleccionada === 'alquiler_vehiculos') ? 'seleccionado' : ''; ?>">Alquiler vehiculos</a>
+        <a href="consultar-producto.php?tabla_seleccionada=estadias" class="tabla  <?php echo ($tabla_seleccionada === 'estadias') ? 'seleccionado' : ''; ?>">Estadías</a>
+        <a href="consultar-producto.php?tabla_seleccionada=boletos_avion" class="tabla  <?php echo ($tabla_seleccionada === 'boletos_avion') ? 'seleccionado' : ''; ?>">Boletos de avión</a>
     </div>
 
     <?php
-
-    $tabla_seleccionada = 'productos'; 
 
     if (isset($_GET['tabla_seleccionada'])) {
     $tabla_seleccionada = $_GET['tabla_seleccionada'];

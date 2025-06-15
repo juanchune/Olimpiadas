@@ -347,47 +347,27 @@
 <script>
     
     document.addEventListener('DOMContentLoaded', () => {
-        // Excursiones siempre visibles
+    const toggles = document.querySelectorAll('.toggle-producto');
 
-        // Obtengo todos los checkboxes que controlan los selects
-        const toggles = document.querySelectorAll('.toggle-producto');
+    const actualizarContenedor = (checkbox) => {
+        const tipo = checkbox.dataset.target;
+        const contenedor = document.getElementById('productos-' + tipo);
 
-        toggles.forEach(checkbox => {
-            checkbox.addEventListener('change', () => {
-            const tipo = checkbox.dataset.target;
-            const contenedor = document.getElementById('productos-' + tipo);
-
-            if (checkbox.checked) {
-                contenedor.style.display = 'block';
-            } else {
-                contenedor.style.display = 'none';
-
-                // Limpio el select correspondiente al ocultar
-                const select = contenedor.querySelector('select');
-                if (select) {
-                select.selectedIndex = 0; // vuelve a la opción vacía
-                }
-            }
-            });
-        });
-
-        // Al cargar la página, aplico el estado inicial (por si están marcados algunos)
-        toggles.forEach(checkbox => {
-            const tipo = checkbox.dataset.target;
-            const contenedor = document.getElementById('productos-' + tipo);
-
-            if (checkbox.checked) {
+        if (checkbox.checked) {
             contenedor.style.display = 'block';
-            } else {
+        } else {
             contenedor.style.display = 'none';
-
             const select = contenedor.querySelector('select');
-            if (select) {
-                select.selectedIndex = 0;
-            }
-            }
-        });
-        });
+            if (select) select.selectedIndex = 0;
+        }
+    };
+
+    // Asigna eventos y aplica el estado inicial
+    toggles.forEach(checkbox => {
+        checkbox.addEventListener('change', () => actualizarContenedor(checkbox));
+        actualizarContenedor(checkbox); // Estado inicial al cargar la página
+    });
+})
         </script>
         <script>
         document.addEventListener('DOMContentLoaded', function () {

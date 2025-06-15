@@ -164,7 +164,7 @@ if (isset($_SESSION['email'])):  // Verificamos si existe una sesión iniciada c
                     </a>
                 </li>
                 <li>
-                    <a href="/Olimpiadas/Truway/php/admin/consultar-pedidos-entregados.php">
+                    <a href="/Olimpiadas/Truway/php/admin/consultar-pedidos.php">
                         <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24">
                             <path class="icon" fill="currentColor"
                                 d="M8 3.5A1.5 1.5 0 0 1 9.5 2h5A1.5 1.5 0 0 1 16 3.5v1A1.5 1.5 0 0 1 14.5 6h-5A1.5 1.5 0 0 1 8 4.5z" />
