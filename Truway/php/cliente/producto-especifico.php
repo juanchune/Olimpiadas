@@ -1,14 +1,50 @@
 <?php
+<?php
 session_start(); 
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 
-$tipoProducto = 'paquete';
+// Obtener el id del producto por GET
+$id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if ($id_producto <= 0) {
+    echo "<p>Producto no encontrado.</p>";
+    include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/footer.php';
+    exit;
+}
 
+// Traer datos del producto principal
+$res = mysqli_query($conn, "SELECT * FROM productos WHERE id_producto = $id_producto");
+$producto = mysqli_fetch_assoc($res);
+
+if (!$producto) {
+    echo "<p>Producto no encontrado.</p>";
+    include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/footer.php';
+    exit;
+}
+
+$tipoProducto = strtolower($producto['tipo_producto']);
+$nombre = $producto['nombre'];
+$descripcion = $producto['descripcion'];
+$precio = $producto['precio'];
+
+// Variables para paquete
+$incluyePasaje = false;
+$incluyeVehiculo = false;
+$incluyeEstadia = false;
+
+// Si es paquete, buscar qué incluye
 if($tipoProducto == 'paquete'){
-    $incluyePasaje = true;
-    $incluyeVehiculo = false;
-    $incluyeEstadia = true;
+    $res_paquete = mysqli_query($conn, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
+    if ($paquete = mysqli_fetch_assoc($res_paquete)) {
+        $id_paquete = $paquete['id_paquete'];
+        $res_detalle = mysqli_query($conn, "SELECT p.tipo_producto FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
+        while ($row = mysqli_fetch_assoc($res_detalle)) {
+            $tipo = strtolower($row['tipo_producto']);
+            if ($tipo == 'pasaje') $incluyePasaje = true;
+            if ($tipo == 'alquiler de vehículo' || $tipo == 'vehiculo' || $tipo == 'vehículo') $incluyeVehiculo = true;
+            if ($tipo == 'estadía' || $tipo == 'estadia') $incluyeEstadia = true;
+        }
+    }
 }
 ?>
 <link rel="stylesheet" href="/Olimpiadas/Truway/css/producto-especifico.css">
@@ -17,167 +53,197 @@ if($tipoProducto == 'paquete'){
     <section class="producto-especifico">
         <div class="cont-general">
                 <h2 class="nombre">
-                    Paquete Cataratas Del Iguazu Clásico - Descubre La Maravilla Natural En Iguazu Ar Con Tangol Tours
+                    <?php echo htmlspecialchars($nombre); ?>
                 </h2>
-                <span class="descripcion">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Laboriosam, fuga alias sed corrupti cumque architecto atque quidem explicabo exercitationem necessitatibus earum at tempora? Beatae in enim exercitationem impedit, ea dignissimos!</span>
-                <h6 class=precio-unitario>ARS $1000.00000.00000.000000</h6>
+                <span class="descripcion"><?php echo htmlspecialchars($descripcion); ?></span>
+                <h6 class=precio-unitario>ARS $<?php echo number_format($precio, 2, ',', '.'); ?></h6>
                 <a href="#reserva" class=btn-realizar-reserva>
                     Realizar reserva
                 </a>
         </div>
         <div class="informacion-especifica <?php echo 'info-' . $tipoProducto; ?>">
 
-    <?php if ($tipoProducto === 'pasaje'): ?>
+    <?php if ($tipoProducto === 'pasaje'): 
+        $res = mysqli_query($conn, "SELECT * FROM pasajes WHERE id_producto = $id_producto");
+        $info = mysqli_fetch_assoc($res);
+    ?>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Origen</span>
-            <span class="dato">Perú</span>
+            <span class="dato"><?php echo htmlspecialchars($info['origen']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Destino</span>
-            <span class="dato">Argentina</span>
+            <span class="dato"><?php echo htmlspecialchars($info['destino']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Aerolínea</span>
-            <span class="dato">LATAM Airlines</span>
+            <span class="dato"><?php echo htmlspecialchars($info['aerolinea']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Tipo pasaje</span>
-            <span class="dato">Ida y vuelta</span>
+            <span class="dato"><?php echo str_replace('_', ' ', ucfirst($info['tipo_pasaje'])); ?></span>
         </div>
-    <?php elseif ($tipoProducto === 'vehiculo'): ?>
+    <?php elseif ($tipoProducto === 'vehiculo' || $tipoProducto === 'vehículo' || $tipoProducto === 'alquiler de vehículo'): 
+        $res = mysqli_query($conn, "SELECT * FROM vehiculos WHERE id_producto = $id_producto");
+        $info = mysqli_fetch_assoc($res);
+    ?>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Marca</span>
-            <span class="dato">Toyota</span>
+            <span class="dato"><?php echo htmlspecialchars($info['marca']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Capacidad</span>
-            <span class="dato">5</span>
+            <span class="dato"><?php echo htmlspecialchars($info['capacidad']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Empresa rentadora</span>
-            <span class="dato">Masharrda-SRL</span>
+            <span class="dato"><?php echo htmlspecialchars($info['empresa_rentadora']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Tipo</span>
-            <span class="dato">4x4</span>
+            <span class="dato"><?php echo htmlspecialchars($info['tipo']); ?></span>
         </div>
-    <?php elseif ($tipoProducto === 'excursion'): ?>
+    <?php elseif ($tipoProducto === 'excursion' || $tipoProducto === 'excursión'): 
+        $res = mysqli_query($conn, "SELECT * FROM excursiones WHERE id_producto = $id_producto");
+        $info = mysqli_fetch_assoc($res);
+    ?>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Ubicacion salida</span>
-            <span class="dato">Neochea</span>
+            <span class="dato"><?php echo htmlspecialchars($info['ubicacion_salida']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Duracion</span>
-            <span class="dato">2 horas</span>
+            <span class="dato"><?php echo htmlspecialchars($info['duracion']); ?> horas</span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Guia</span>
-            <span class="dato">Si</span>
+            <span class="dato"><?php echo ($info['guia'] ? 'Sí' : 'No'); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Dificultad</span>
-            <span class="dato">Baja</span>
+            <span class="dato"><?php echo ucfirst($info['dificultad']); ?></span>
         </div>
-     <?php elseif ($tipoProducto === 'estadia'): ?>
+     <?php elseif ($tipoProducto === 'estadia' || $tipoProducto === 'estadía'): 
+        $res = mysqli_query($conn, "SELECT * FROM estadias WHERE id_producto = $id_producto");
+        $info = mysqli_fetch_assoc($res);
+    ?>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Localidad</span>
-            <span class="dato">Quequen</span>
+            <span class="dato"><?php echo htmlspecialchars($info['localidad']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Nombre hotel</span>
-            <span class="dato">Francis sonrisas</span>
+            <span class="dato"><?php echo htmlspecialchars($info['nombre_hotel']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Servicios</span>
-            <span class="dato">Desayuno, wifi, estacionamiento y abrazos</span>
+            <span class="dato"><?php echo htmlspecialchars($info['servicios']); ?></span>
         </div>
         <div class="informacion-producto">
             <span class="lbl-tipo-dato">Categoria</span>
-            <span class="dato">5 estrellas</span>
+            <span class="dato"><?php echo htmlspecialchars($info['categoria']); ?> estrellas</span>
         </div>
 
-    <?php elseif ($tipoProducto === 'paquete'): ?>
+    <?php elseif ($tipoProducto === 'paquete'): 
+        // Buscar id_paquete
+        $res_paquete = mysqli_query($conn, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
+        $paquete = mysqli_fetch_assoc($res_paquete);
+        $id_paquete = $paquete ? $paquete['id_paquete'] : 0;
+        // Traer productos del paquete
+        $res_detalle = mysqli_query($conn, "SELECT p.*, dp.id_producto as id_prod_incluido FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
+        while ($prod = mysqli_fetch_assoc($res_detalle)):
+            $tipo = strtolower($prod['tipo_producto']);
+            if ($tipo == 'excursion' || $tipo == 'excursión'):
+                $res_info = mysqli_query($conn, "SELECT * FROM excursiones WHERE id_producto = {$prod['id_producto']}");
+                $info = mysqli_fetch_assoc($res_info);
+    ?>
     <h4 class="subtitulo">Excursión</h4>
     <div class="informacion-producto">
         <span class="lbl-tipo-dato">Ubicación salida</span>
-        <span class="dato">Necochea</span>
+        <span class="dato"><?php echo htmlspecialchars($info['ubicacion_salida']); ?></span>
     </div>
     <div class="informacion-producto">
         <span class="lbl-tipo-dato">Duración</span>
-        <span class="dato">2 horas</span>
+        <span class="dato"><?php echo htmlspecialchars($info['duracion']); ?> horas</span>
     </div>
     <div class="informacion-producto">
         <span class="lbl-tipo-dato">Guía</span>
-        <span class="dato">Sí</span>
+        <span class="dato"><?php echo ($info['guia'] ? 'Sí' : 'No'); ?></span>
     </div>
     <div class="informacion-producto">
         <span class="lbl-tipo-dato">Dificultad</span>
-        <span class="dato">Baja</span>
+        <span class="dato"><?php echo ucfirst($info['dificultad']); ?></span>
     </div>
-
-    <!--Pasajes -->
-    <?php if (!empty($incluyePasaje)): ?>
-        <h4 class="subtitulo">Pasajes</h4>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Origen</span>
-            <span class="dato">Perú</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Destino</span>
-            <span class="dato">Argentina</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Aerolínea</span>
-            <span class="dato">LATAM Airlines</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Tipo pasaje</span>
-            <span class="dato">Ida y vuelta</span>
-        </div>
-    <?php endif; ?>
-
-    <!--Vehculo -->
-    <?php if (!empty($incluyeVehiculo)): ?>
-        <h4 class="subtitulo">Vehículo</h4>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Marca</span>
-            <span class="dato">Toyota</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Capacidad</span>
-            <span class="dato">5</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Empresa rentadora</span>
-            <span class="dato">Masharrda-SRL</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Tipo</span>
-            <span class="dato">4x4</span>
-        </div>
-    <?php endif; ?>
-
-    <!--Estadia -->
-    <?php if (!empty($incluyeEstadia)): ?>
-        <h4 class="subtitulo" class="subtitulo">Estadía</h4>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Localidad</span>
-            <span class="dato">Quequén</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Nombre hotel</span>
-            <span class="dato">Francis Sonrisas</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Servicios</span>
-            <span class="dato">Desayuno, wifi, estacionamiento y abrazos</span>
-        </div>
-        <div class="informacion-producto">
-            <span class="lbl-tipo-dato">Categoría</span>
-            <span class="dato">5 estrellas</span>
-        </div>
-    <?php endif; ?>
-<?php endif; ?>
+    <?php
+            elseif ($tipo == 'pasaje'):
+                $res_info = mysqli_query($conn, "SELECT * FROM pasajes WHERE id_producto = {$prod['id_producto']}");
+                $info = mysqli_fetch_assoc($res_info);
+    ?>
+    <h4 class="subtitulo">Pasajes</h4>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Origen</span>
+        <span class="dato"><?php echo htmlspecialchars($info['origen']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Destino</span>
+        <span class="dato"><?php echo htmlspecialchars($info['destino']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Aerolínea</span>
+        <span class="dato"><?php echo htmlspecialchars($info['aerolinea']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Tipo pasaje</span>
+        <span class="dato"><?php echo str_replace('_', ' ', ucfirst($info['tipo_pasaje'])); ?></span>
+    </div>
+    <?php
+            elseif ($tipo == 'alquiler de vehículo' || $tipo == 'vehiculo' || $tipo == 'vehículo'):
+                $res_info = mysqli_query($conn, "SELECT * FROM vehiculos WHERE id_producto = {$prod['id_producto']}");
+                $info = mysqli_fetch_assoc($res_info);
+    ?>
+    <h4 class="subtitulo">Vehículo</h4>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Marca</span>
+        <span class="dato"><?php echo htmlspecialchars($info['marca']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Capacidad</span>
+        <span class="dato"><?php echo htmlspecialchars($info['capacidad']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Empresa rentadora</span>
+        <span class="dato"><?php echo htmlspecialchars($info['empresa_rentadora']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Tipo</span>
+        <span class="dato"><?php echo htmlspecialchars($info['tipo']); ?></span>
+    </div>
+    <?php
+            elseif ($tipo == 'estadía' || $tipo == 'estadia'):
+                $res_info = mysqli_query($conn, "SELECT * FROM estadias WHERE id_producto = {$prod['id_producto']}");
+                $info = mysqli_fetch_assoc($res_info);
+    ?>
+    <h4 class="subtitulo">Estadía</h4>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Localidad</span>
+        <span class="dato"><?php echo htmlspecialchars($info['localidad']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Nombre hotel</span>
+        <span class="dato"><?php echo htmlspecialchars($info['nombre_hotel']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Servicios</span>
+        <span class="dato"><?php echo htmlspecialchars($info['servicios']); ?></span>
+    </div>
+    <div class="informacion-producto">
+        <span class="lbl-tipo-dato">Categoría</span>
+        <span class="dato"><?php echo htmlspecialchars($info['categoria']); ?> estrellas</span>
+    </div>
+    <?php
+            endif;
+        endwhile;
+    endif; ?>
         </div>
     </section>
     <section class="section-frm-datos" id=reserva>
@@ -215,6 +281,5 @@ if($tipoProducto == 'paquete'){
     });
   });
 </script>
-
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/footer.php'; ?>
