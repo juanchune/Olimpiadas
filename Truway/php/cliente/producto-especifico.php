@@ -1,5 +1,4 @@
 <?php
-<?php
 session_start(); 
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
@@ -13,7 +12,7 @@ if ($id_producto <= 0) {
 }
 
 // Traer datos del producto principal
-$res = mysqli_query($conn, "SELECT * FROM productos WHERE id_producto = $id_producto");
+$res = mysqli_query($conexion, "SELECT * FROM productos WHERE id_producto = $id_producto");
 $producto = mysqli_fetch_assoc($res);
 
 if (!$producto) {
@@ -34,10 +33,10 @@ $incluyeEstadia = false;
 
 // Si es paquete, buscar qué incluye
 if($tipoProducto == 'paquete'){
-    $res_paquete = mysqli_query($conn, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
+    $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
     if ($paquete = mysqli_fetch_assoc($res_paquete)) {
         $id_paquete = $paquete['id_paquete'];
-        $res_detalle = mysqli_query($conn, "SELECT p.tipo_producto FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
+        $res_detalle = mysqli_query($conexion, "SELECT p.tipo_producto FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
         while ($row = mysqli_fetch_assoc($res_detalle)) {
             $tipo = strtolower($row['tipo_producto']);
             if ($tipo == 'pasaje') $incluyePasaje = true;
@@ -64,7 +63,7 @@ if($tipoProducto == 'paquete'){
         <div class="informacion-especifica <?php echo 'info-' . $tipoProducto; ?>">
 
     <?php if ($tipoProducto === 'pasaje'): 
-        $res = mysqli_query($conn, "SELECT * FROM pasajes WHERE id_producto = $id_producto");
+        $res = mysqli_query($conexion, "SELECT * FROM pasajes WHERE id_producto = $id_producto");
         $info = mysqli_fetch_assoc($res);
     ?>
         <div class="informacion-producto">
@@ -84,7 +83,7 @@ if($tipoProducto == 'paquete'){
             <span class="dato"><?php echo str_replace('_', ' ', ucfirst($info['tipo_pasaje'])); ?></span>
         </div>
     <?php elseif ($tipoProducto === 'vehiculo' || $tipoProducto === 'vehículo' || $tipoProducto === 'alquiler de vehículo'): 
-        $res = mysqli_query($conn, "SELECT * FROM vehiculos WHERE id_producto = $id_producto");
+        $res = mysqli_query($conexion, "SELECT * FROM vehiculos WHERE id_producto = $id_producto");
         $info = mysqli_fetch_assoc($res);
     ?>
         <div class="informacion-producto">
@@ -104,7 +103,7 @@ if($tipoProducto == 'paquete'){
             <span class="dato"><?php echo htmlspecialchars($info['tipo']); ?></span>
         </div>
     <?php elseif ($tipoProducto === 'excursion' || $tipoProducto === 'excursión'): 
-        $res = mysqli_query($conn, "SELECT * FROM excursiones WHERE id_producto = $id_producto");
+        $res = mysqli_query($conexion, "SELECT * FROM excursiones WHERE id_producto = $id_producto");
         $info = mysqli_fetch_assoc($res);
     ?>
         <div class="informacion-producto">
@@ -124,7 +123,7 @@ if($tipoProducto == 'paquete'){
             <span class="dato"><?php echo ucfirst($info['dificultad']); ?></span>
         </div>
      <?php elseif ($tipoProducto === 'estadia' || $tipoProducto === 'estadía'): 
-        $res = mysqli_query($conn, "SELECT * FROM estadias WHERE id_producto = $id_producto");
+        $res = mysqli_query($conexion, "SELECT * FROM estadias WHERE id_producto = $id_producto");
         $info = mysqli_fetch_assoc($res);
     ?>
         <div class="informacion-producto">
@@ -146,15 +145,15 @@ if($tipoProducto == 'paquete'){
 
     <?php elseif ($tipoProducto === 'paquete'): 
         // Buscar id_paquete
-        $res_paquete = mysqli_query($conn, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
+        $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
         $paquete = mysqli_fetch_assoc($res_paquete);
         $id_paquete = $paquete ? $paquete['id_paquete'] : 0;
         // Traer productos del paquete
-        $res_detalle = mysqli_query($conn, "SELECT p.*, dp.id_producto as id_prod_incluido FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
+        $res_detalle = mysqli_query($conexion, "SELECT p.*, dp.id_producto as id_prod_incluido FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
         while ($prod = mysqli_fetch_assoc($res_detalle)):
             $tipo = strtolower($prod['tipo_producto']);
             if ($tipo == 'excursion' || $tipo == 'excursión'):
-                $res_info = mysqli_query($conn, "SELECT * FROM excursiones WHERE id_producto = {$prod['id_producto']}");
+                $res_info = mysqli_query($conexion, "SELECT * FROM excursiones WHERE id_producto = {$prod['id_producto']}");
                 $info = mysqli_fetch_assoc($res_info);
     ?>
     <h4 class="subtitulo">Excursión</h4>
@@ -176,7 +175,7 @@ if($tipoProducto == 'paquete'){
     </div>
     <?php
             elseif ($tipo == 'pasaje'):
-                $res_info = mysqli_query($conn, "SELECT * FROM pasajes WHERE id_producto = {$prod['id_producto']}");
+                $res_info = mysqli_query($conexion, "SELECT * FROM pasajes WHERE id_producto = {$prod['id_producto']}");
                 $info = mysqli_fetch_assoc($res_info);
     ?>
     <h4 class="subtitulo">Pasajes</h4>
@@ -198,7 +197,7 @@ if($tipoProducto == 'paquete'){
     </div>
     <?php
             elseif ($tipo == 'alquiler de vehículo' || $tipo == 'vehiculo' || $tipo == 'vehículo'):
-                $res_info = mysqli_query($conn, "SELECT * FROM vehiculos WHERE id_producto = {$prod['id_producto']}");
+                $res_info = mysqli_query($conexion, "SELECT * FROM vehiculos WHERE id_producto = {$prod['id_producto']}");
                 $info = mysqli_fetch_assoc($res_info);
     ?>
     <h4 class="subtitulo">Vehículo</h4>
@@ -220,7 +219,7 @@ if($tipoProducto == 'paquete'){
     </div>
     <?php
             elseif ($tipo == 'estadía' || $tipo == 'estadia'):
-                $res_info = mysqli_query($conn, "SELECT * FROM estadias WHERE id_producto = {$prod['id_producto']}");
+                $res_info = mysqli_query($conexion, "SELECT * FROM estadias WHERE id_producto = {$prod['id_producto']}");
                 $info = mysqli_fetch_assoc($res_info);
     ?>
     <h4 class="subtitulo">Estadía</h4>

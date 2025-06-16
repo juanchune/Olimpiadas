@@ -92,7 +92,10 @@ include('conexion.php');
                                         <span class="tiempo"><?php echo $duracion ?></span>
                                     </div>
                                 <?php } ?>
-                                <button class="btn-ver-mas">Ver más</button>
+                                 <form method="get" action="php/cliente/producto-especifico.php" class="frm-btn-envar">
+                                    <input type="hidden" name="id" id="id" value="<?php echo $fila['id_producto']; ?>">
+                                    <button class="btn-ver-mas">Ver más</button>
+                                </form>
                             </div>
                         </article>
                         <?php
