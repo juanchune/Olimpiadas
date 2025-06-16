@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido");
         mysqli_query($conexion, "INSERT IGNORE INTO pedidos_aprobados (id_pedido) VALUES ($id_pedido)");
 
-        // Cambia 'pago' por 'pendiente'
+
         $estado_result = mysqli_query($conexion, "SELECT id_estado FROM estado_facturacion WHERE estado = 'pendiente' LIMIT 1");
         $estado_row = mysqli_fetch_assoc($estado_result);
         $id_estado = $estado_row ? intval($estado_row['id_estado']) : 'NULL';
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido");
         mysqli_query($conexion, "INSERT IGNORE INTO pedidos_rechazados (id_pedido) VALUES ($id_pedido)");
     }
-    header("Location: consultar-pedidos.php?estado_facturacion=pendientes");
+    header("Location: consultar-pedidos.php");
     exit();
 }
 ?>

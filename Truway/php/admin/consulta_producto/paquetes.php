@@ -2,18 +2,25 @@
 
 include ('conexion.php');
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
-    
-    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto");
-    
+
+   
+    $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
+    if ($row_paquete = mysqli_fetch_assoc($res_paquete)) {
+        $id_paquete = intval($row_paquete['id_paquete']);
+
+        
+        mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_paquete = $id_paquete");
+        // Luego elimina el paquete
+        mysqli_query($conexion, "DELETE FROM paquetes WHERE id_paquete = $id_paquete");
+    }
+
+
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
-
 $tabla_seleccionada = 'paquetes';
-
 
 $where = [];
 if (!empty($_GET['precio'])) {
@@ -21,7 +28,6 @@ if (!empty($_GET['precio'])) {
     $where[] = "pr.precio <= $precio";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-
 
 $sql = "SELECT paq.id_paquete, pr.id_producto, pr.nombre, pr.descripcion, pr.precio
         FROM paquetes paq

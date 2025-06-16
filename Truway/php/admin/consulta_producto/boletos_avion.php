@@ -1,11 +1,12 @@
 <?php
 include('conexion.php');
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
 
-    mysqli_query($conexion, "DELETE FROM boletos_avion WHERE id_producto = $id_producto");
+
+    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");
+
 
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }

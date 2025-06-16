@@ -1,0 +1,74 @@
+helper
+
+1. funciones de sesion
+- session_start()
+  inicia una nueva sesion o reanuda la existente. permite usar variables de sesion ($_SESSION).
+
+- session_destroy()
+  elimina toda la informacion registrada de una sesion.
+
+2. funciones de inclusion
+- include / include_once / require / require_once
+  incluyen y evaluan el archivo especificado.
+  include solo muestra un warning si falla, require detiene el script.
+  include_once y require_once solo incluyen el archivo una vez.
+
+3. variables globales
+- $_server
+  informacion del servidor
+
+- $_session
+  almacena variables de sesion para usarlas en distintas paginas.
+
+- $_post / $_get
+  reciben datos enviados por formularios (post o get).
+
+4. funciones de mysqli
+- mysqli_connect($host, $user, $pass, $db)
+  abre una nueva conexion a la base de datos mysql.
+
+- mysqli_query($conexion, $sql)
+  ejecuta una consulta sql sobre la base de datos.
+
+- mysqli_fetch_assoc($resultado)
+  obtiene una fila de resultado como un array asociativo.
+
+5. funciones de validacion y utilidad
+- isset($var)
+  verifica si una variable esta definida y no es null.
+
+- intval($var)
+  convierte una variable a entero.
+
+- strtolower($str)
+  convierte una cadena a minusculas.
+
+- date('y-m-d')
+  devuelve la fecha actual en formato año-mes-dia.
+
+- header("location: ...")
+  redirige al navegador a otra url.
+
+- exit / exit()
+  termina la ejecucion del script.
+
+6. funciones de html y seguridad
+- htmlspecialchars($string)
+  convierte caracteres especiales en entidades html para evitar xss (no se ve en tus archivos pero es recomendable).
+
+7. funciones de fecha y hora
+- new datetime($fecha)
+  crea un objeto de fecha y hora.
+
+- datetime::createfromformat($formato, $fecha)
+  crea un objeto datetime desde un formato especifico.
+
+8. estructuras de control
+- if / else / elseif
+  condicionales para ejecutar codigo segun una condicion.
+
+- while
+  bucle que se ejecuta mientras la condicion sea verdadera.
+
+- switch / case
+  estructura de control para multiples condiciones.

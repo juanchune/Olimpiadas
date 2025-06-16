@@ -5,11 +5,21 @@ include ('conexion.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
 
+ 
+    mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto");
+
+ 
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
 $tabla_seleccionada = 'productos';
-
 
 $where = [];
 if (!empty($_GET['precio'])) {
@@ -22,9 +32,7 @@ if (!empty($_GET['tipo_producto'])) {
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-
 $tiposResult = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto");
-
 
 $sql = "SELECT id_producto, nombre, tipo_producto, precio, descripcion
         FROM productos
