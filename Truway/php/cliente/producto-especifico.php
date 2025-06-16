@@ -9,44 +9,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_producto'])) {
     $id_producto = intval($_POST['id_producto']);
     $personas = intval($_POST['personas'] ?? 1);
     $fecha_pedido = $_POST['fecha-pedido'] ?? date('Y-m-d');
+    $hoy = new DateTime(date('Y-m-d'));
+    $fecha_usuario = DateTime::createFromFormat('Y-m-d', $fecha_pedido);
 
-    // Obtener precio actual 
-    $res_precio = mysqli_query($conexion, "SELECT precio FROM productos WHERE id_producto = $id_producto");
-    $row_precio = mysqli_fetch_assoc($res_precio);
-    $precio = $row_precio ? floatval($row_precio['precio']) : 0;
-
-    if ($id_usuario && $id_producto && $precio > 0) {
-        // Buscar si el usuario ya tiene un carrito
-        $res_carrito = mysqli_query($conexion, "SELECT id_carrito FROM carrito WHERE id_usuario = $id_usuario");
-        if ($row_carrito = mysqli_fetch_assoc($res_carrito)) {
-            $id_carrito = $row_carrito['id_carrito'];
-        } else {
-            // Crear carrito si no existe
-            mysqli_query($conexion, "INSERT INTO carrito (id_usuario) VALUES ($id_usuario)");
-            $id_carrito = mysqli_insert_id($conexion);
-        }
-
-        // Verificar si el producto ya está 
-        $res_detalle = mysqli_query($conexion, "SELECT id_detalle_carrito, cantidad FROM detalle_carrito WHERE id_carrito = $id_carrito AND id_producto = $id_producto");
-        if ($row_detalle = mysqli_fetch_assoc($res_detalle)) {
-            
-            $nueva_cantidad = $row_detalle['cantidad'] + $personas;
-            $id_detalle_carrito = $row_detalle['id_detalle_carrito'];
-            mysqli_query($conexion, "UPDATE detalle_carrito SET cantidad = $nueva_cantidad, fecha_reserva = '$fecha_pedido' WHERE id_detalle_carrito = $id_detalle_carrito");
-        } else {
-            
-            mysqli_query($conexion, "INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad, precio_carrito, fecha_reserva) VALUES ($id_carrito, $id_producto, $personas, $precio, '$fecha_pedido')");
-        }
-
-        // Redirigir 
-        header("Location: producto-especifico.php?id=$id_producto&agregado=1");
-        exit;
+    if (!$fecha_usuario || $fecha_usuario < $hoy) {
+        $error = "La fecha seleccionada no puede ser anterior a hoy.";
     } else {
-        $error = "Debe iniciar sesión para agregar productos al carrito.";
+        $res_precio = mysqli_query($conexion, "SELECT precio FROM productos WHERE id_producto = $id_producto");
+        $row_precio = mysqli_fetch_assoc($res_precio);
+        $precio = $row_precio ? floatval($row_precio['precio']) : 0;
+
+        if ($id_usuario && $id_producto && $precio > 0) {
+
+            $res_carrito = mysqli_query($conexion, "SELECT id_carrito FROM carrito WHERE id_usuario = $id_usuario");
+            if ($row_carrito = mysqli_fetch_assoc($res_carrito)) {
+                $id_carrito = $row_carrito['id_carrito'];
+            } else {
+      
+                mysqli_query($conexion, "INSERT INTO carrito (id_usuario) VALUES ($id_usuario)");
+                $id_carrito = mysqli_insert_id($conexion);
+            }
+
+            $res_detalle = mysqli_query($conexion, "SELECT id_detalle_carrito, cantidad FROM detalle_carrito WHERE id_carrito = $id_carrito AND id_producto = $id_producto");
+            if ($row_detalle = mysqli_fetch_assoc($res_detalle)) {
+                $nueva_cantidad = $row_detalle['cantidad'] + $personas;
+                $id_detalle_carrito = $row_detalle['id_detalle_carrito'];
+                mysqli_query($conexion, "UPDATE detalle_carrito SET cantidad = $nueva_cantidad, fecha_reserva = '$fecha_pedido' WHERE id_detalle_carrito = $id_detalle_carrito");
+            } else {
+                mysqli_query($conexion, "INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad, precio_carrito, fecha_reserva) VALUES ($id_carrito, $id_producto, $personas, $precio, '$fecha_pedido')");
+            }
+       
+            header("Location: producto-especifico.php?id=$id_producto&agregado=1");
+            exit;
+        } else {
+            $error = "Debe iniciar sesión para agregar productos al carrito.";
+        }
     }
 }
 
-// Verificar si el usuario está autenticado
+
 $id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id_producto <= 0) {
     echo "<p>Producto no encontrado.</p>";
@@ -64,18 +65,17 @@ if (!$producto) {
     exit;
 }
 
-// Obtener información del producto
+// Obtener info
 $tipoProducto = strtolower($producto['tipo_producto']);
 $nombre = $producto['nombre'];
 $descripcion = $producto['descripcion'];
 $precio = $producto['precio'];
 
-// Verificar si el producto es parte de un paquete
+
 $incluyePasaje = false;
 $incluyeVehiculo = false;
 $incluyeEstadia = false;
 
-// Si es un paquete, obtener los productos incluidos
 if($tipoProducto == 'paquete'){
     $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
     if ($paquete = mysqli_fetch_assoc($res_paquete)) {
@@ -297,7 +297,7 @@ if($tipoProducto == 'paquete'){
             </div>
             <div class="cont-input">
                 <label class="lbl-frm" for="fecha">Fecha</label>
-                <input class="input-frm" id="fecha" name="fecha-pedido" type="date" required>
+                <input class="input-frm" id="fecha" name="fecha-pedido" type="date" required min="<?php echo date('Y-m-d'); ?>">
             </div>
             <div class="cont-input">
                 <button class="btn-agregar" type="submit">Agregar al carrito</button>
@@ -317,7 +317,6 @@ if($tipoProducto == 'paquete'){
 
     enlaceReserva.addEventListener('click', function () {
       seccionReserva.classList.add('resaltar');
-
 
       setTimeout(() => {
         seccionReserva.classList.remove('resaltar');

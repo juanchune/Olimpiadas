@@ -7,6 +7,30 @@ include('conexion.php');
 <?php
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
 $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
+
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_pedido = intval($_POST['id_pedido'] ?? 0);
+
+    if (isset($_POST['aprobar'])) {
+        mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido");
+        mysqli_query($conexion, "INSERT IGNORE INTO pedidos_aprobados (id_pedido) VALUES ($id_pedido)");
+
+        // Cambia 'pago' por 'pendiente'
+        $estado_result = mysqli_query($conexion, "SELECT id_estado FROM estado_facturacion WHERE estado = 'pendiente' LIMIT 1");
+        $estado_row = mysqli_fetch_assoc($estado_result);
+        $id_estado = $estado_row ? intval($estado_row['id_estado']) : 'NULL';
+
+        $insert_ventas = "INSERT IGNORE INTO ventas (id_pedido, estado_facturacion) VALUES ($id_pedido, $id_estado)";
+        mysqli_query($conexion, $insert_ventas);
+    }
+    if (isset($_POST['rechazar'])) {
+        mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido");
+        mysqli_query($conexion, "INSERT IGNORE INTO pedidos_rechazados (id_pedido) VALUES ($id_pedido)");
+    }
+    header("Location: consultar-pedidos.php?estado_facturacion=pendientes");
+    exit();
+}
 ?>
 <main>
     <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-pedidos.css">
@@ -30,7 +54,7 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
                 $tabla = 'pedidos_rechazados';
                 break;
             default:
-                die('Estado no válido');
+                die('Estado no valido');
         }
 
         $pedidos_query = "SELECT id_pedido FROM `$tabla`";
@@ -56,7 +80,6 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
             $pedido_result = mysqli_query($conexion, $pedido_query);
             $pedido = mysqli_fetch_assoc($pedido_result);
 
-            // Obtener los productos que componen el pedido y su cantidad
             $detalle_query = "SELECT id_producto, cantidad FROM detalle_pedido WHERE id_pedido = '$id_pedido'";
             $detalle_result = mysqli_query($conexion, $detalle_query);
         ?>
@@ -64,6 +87,13 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
             <div class="informacion-principal">
                 <button class="btn-desplegable">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                    <?php if ($estado_facturacion === 'pendientes'): ?>
+                        <form method="post" style="display:inline; margin-left:10px;">
+                            <input type="hidden" name="id_pedido" value="<?php echo $pedido['id_pedido']; ?>">
+                            <button type="submit" name="aprobar" class="btn-aprobar">Aprobar</button>
+                            <button type="submit" name="rechazar" class="btn-rechazar">Rechazar</button>
+                        </form>
+                    <?php endif; ?>
                 </button>
                 <div class="informacion">
                     <span class="lbl-informacion"><?php echo $pedido['id_pedido']; ?></span>
@@ -79,7 +109,7 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
                 <div class="informacion">
                     <span class="lbl-informacion"><strong>ID PRODUCTO</strong></span>
                     <span class="lbl-informacion"><strong>NOMBRE</strong></span>
-                    <span class="lbl-informacion"><strong>DESCRIPCIÓN</strong></span>
+                    <span class="lbl-informacion"><strong>DESCRIPCION</strong></span>
                     <span class="lbl-informacion"><strong>PRECIO</strong></span>
                     <span class="lbl-informacion"><strong>CANTIDAD</strong></span>
                 </div>
@@ -115,7 +145,6 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
             const producto = btn.closest('.producto');
             const detalleActual = producto.querySelector('.detalles-producto');
 
-            // Cierra todos los demás detalles-producto
             document.querySelectorAll('.detalles-producto').forEach(detalle => {
                 if (detalle !== detalleActual) {
                     detalle.classList.remove('activo');
@@ -123,7 +152,6 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
                 }
             });
 
-            // Alterna el actual
             detalleActual.classList.toggle('activo');
             detalleActual.classList.toggle('oculto');
         });
