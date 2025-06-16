@@ -85,10 +85,7 @@ include('conexion.php');
                                     </div>
                                <?php }
                             ?>
-                            <form method="get" action="producto-especifico.php" class="frm-btn-envar">
-                                <input type="hidden" name="id" id="id" value="<?php echo $fila['id_producto']; ?>">
-                                <button class="btn-ver-mas">Ver más</button>
-                            </form>
+                            <button class="btn-ver-mas" onclick="location.href='producto-especifico.php?id=<?php echo $fila['id_producto']; ?>'">Ver más</button>
                         </div>
                     </article>
                     <?php

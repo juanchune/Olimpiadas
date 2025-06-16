@@ -1,9 +1,52 @@
 <?php
+
 session_start(); 
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 
-// Obtener el id del producto por GET
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_producto'])) {
+    $id_usuario = $_SESSION['id'] ?? 0;
+    $id_producto = intval($_POST['id_producto']);
+    $personas = intval($_POST['personas'] ?? 1);
+    $fecha_pedido = $_POST['fecha-pedido'] ?? date('Y-m-d');
+
+    // Obtener precio actual 
+    $res_precio = mysqli_query($conexion, "SELECT precio FROM productos WHERE id_producto = $id_producto");
+    $row_precio = mysqli_fetch_assoc($res_precio);
+    $precio = $row_precio ? floatval($row_precio['precio']) : 0;
+
+    if ($id_usuario && $id_producto && $precio > 0) {
+        // Buscar si el usuario ya tiene un carrito
+        $res_carrito = mysqli_query($conexion, "SELECT id_carrito FROM carrito WHERE id_usuario = $id_usuario");
+        if ($row_carrito = mysqli_fetch_assoc($res_carrito)) {
+            $id_carrito = $row_carrito['id_carrito'];
+        } else {
+            // Crear carrito si no existe
+            mysqli_query($conexion, "INSERT INTO carrito (id_usuario) VALUES ($id_usuario)");
+            $id_carrito = mysqli_insert_id($conexion);
+        }
+
+        // Verificar si el producto ya está 
+        $res_detalle = mysqli_query($conexion, "SELECT id_detalle_carrito, cantidad FROM detalle_carrito WHERE id_carrito = $id_carrito AND id_producto = $id_producto");
+        if ($row_detalle = mysqli_fetch_assoc($res_detalle)) {
+            
+            $nueva_cantidad = $row_detalle['cantidad'] + $personas;
+            $id_detalle_carrito = $row_detalle['id_detalle_carrito'];
+            mysqli_query($conexion, "UPDATE detalle_carrito SET cantidad = $nueva_cantidad, fecha_reserva = '$fecha_pedido' WHERE id_detalle_carrito = $id_detalle_carrito");
+        } else {
+            
+            mysqli_query($conexion, "INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad, precio_carrito, fecha_reserva) VALUES ($id_carrito, $id_producto, $personas, $precio, '$fecha_pedido')");
+        }
+
+        // Redirigir 
+        header("Location: producto-especifico.php?id=$id_producto&agregado=1");
+        exit;
+    } else {
+        $error = "Debe iniciar sesión para agregar productos al carrito.";
+    }
+}
+
+// Verificar si el usuario está autenticado
 $id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id_producto <= 0) {
     echo "<p>Producto no encontrado.</p>";
@@ -11,7 +54,7 @@ if ($id_producto <= 0) {
     exit;
 }
 
-// Traer datos del producto principal
+// Verificar si el producto existe
 $res = mysqli_query($conexion, "SELECT * FROM productos WHERE id_producto = $id_producto");
 $producto = mysqli_fetch_assoc($res);
 
@@ -21,17 +64,18 @@ if (!$producto) {
     exit;
 }
 
+// Obtener información del producto
 $tipoProducto = strtolower($producto['tipo_producto']);
 $nombre = $producto['nombre'];
 $descripcion = $producto['descripcion'];
 $precio = $producto['precio'];
 
-// Variables para paquete
+// Verificar si el producto es parte de un paquete
 $incluyePasaje = false;
 $incluyeVehiculo = false;
 $incluyeEstadia = false;
 
-// Si es paquete, buscar qué incluye
+// Si es un paquete, obtener los productos incluidos
 if($tipoProducto == 'paquete'){
     $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
     if ($paquete = mysqli_fetch_assoc($res_paquete)) {
@@ -144,11 +188,11 @@ if($tipoProducto == 'paquete'){
         </div>
 
     <?php elseif ($tipoProducto === 'paquete'): 
-        // Buscar id_paquete
+
         $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
         $paquete = mysqli_fetch_assoc($res_paquete);
         $id_paquete = $paquete ? $paquete['id_paquete'] : 0;
-        // Traer productos del paquete
+
         $res_detalle = mysqli_query($conexion, "SELECT p.*, dp.id_producto as id_prod_incluido FROM detalle_paquete dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_paquete = $id_paquete");
         while ($prod = mysqli_fetch_assoc($res_detalle)):
             $tipo = strtolower($prod['tipo_producto']);
@@ -258,9 +302,10 @@ if($tipoProducto == 'paquete'){
             <div class="cont-input">
                 <button class="btn-agregar" type="submit">Agregar al carrito</button>
             </div>
+            <input type="hidden" name="id_producto" value="<?php echo $id_producto; ?>">
         </form>
-
-        </div>
+        <?php if (isset($error)) { echo '<p style="color:red;">' . htmlspecialchars($error) . '</p>'; } ?>
+        <?php if (isset($_GET['agregado']) && $_GET['agregado'] == 1) { echo '<p style="color:green;">Producto agregado al carrito.</p>'; } ?>
     </section>
 
 </main>
@@ -273,7 +318,7 @@ if($tipoProducto == 'paquete'){
     enlaceReserva.addEventListener('click', function () {
       seccionReserva.classList.add('resaltar');
 
-      // Remover la clase despues de que termine la animacion
+
       setTimeout(() => {
         seccionReserva.classList.remove('resaltar');
       }, 1500);

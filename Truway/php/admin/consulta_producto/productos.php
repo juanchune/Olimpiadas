@@ -1,11 +1,16 @@
 <?php
 
-
 include ('conexion.php');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
+    $id_producto = intval($_POST['eliminar_id']);
+    // Elimina solo de productos, ya que aquí solo hay productos generales
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
+}
 
 $tabla_seleccionada = 'productos';
 
-// Filtros
+//Filtros
 $where = [];
 if (!empty($_GET['precio'])) {
     $precio = floatval($_GET['precio']);
@@ -17,10 +22,10 @@ if (!empty($_GET['tipo_producto'])) {
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-// Obtener tipos de producto para el filtro
+
 $tiposResult = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto");
 
-// Consulta principal: todos los productos
+
 $sql = "SELECT id_producto, nombre, tipo_producto, precio, descripcion
         FROM productos
         $whereSQL
@@ -66,18 +71,19 @@ $result = mysqli_query($conexion, $sql);
     </article>
 
     <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
-        <article class="producto">
-            <div class="informacion-principal">
-                <div class="informacion">
-                    <button class="btn-desplegable">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
-                    </button>
-                    <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
-                    <span class="lbl-informacion"><?= htmlspecialchars($dato['nombre']) ?></span>
-                    <span class="lbl-informacion"><?= htmlspecialchars($dato['tipo_producto']) ?></span>
-                    <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
-                    <div class="btns">
-                        <button class="btn-modificar">
+    <article class="producto" data-id="<?= $dato['id_producto'] ?>" data-tipo="productos">
+        <div class="informacion-principal">
+            <div class="informacion">
+                <button class="btn-desplegable">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                </button>
+                <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                <span class="lbl-informacion"><?= htmlspecialchars($dato['nombre']) ?></span>
+                <span class="lbl-informacion"><?= htmlspecialchars($dato['tipo_producto']) ?></span>
+                <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
+                <div class="btns">
+                    <button class="btn modificar">
+                        <a href="editar-producto.php?id=<?= $dato['id_producto'] ?>" class="btn-modificar" title="Editar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <g fill="none">
                                     <path stroke="currentColor" class="icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -87,24 +93,28 @@ $result = mysqli_query($conexion, $sql);
                                         d="m15 6l3 3m-5 11h8" />
                                 </g>
                             </svg>
-                        </button>
-                        <button class="btn-eliminar">
+                        </a>
+                    </button>
+                    <form method="post" style="display:inline;" onsubmit="return confirm('¿Seguro que desea eliminar este producto?');">
+                        <input type="hidden" name="eliminar_id" value="<?= $dato['id_producto'] ?>">
+                        <button type="submit" class="btn-eliminar" title="Eliminar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <path class="icon" fill="currentColor"
                                     d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17" />
                             </svg>
                         </button>
-                    </div>
+                    </form>
                 </div>
             </div>
-            <div class="detalles-producto oculto">
-                <div class="cont-descripcion">
-                    <h5>Descripción</h5>
-                    <p class="descripcion"><?= htmlspecialchars($dato['descripcion']) ?></p>
-                </div>
+        </div>
+        <div class="detalles-producto oculto">
+            <div class="cont-descripcion">
+                <h5>Descripción</h5>
+                <p class="descripcion"><?= htmlspecialchars($dato['descripcion']) ?></p>
             </div>
-        </article>
-    <?php } ?>
+        </div>
+    </article>
+<?php } ?>
 </section>
 <script>
     document.querySelectorAll('.btn-desplegable').forEach(btn => {
