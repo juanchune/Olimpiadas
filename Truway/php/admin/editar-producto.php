@@ -1,7 +1,10 @@
 <?php
-
+session_start();
+include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_producto = isset($_POST['id_producto']) ? intval($_POST['id_producto']) : 0;
