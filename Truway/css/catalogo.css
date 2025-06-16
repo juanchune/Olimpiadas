@@ -202,6 +202,10 @@ main {
     margin-bottom: 1rem;
 }
 
+.frm-btn-envar{
+    margin-left: auto;
+}
+
 .cont-tiempo-btn .cont-tiempo {
     display: flex;
     gap: .5rem;

@@ -231,6 +231,11 @@ header .contenido{
     align-items: center;
 }
 
+.frm-btn-envar{
+    margin-left: auto;
+}
+
+
 .cont-tiempo-btn .cont-tiempo{
     display: flex;
     gap: .5rem;

@@ -34,7 +34,6 @@ main {
     display: flex;  
     flex-direction: column;
     gap: .5rem;
-
 }
 
 .cont-general .nombre {
@@ -42,11 +41,16 @@ main {
     font-family: Noto_Sans;
     font-weight: 900;
     color: var(--terciario-50);
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .cont-general .descripcion {
+    width: auto;
     font-size: 1rem;
     font-weight: 400;
+    overflow: hidden;
+    word-break: break-word;
 }
 
 .cont-general .precio-unitario {
