@@ -36,13 +36,13 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
     $tabla_seleccionada = $_GET['tabla_seleccionada'];
       switch ($tabla_seleccionada) {
         case('productos'):
-             // Consulta inicial para obtener todos los productos
+           
             $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
                     FROM productos p
                     JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+           
             if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {
                 $filters[] = "tp.tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo-producto']) . "'";
             }
@@ -51,14 +51,14 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $filters[] = "p.precio <= " . intval($_GET['precio']);
             }
 
-            // Si hay filtros, añadirlos a la consulta
+            
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
             $result = mysqli_query($conexion, $query);
 
-            // Obtener valores únicos para los filtros
+           
             $tipoProductoQuery = "SELECT DISTINCT tipo FROM tipo_producto ORDER BY tipo ASC";
             $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
 
@@ -68,13 +68,13 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
             include 'consulta_producto/productos.php';
             break;
         case('paquetes'):
-            // Consulta inicial para obtener todos los paquetes
+           
             $query = "SELECT p.id_producto, p.id_paquete, pr.nombre, pr.descripcion, pr.precio 
                     FROM paquetes p
                     JOIN productos pr ON p.id_producto = pr.id_producto";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+           
             if (isset($_GET['pais']) && $_GET['pais'] !== '') {
                 $filters[] = "pr.descripcion LIKE '%" . mysqli_real_escape_string($conexion, $_GET['pais']) . "%'";
             }
@@ -82,7 +82,7 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $filters[] = "pr.precio <= " . intval($_GET['precio']);
             }
 
-            // Si hay filtros, añadirlos a la consulta
+           
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
@@ -94,16 +94,16 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
             break;
 
         case('excursiones'):
-            // Consulta inicial para obtener todas las excursiones
+           
             $query = "SELECT * FROM excursiones";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+           
             if (isset($_GET['dificultad']) && $_GET['dificultad'] !== '') {
                 $filters[] = "dificultad = '" . mysqli_real_escape_string($conexion, $_GET['dificultad']) . "'";
             }
 
-            // Si hay filtros, añadirlos a la consulta
+           
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
@@ -115,11 +115,11 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
             break;
 
         case('alquiler_vehiculos'):
-            // Consulta inicial para obtener todas las excursiones
+          
             $query = "SELECT * FROM vehiculos";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+     
             if (isset($_GET['capacidad']) && $_GET['capacidad'] !== '') {
                 $filters[] = "capacidad = " . intval($_GET['capacidad']);
             }
@@ -127,14 +127,14 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $filters[] = "tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo']) . "'";
             }
 
-            // Si hay filtros, añadirlos a la consulta
+            
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
             $result = mysqli_query($conexion, $query);
 
-            // Obtener valores únicos para los filtros
+        
             $capacidadQuery = "SELECT DISTINCT capacidad FROM vehiculos ORDER BY capacidad ASC";
             $capacidadResult = mysqli_query($conexion, $capacidadQuery);
 
@@ -146,11 +146,11 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
             break;
         
         case('estadias'):
-            // Consulta inicial para obtener todas las estadías
+       
             $query = "SELECT * FROM estadias";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+ 
             if (isset($_GET['categoria']) && $_GET['categoria'] !== '') {
                 $filters[] = "categoria = '" . mysqli_real_escape_string($conexion, $_GET['categoria']) . "'";
             }
@@ -158,14 +158,14 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $filters[] = "localidad = '" . mysqli_real_escape_string($conexion, $_GET['localidad']) . "'";
             }
 
-            // Si hay filtros, añadirlos a la consulta
+     
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
             $result = mysqli_query($conexion, $query);
 
-            // Obtener valores únicos para los filtros
+  
             $categoriaQuery = "SELECT DISTINCT categoria FROM estadias ORDER BY categoria ASC";
             $categoriaResult = mysqli_query($conexion, $categoriaQuery);
 
@@ -177,11 +177,11 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
             break;
 
         case('boletos_avion'):
-            // Consulta inicial para obtener todos los boletos de avión
+           
             $query = "SELECT * FROM pasajes";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+
             if (isset($_GET['tipo-pasaje']) && $_GET['tipo-pasaje'] !== '') {
                 $filters[] = "tipo_pasaje = '" . mysqli_real_escape_string($conexion, $_GET['tipo-pasaje']) . "'";
             }
@@ -189,14 +189,14 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $filters[] = "aerolinea = '" . mysqli_real_escape_string($conexion, $_GET['aereolinea']) . "'";
             }
 
-            // Si hay filtros, añadirlos a la consulta
+       
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
             $result = mysqli_query($conexion, $query);
 
-            // Obtener valores únicos para los filtros
+   
             $tipoPasajeQuery = "SELECT DISTINCT tipo_pasaje FROM pasajes ORDER BY tipo_pasaje ASC";
             $tipoPasajeResult = mysqli_query($conexion, $tipoPasajeQuery);
 
@@ -210,13 +210,13 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
         }
     
     }else{
-         // Consulta inicial para obtener todos los productos
+    
             $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
                     FROM productos p
                     JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
             $filters = [];
 
-            // Aplicar filtros si se envían por GET
+     
             if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {
                 $filters[] = "tp.tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo-producto']) . "'";
             }
@@ -225,14 +225,14 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $filters[] = "p.precio <= " . intval($_GET['precio']);
             }
 
-            // Si hay filtros, añadirlos a la consulta
+   
             if (!empty($filters)) {
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
             $result = mysqli_query($conexion, $query);
 
-            // Obtener valores únicos para los filtros
+        
             $tipoProductoQuery = "SELECT DISTINCT tipo FROM tipo_producto ORDER BY tipo ASC";
             $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
 

@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaciar_carrito'])) {
               <a class="btn modificar" href="/Olimpiadas/truway/php/general/producto-especifico.php?id_producto=<?php echo $producto['id_producto']; ?>">
                 Modificar
               </a>
-              <!-- Aquí podrías agregar funcionalidad para eliminar un producto específico -->
+ 
             </div>
           </div>
         </div>

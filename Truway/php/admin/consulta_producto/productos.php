@@ -4,13 +4,13 @@ include ('conexion.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
-    // Elimina solo de productos, ya que aquí solo hay productos generales
+
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
 $tabla_seleccionada = 'productos';
 
-//Filtros
+
 $where = [];
 if (!empty($_GET['precio'])) {
     $precio = floatval($_GET['precio']);

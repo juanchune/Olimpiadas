@@ -508,5 +508,6 @@ main {
     border-bottom: 1px solid var(--terciario-50);
 }
 
-
-
+.producto-pedido {
+    margin-bottom: 8px;
+}

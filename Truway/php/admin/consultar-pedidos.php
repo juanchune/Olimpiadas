@@ -75,14 +75,15 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
                 </div>
             </div>
             <div class="detalles-producto oculto">
-                <div class="informacion-secundaria">
-                    <div class="informacion">
-                        <span class="lbl-informacion"><strong>ID PRODUCTO</strong></span>
-                        <span class="lbl-informacion"><strong>NOMBRE</strong></span>
-                        <span class="lbl-informacion"><strong>DESCRIPCIÓN</strong></span>
-                        <span class="lbl-informacion"><strong>PRECIO</strong></span>
-                        <span class="lbl-informacion"><strong>CANTIDAD</strong></span>
-                    </div>
+            <div class="informacion-secundaria">
+                <div class="informacion">
+                    <span class="lbl-informacion"><strong>ID PRODUCTO</strong></span>
+                    <span class="lbl-informacion"><strong>NOMBRE</strong></span>
+                    <span class="lbl-informacion"><strong>DESCRIPCIÓN</strong></span>
+                    <span class="lbl-informacion"><strong>PRECIO</strong></span>
+                    <span class="lbl-informacion"><strong>CANTIDAD</strong></span>
+                </div>
+                <div class="lista-productos-pedido">
                     <?php
                     while ($detalle = mysqli_fetch_assoc($detalle_result)) {
                         $id_producto = $detalle['id_producto'];
@@ -91,7 +92,7 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
                         $producto_result = mysqli_query($conexion, $producto_query);
                         $producto = mysqli_fetch_assoc($producto_result);
                     ?>
-                    <div class="informacion">
+                    <div class="informacion producto-pedido">
                         <span class="lbl-informacion"><?php echo $producto['id_producto']; ?></span>
                         <span class="lbl-informacion"><?php echo $producto['nombre']; ?></span>
                         <span class="lbl-informacion"><?php echo $producto['descripcion']; ?></span>
@@ -101,6 +102,7 @@ $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
                     <?php } ?>
                 </div>
             </div>
+        </div>
         </article>
         <?php } ?>
     </section>

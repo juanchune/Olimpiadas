@@ -2,14 +2,15 @@
 
 include('conexion.php');
 
-// Eliminar si se envió el formulario
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
-    // Primero elimina de la tabla específica
+
     mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto");
-    // Luego elimina de productos
+
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
+
 
 ?>
 
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
 </div>
 
 <section class="section-tabla-productos excursiones">
-    <!-- Información principal fija como guía -->
+
     <article class="producto guia">
         <div class="informacion-principal">
             <div class="informacion">
@@ -48,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
         </div>
     </article>
 
-    <!-- Excursiones dinámicas -->
+
     <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
         <article class="producto">
             <div class="informacion-principal">

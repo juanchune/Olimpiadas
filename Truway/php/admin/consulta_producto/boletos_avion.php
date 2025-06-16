@@ -1,12 +1,12 @@
 <?php
 include('conexion.php');
 
-// Eliminar si se envió el formulario
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
-    // Primero elimina de la tabla específica
+
     mysqli_query($conexion, "DELETE FROM boletos_avion WHERE id_producto = $id_producto");
-    // Luego elimina de productos
+
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 ?>
@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     </div>
 
     <section class="section-tabla-productos boletos-avion">
-        <!-- Informacion principal-->
+
         <article class="producto guia">
             <div class="informacion-principal">
                 <div class="informacion">
@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
             </div>
         </article>
 
-        <!-- Boleto -->
+ 
     <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
         <article class="producto">
             <div class="informacion-principal">
@@ -66,7 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
                     <div class="btns">
                         <button class="btn modificar">
                             <a href="editar-producto.php?id=<?= $dato['id_producto'] ?>" class="btn-modificar" title="Editar">
-                                <!-- ...icono... -->
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <g fill="none">
+                                    <path stroke="currentColor" class="icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0z" />
+                                    <path class="icon" fill="currentColor" d="m5 16l-1 4l4-1L18 9l-3-3z" />
+                                    <path class="icon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="m15 6l3 3m-5 11h8" />
+                                </g>
+                            </svg>
                             </a>
                         </button>
                         <form method="post" style="display:inline;" onsubmit="return confirm('¿Seguro que desea eliminar este producto?');">

@@ -362,7 +362,7 @@
         }
     };
 
-    // Asigna eventos y aplica el estado inicial
+
     toggles.forEach(checkbox => {
         checkbox.addEventListener('change', () => actualizarContenedor(checkbox));
         actualizarContenedor(checkbox); // Estado inicial al cargar la página

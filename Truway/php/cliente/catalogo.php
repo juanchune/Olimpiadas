@@ -96,7 +96,7 @@ include('conexion.php');
     </section>
 </main>
 <script>
-    // Envía automáticamente el formulario cuando se hace click en un checkbox
+    
     document.querySelectorAll('.filtros input[type="checkbox"]').forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
             this.form.submit();

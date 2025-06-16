@@ -13,7 +13,7 @@ if ($id_producto <= 0) {
     exit;
 }
 
-// Obtener datos del producto
+
 $sql = "SELECT * FROM productos WHERE id_producto = $id_producto";
 $res = mysqli_query($conexion, $sql);
 $producto = mysqli_fetch_assoc($res);
@@ -26,14 +26,14 @@ if (!$producto) {
 $tipo_producto = strtolower($producto['tipo_producto']);
 $msg = "";
 
-// Obtener tipos de producto para el select
+
 $tipos = [];
 $resTipos = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto");
 while ($row = mysqli_fetch_assoc($resTipos)) {
     $tipos[] = $row['tipo_producto'];
 }
 
-// Si es paquete obtener productos
+
 $productos_incluidos = [];
 $productos_disponibles = [];
 if ($tipo_producto === 'paquete') {
@@ -44,14 +44,14 @@ if ($tipo_producto === 'paquete') {
     while ($row = mysqli_fetch_assoc($resIncluidos)) {
         $productos_incluidos[] = $row['id_producto'];
     }
-    // Todos los productos
+
     $resTodos = mysqli_query($conexion, "SELECT id_producto, nombre, tipo_producto FROM productos WHERE tipo_producto != 'paquete' AND id_producto != $id_producto");
     while ($row = mysqli_fetch_assoc($resTodos)) {
         $productos_disponibles[] = $row;
     }
 }
 
-// Guardar cambios
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
     $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']);
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         WHERE id_producto = $id_producto";
     mysqli_query($conexion, $update);
 
-    // Guardar datos especificos 
+
     if ($tipo_producto === 'excursion' || $tipo_producto === 'excursión') { //Excursion
         $ubicacion = mysqli_real_escape_string($conexion, $_POST['ubicacion_salida']);
         $duracion = intval($_POST['duracion']);
@@ -111,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Redirigir a la lista
+
     if ($tipo_producto === 'paquete') {
         header("Location: paquetes.php");
     } elseif ($tipo_producto === 'excursion' || $tipo_producto === 'excursión') {
@@ -225,7 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label>Tipo: <input type="text" name="tipo" value="<?= htmlspecialchars($info['tipo']) ?>" required></label>
             </div>
             <?php elseif ($tipo_producto === 'paquete'):
-                // Obtener productos disponibles por tipo
+     
                 $excursiones = [];
                 $pasajes = [];
                 $estadias = [];
@@ -237,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if ($tipo === 'estadia' || $tipo === 'estadía') $estadias[] = $prod;
                     if ($tipo === 'vehiculo' || $tipo === 'vehículo' || $tipo === 'alquiler de vehículo') $vehiculos[] = $prod;
                 }
-                // Buscar los productos ya incluidos
+          
                 $id_excursion = $id_pasaje = $id_estadia = $id_vehiculo = '';
                 foreach ($productos_incluidos as $id_prod) {
                     $tipo = '';
