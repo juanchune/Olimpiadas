@@ -2,10 +2,19 @@
 
 include ('conexion.php');
 
-// Para mantener el filtro seleccionado
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
+    $id_producto = intval($_POST['eliminar_id']);
+    
+    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto");
+    
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
+}
+
+
 $tabla_seleccionada = 'paquetes';
 
-// Filtro de precio
+
 $where = [];
 if (!empty($_GET['precio'])) {
     $precio = floatval($_GET['precio']);
@@ -13,7 +22,7 @@ if (!empty($_GET['precio'])) {
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-// Consulta principal: trae datos de paquetes y su producto asociado
+
 $sql = "SELECT paq.id_paquete, pr.id_producto, pr.nombre, pr.descripcion, pr.precio
         FROM paquetes paq
         JOIN productos pr ON paq.id_producto = pr.id_producto
@@ -38,7 +47,7 @@ $result = mysqli_query($conexion, $sql);
 </div>
 
 <section class="section-tabla-productos paquetes">
-    <!-- Información principal fija como guía -->
+
     <article class="producto guia">
         <div class="informacion-principal">
             <div class="informacion">
@@ -52,7 +61,7 @@ $result = mysqli_query($conexion, $sql);
         </div>
     </article>
 
-    <!-- Paquetes dinámicos -->
+
     <?php while ($dato = mysqli_fetch_assoc($result)) { ?>
         <article class="producto">
             <div class="informacion-principal">
@@ -65,23 +74,28 @@ $result = mysqli_query($conexion, $sql);
                     <span class="lbl-informacion"><?= htmlspecialchars($dato['nombre']) ?></span>
                     <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
                     <div class="btns">
-                        <button class="btn-modificar">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <g fill="none">
-                                    <path stroke="currentColor" class="icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0z" />
-                                    <path class="icon" fill="currentColor" d="m5 16l-1 4l4-1L18 9l-3-3z" />
-                                    <path class="icon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="m15 6l3 3m-5 11h8" />
-                                </g>
-                            </svg>
+                        <button class="btn modificar">
+                            <a href="editar-producto.php?id=<?= $dato['id_producto'] ?>" class="btn-modificar" title="Editar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <g fill="none">
+                                        <path stroke="currentColor" class="icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="m5 16l-1 4l4-1L19.586 7.414a2 2 0 0 0 0-2.828l-.172-.172a2 2 0 0 0-2.828 0z" />
+                                        <path class="icon" fill="currentColor" d="m5 16l-1 4l4-1L18 9l-3-3z" />
+                                        <path class="icon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="m15 6l3 3m-5 11h8" />
+                                    </g>
+                                </svg>
+                            </a>
                         </button>
-                        <button class="btn-eliminar">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path class="icon" fill="currentColor"
-                                    d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17" />
-                            </svg>
-                        </button>
+                        <form method="post" style="display:inline;" onsubmit="return confirm('¿Seguro que desea eliminar este producto?');">
+                            <input type="hidden" name="eliminar_id" value="<?= $dato['id_producto'] ?>">
+                            <button type="submit" class="btn-eliminar" title="Eliminar">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path class="icon" fill="currentColor"
+                                        d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17" />
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -112,7 +126,7 @@ $result = mysqli_query($conexion, $sql);
             <?php } ?>
         </div>
     <?php } else {
-        echo '<p>No hay productos asociados a este paquete.</p>';
+        echo '<p>No hay productos asociados a este paquete</p>';
     } ?>
 </div>
             </div>

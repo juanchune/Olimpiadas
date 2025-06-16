@@ -85,7 +85,7 @@ include('conexion.php');
                                     </div>
                                <?php }
                             ?>
-                            <button class="btn-ver-mas">Ver más</button>
+                            <button class="btn-ver-mas" onclick="location.href='producto-especifico.php?id=<?php echo $fila['id_producto']; ?>'">Ver más</button>
                         </div>
                     </article>
                     <?php
