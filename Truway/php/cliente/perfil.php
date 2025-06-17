@@ -158,7 +158,7 @@ if ($resultado_usuario) {
                                 </div>
                                 <div class="cont-informacion">
                                     <span class="lbl">Fecha pedido</span>
-                                    <span class="lbl-informacion fecha"><?php echo $pedido['fecha']?></span>
+                                    <span class="lbl-informacion fecha"><?php echo date("d-m-Y", strtotime($pedido['fecha'])); ?></span>
                                 </div>
                                 <div class="cont-informacion">
                                     <span class="lbl">Cantidad de productos</span>
@@ -175,6 +175,7 @@ if ($resultado_usuario) {
                                     //En entero para asegurar :o
                                     $id_pedido = intval($id_pedido);
 
+                                    //Consulta los productos incluidos en un pedido especifico con$id_pedido, obteniendo su id, fecha, cantidad, nombre, precio y tipo de producto
                                     $query = "
                                         SELECT dp.id_producto, dp.fecha, dp.cantidad, p.nombre, p.precio, p.tipo_producto
                                         FROM detalle_pedido dp

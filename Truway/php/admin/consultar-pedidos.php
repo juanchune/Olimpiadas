@@ -64,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <article class="producto">
             <div class="informacion-principal">
                 <div class="informacion">
+                    <span class="lbl-informacion"> </span>
                     <span class="lbl-informacion">ID PEDIDO</span>
                     <span class="lbl-informacion">ID USUARIO</span>
                     <span class="lbl-informacion">FECHA</span>
@@ -85,23 +86,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ?>
         <article class="producto">
             <div class="informacion-principal">
-                <button class="btn-desplegable">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
-                    <?php if ($estado_facturacion === 'pendientes'): ?>
-                        <form method="post" style="display:inline; margin-left:10px;">
-                            <input type="hidden" name="id_pedido" value="<?php echo $pedido['id_pedido']; ?>">
-                            <button type="submit" name="aprobar" class="btn-aprobar">Aprobar</button>
-                            <button type="submit" name="rechazar" class="btn-rechazar">Rechazar</button>
-                        </form>
-                    <?php endif; ?>
-                </button>
+            
                 <div class="informacion">
+                    <button class="btn-desplegable">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
+                    </button>
                     <span class="lbl-informacion"><?php echo $pedido['id_pedido']; ?></span>
                     <span class="lbl-informacion"><?php echo $pedido['id_usuario']; ?></span>
                     <span class="lbl-informacion"><?php echo $pedido['fecha']; ?></span>
                     <span class="lbl-informacion"><?php echo $pedido['precio_total']; ?></span>
                     <span class="lbl-informacion"><?php echo $pedido['metodo_pago']; ?></span>
                     <span class="lbl-informacion"><?php echo $pedido['cantidad']; ?></span>
+                     <?php if ($estado_facturacion === 'pendientes'): ?>
+                            <form method="post" style="display:inline;">
+                                <input type="hidden" name="id_pedido" value="<?php echo $pedido['id_pedido']; ?>">
+                                <button type="submit" name="aprobar" class="btn-aprobar"><svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M9 16.17L5.53 12.7a.996.996 0 1 0-1.41 1.41l4.18 4.18c.39.39 1.02.39 1.41 0L20.29 7.71a.996.996 0 1 0-1.41-1.41z"/></svg>
+                                </button>
+                                <button type="submit" name="rechazar" class="btn-rechazar"><svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><g class="icon" fill="currentColor" fill-rule="evenodd" clip-rule="evenodd"><path d="M5.47 5.47a.75.75 0 0 1 1.06 0l12 12a.75.75 0 1 1-1.06 1.06l-12-12a.75.75 0 0 1 0-1.06"/><path d="M18.53 5.47a.75.75 0 0 1 0 1.06l-12 12a.75.75 0 0 1-1.06-1.06l12-12a.75.75 0 0 1 1.06 0"/></g></svg></button>
+                            </form>
+                        <?php endif; ?>
                 </div>
             </div>
             <div class="detalles-producto oculto">
@@ -113,16 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span class="lbl-informacion"><strong>PRECIO</strong></span>
                     <span class="lbl-informacion"><strong>CANTIDAD</strong></span>
                 </div>
-                <div class="lista-productos-pedido">
                     <?php
-                    while ($detalle = mysqli_fetch_assoc($detalle_result)) {
+                    while ($detalle = mysqli_fetch_assoc($detalle_result)) {?>
+                        <?php 
                         $id_producto = $detalle['id_producto'];
                         $cantidad_producto = $detalle['cantidad'];
                         $producto_query = "SELECT * FROM productos WHERE id_producto = '$id_producto'";
                         $producto_result = mysqli_query($conexion, $producto_query);
                         $producto = mysqli_fetch_assoc($producto_result);
                     ?>
-                    <div class="informacion producto-pedido">
+                    <div class="informacion">
                         <span class="lbl-informacion"><?php echo $producto['id_producto']; ?></span>
                         <span class="lbl-informacion"><?php echo $producto['nombre']; ?></span>
                         <span class="lbl-informacion"><?php echo $producto['descripcion']; ?></span>
@@ -130,7 +133,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class="lbl-informacion"><?php echo $cantidad_producto; ?></span>
                     </div>
                     <?php } ?>
-                </div>
             </div>
         </div>
         </article>

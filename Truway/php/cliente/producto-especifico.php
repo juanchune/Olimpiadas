@@ -67,7 +67,7 @@ if (!$producto) {
 
 // Obtener info
 $tipoProducto = strtolower($producto['tipo_producto']);
-$nombre = $producto['nombre'];
+$nombre_producto = $producto['nombre'];
 $descripcion = $producto['descripcion'];
 $precio = $producto['precio'];
 
@@ -96,7 +96,7 @@ if($tipoProducto == 'paquete'){
     <section class="producto-especifico">
         <div class="cont-general">
                 <h2 class="nombre">
-                    <?php echo htmlspecialchars($nombre); ?>
+                    <?php echo htmlspecialchars($nombre_producto); ?>
                 </h2>
                 <span class="descripcion"><?php echo htmlspecialchars($descripcion); ?></span>
                 <h6 class=precio-unitario>ARS $<?php echo number_format($precio, 2, ',', '.'); ?></h6>
