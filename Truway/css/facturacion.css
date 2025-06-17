@@ -111,7 +111,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all .5s ease;
+    transition: all .6s ease;
     cursor: pointer;
 }
 

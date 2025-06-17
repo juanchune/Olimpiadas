@@ -26,6 +26,5 @@
             
         }
     }else{
-        $mensaje="uwu";
     }
 ?>

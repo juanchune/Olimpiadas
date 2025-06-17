@@ -120,6 +120,10 @@
                 </select>           
             </div>
             <div class="cont-input">
+                <label for="codigo-producto" class="lbl">Codigo producto</label>
+                <input type="text" name="codigo-producto" id="codigo-producto" class="input-producto" maxlength=50 required>
+            </div> 
+            <div class="cont-input">
                 <label for="nombre-producto" class="lbl">Nombre del producto</label>
                 <input type="text" name="nombre-producto" id="nombre-producto" class="input-producto" maxlength=50 required>
             </div> 

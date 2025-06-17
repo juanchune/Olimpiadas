@@ -149,12 +149,30 @@
           </div>
         </div>
         <!-- formulario modificar -->
-        <form id="modificar-<?php echo $producto['id_detalle_carrito']; ?>" method="post" style="display:none; margin-top:10px;">
+        <form class="form-modificar" id="modificar-<?php echo $producto['id_detalle_carrito']; ?>" method="post">
           <input type="hidden" name="id_detalle_carrito" value="<?php echo $producto['id_detalle_carrito']; ?>">
-          <label>Cantidad: <input type="number" name="nueva_cantidad" min="1" value="<?php echo $producto['cantidad']; ?>" required></label>
-          <label>Fecha: <input type="date" name="nueva_fecha" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($producto['fecha_reserva']); ?>" required></label>
-          <button type="submit" name="modificar_producto" class="btn guardar">Guardar</button>
-          <button type="button" class="btn cancelar" onclick="document.getElementById('modificar-<?php echo $producto['id_detalle_carrito']; ?>').style.display='none';return false;">Cancelar</button>
+
+          <div class="cont-inputs-modificar">
+
+            <div class="cont-input">
+              <label>Cantidad: </label>
+              <input class="input-modificar" type="number" name="nueva_cantidad" min="1" value="<?php echo $producto['cantidad']; ?>" required>
+            </div>
+
+            <div class="cont-input">
+              <label>Fecha: </label>
+              <input class="input-modificar" type="date" name="nueva_fecha" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($producto['fecha_reserva']); ?>" required>
+            </div>
+            
+              <button type="submit" name="modificar_producto" class="btn guardar">Guardar</button>
+
+              <button type="button" class="btn cancelar" onclick="document.getElementById('modificar-<?php echo $producto['id_detalle_carrito']; ?>').style.display='none';return false;">Cancelar</button>
+            
+          </div>
+
+
+
+
           <?php if (isset($error_modificar) && isset($_POST['id_detalle_carrito']) && $_POST['id_detalle_carrito'] == $producto['id_detalle_carrito']) echo '<p style="color:red;">' . htmlspecialchars($error_modificar) . '</p>'; ?>
         </form>
       </article>

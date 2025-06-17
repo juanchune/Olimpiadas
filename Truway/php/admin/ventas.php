@@ -50,6 +50,8 @@ while ($venta = mysqli_fetch_assoc($res_pendientes)) {
                         <div class="informacion">
                             <span class="lbl-informacion">ID PEDIDO</span>
                             <span class="lbl-informacion">ID VENTA</span>
+                            <span class="lbl-informacion">NOMBRE USUARIO</span>
+                            <span class="lbl-informacion">EMAIL USUARIO</span>
                             <span class="lbl-informacion">FECHA VENTA</span>
                             <span class="lbl-informacion">ESTADO FACTURACION</span>
                         </div>

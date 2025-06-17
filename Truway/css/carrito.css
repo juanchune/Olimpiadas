@@ -299,3 +299,52 @@ main {
   gap: 1rem;
   align-items: center;
 }
+
+.form-modificar{
+  display: none;
+}
+
+.cont-inputs-modificar{
+  display: flex;
+  align-items: center;
+  gap:1rem;
+}
+
+.cont-inputs-modificar .cont-input{
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  font-weight: 600;
+}
+
+.cont-input .input-modificar{
+  all: unset;
+  border: .5rem;
+  color: var(--terciario-50);
+  padding: .2rem .5rem;
+  background-color:var(--blanco-50);
+  border: 1px solid var(--terciario-50);
+  border-radius: 1rem;
+}
+
+.form-modificar .cont-btns{
+  display: flex;
+  gap: 1rem;
+}
+
+.form-modificar .btn{
+  all: unset;
+  padding: .5rem 1rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: .9rem;
+}
+
+.form-modificar .btn.guardar{
+  background-color: var(--exito-50);
+}
+
+.form-modificar .btn.cancelar{
+  background-color: var(--error-50);
+}
