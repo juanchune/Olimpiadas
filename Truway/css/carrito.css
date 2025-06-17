@@ -287,6 +287,7 @@ main {
 }
 
 .resumen-pedido .cont-btns .btn.borrar {
+<<<<<<< Updated upstream
   background-color: var(--error-50);
 }
 
@@ -346,5 +347,17 @@ main {
 }
 
 .form-modificar .btn.cancelar{
+=======
+>>>>>>> Stashed changes
   background-color: var(--error-50);
+}
+
+.cont-mensaje {
+  background-color: var(--terciario-50);
+  color: var(--blanco-50);
+  padding: 1rem 1.2rem;
+  border-radius: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }

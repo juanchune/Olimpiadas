@@ -111,7 +111,11 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
+<<<<<<< Updated upstream
     transition: all .6s ease;
+=======
+    transition: all .5s ease;
+>>>>>>> Stashed changes
     cursor: pointer;
 }
 
