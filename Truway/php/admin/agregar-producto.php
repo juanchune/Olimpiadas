@@ -136,7 +136,6 @@
         </div>
 
         <div class="cont-formulario-especifico-producto excursiones oculto">
-            <form method="post" action="" class="frm-productos">
             <h2 class="subtitulo">Informacion de la excursion</h2>
             <form method="post" action="" class="frm-productos">
             <div class="cont-input">
