@@ -76,6 +76,7 @@ $result = mysqli_query($conexion, $sql);
             <div class="informacion">
                 <span class="lbl-informacion"> </span>
                 <span class="lbl-informacion">ID</span>
+                <span class="lbl-informacion">CODIGO PRODUCTO</span>
                 <span class="lbl-informacion">NOMBRE</span>
                 <span class="lbl-informacion">TIPO</span>
                 <span class="lbl-informacion">PRECIO</span>
@@ -92,6 +93,7 @@ $result = mysqli_query($conexion, $sql);
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M4 18q-.425 0-.712-.288T3 17t.288-.712T4 16h16q.425 0 .713.288T21 17t-.288.713T20 18zm0-5q-.425 0-.712-.288T3 12t.288-.712T4 11h16q.425 0 .713.288T21 12t-.288.713T20 13zm0-5q-.425 0-.712-.288T3 7t.288-.712T4 6h16q.425 0 .713.288T21 7t-.288.713T20 8z"/></svg>
                 </button>
                 <span class="lbl-informacion"><?= $dato['id_producto'] ?></span>
+                <span class="lbl-informacion"><?= $dato['codigo_producto'] ?></span>
                 <span class="lbl-informacion"><?= htmlspecialchars($dato['nombre']) ?></span>
                 <span class="lbl-informacion"><?= htmlspecialchars($dato['tipo_producto']) ?></span>
                 <span class="lbl-informacion">$<?= number_format($dato['precio'], 2) ?></span>
