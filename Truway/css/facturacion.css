@@ -1,0 +1,120 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Mulish;
+}
+
+html, body {
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--blanco-50);
+}
+
+main {
+    flex: 1;
+    padding: 0 2rem;
+}
+
+.svg-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    flex-shrink: 0;
+}
+
+.svg-icon .icon {
+    color: var(--blanco-50);
+}
+
+.subtitulo{
+    font-size: 1.5rem;
+    color: var(--terciario-50);
+    margin-bottom: 1rem;
+}
+
+.cont-mensaje{
+    background-color: var(--terciario-50);
+    color: var(--blanco-50);
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.form-facturacion{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+    margin-bottom: 5rem;
+    border: 1px solid var(--terciario-50);
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
+
+.cont-input{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.seleccion-tarjeta{
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+.cont-tipo-tarjeta{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--terciario-50);
+    padding: .6rem 1rem;
+    color: var(--blanco-50);
+    font-weight: 800;
+    border-radius: 1rem;
+}
+
+.cont-tipo-tarjeta .svg-icon{
+    width: 2rem;
+    height: 2rem;
+}
+
+.lbl{
+    color: var(--terciario-50);
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+.input-tarjeta{
+    all: unset;
+    border-radius: 1.25rem;
+    background-color: var(--blanco-50);
+    border: 1px solid var(--terciario-50);
+    padding: .3rem .8rem;
+    font-size: .8rem;
+    font-weight: 400;
+    color: var(--negro-700);
+}
+
+.btn-confirmar{
+    all: unset;
+    background-color: var(--terciario-50);
+    color: var(--blanco-50);
+    font-weight: 800;
+    font-family: 1.2rem;
+    padding: .6rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .5s ease;
+    cursor: pointer;
+}
+
+.btn-confirmar:hover{
+    transform: scale(1.1);
+}

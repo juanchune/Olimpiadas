@@ -2,6 +2,7 @@
 session_start();
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/general/tags.php';
+include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/sistema/accion-pedido.php';
 include('conexion.php');
 
 // Verificar si el usuario está autenticado
@@ -51,6 +52,7 @@ if ($resultado_usuario) {
         <span class="nombre-apellido"><?php echo $nombre ?> <?php echo $apellido ?></span>
     </section>
     <h2 class="subtitulo">Mis pedidos</h2>
+     <?php echo $mensaje;?>
     <section class="section-pedidos-realizados">
         <div class=cont-filtros>
                 <h2 class="subtitulo">Tipo de pedido</h2>
@@ -142,7 +144,7 @@ if ($resultado_usuario) {
                                 $estado = "Rechazado";
                             }?>
 
-                        <article class="tarjeta-pedido pendiente">
+                        <article class="tarjeta-pedido <?php echo strtolower($estado)?>">
                             <div class="cont-datos-pedido">
                                 <div class="cont-informacion">
                                     <span class="lbl">ID Orden</span>
@@ -168,6 +170,24 @@ if ($resultado_usuario) {
                                     <span class="lbl">Estado</span>
                                 <span class="lbl-informacion"><?php echo $estado; ?></span>
                                 </div>
+                            </div>
+
+                            <div class="cont-btns">
+                                <?php if($estado == "Pendiente"){?>
+                                <form action="" method="POST">
+                                    <input type="hidden" name="id_pedido" value=<?php echo $pedido['id_pedido']?>> 
+                                    <button class="btn modificar" name="btn_accion" value="modificar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M20.71 7.04c-.34.34-.67.67-.68 1c-.03.32.31.65.63.96c.48.5.95.95.93 1.44s-.53 1-1.04 1.5l-4.13 4.14L15 14.66l4.25-4.24l-.96-.96l-1.42 1.41l-3.75-3.75l3.84-3.83c.39-.39 1.04-.39 1.41 0l2.34 2.34c.39.37.39 1.02 0 1.41M3 17.25l9.56-9.57l3.75 3.75L6.75 21H3z"/></svg>
+                                    </button>
+                                </form>
+
+                                <form action="" method="POST">
+                                    <input type="hidden" name="id_pedido" value=<?php echo $pedido['id_pedido']?>> 
+                                    <button class="btn borrar" name="btn-accion" value="borrar_pedido">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/></svg>
+                                    </button>
+                                </form>
+                                <?php } ?>
                             </div>
 
                             <div class="grid-productos">
@@ -197,15 +217,6 @@ if ($resultado_usuario) {
                                                 </div>
                                                 <div class="cont-grid-titulo-btns">
                                                     <h3><?php echo $producto['nombre']; ?></h3>
-                                                    <div class="cont-btns">
-                                                        <?php if($estado == "Pendientes")?>
-                                                        <button class="btn modificar">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M20.71 7.04c-.34.34-.67.67-.68 1c-.03.32.31.65.63.96c.48.5.95.95.93 1.44s-.53 1-1.04 1.5l-4.13 4.14L15 14.66l4.25-4.24l-.96-.96l-1.42 1.41l-3.75-3.75l3.84-3.83c.39-.39 1.04-.39 1.41 0l2.34 2.34c.39.37.39 1.02 0 1.41M3 17.25l9.56-9.57l3.75 3.75L6.75 21H3z"/></svg>
-                                                        </button>
-                                                        <button class="btn borrar">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/></svg>
-                                                        </button>
-                                                    </div>
                                                 </div>
                                             </div>
 

@@ -136,9 +136,20 @@ main {
   flex-direction: column;
 }
 
+.tarjeta-pedido.pendiente .cont-datos-pedido{
+  background-color: var(--advertencia-50);
+}
+
+.tarjeta-pedido.aprobado .cont-datos-pedido{
+  background-color: var(--exito-50);
+}
+
+.tarjeta-pedido.rechazado .cont-datos-pedido{
+  background-color: var(--error-50);
+}
+
 .cont-datos-pedido {
   padding: .5rem;
-  background-color: var(--blanco-200);
   display: flex;
   justify-content: space-between;
   grid-template-rows: repeat(6 100%);
@@ -260,12 +271,14 @@ main {
   font-weight: 800;
 }
 
-.cont-grid-titulo-btns .cont-btns {
+
+.cont-btns {
   display: flex;
   gap: .5rem;
+  padding: .5rem 0;
 }
 
-.cont-grid-titulo-btns .cont-btns button {
+.cont-btns button {
   all: unset;
   width: 1.8rem;
   height: 1.8rem;
@@ -277,15 +290,15 @@ main {
   cursor: pointer;
 }
 
-.cont-grid-titulo-btns .cont-btns .btn.borrar {
+.cont-btns .btn.borrar {
   background-color: var(--error-50);
 }
 
-.cont-grid-titulo-btns .cont-btns .btn.modificar {
+.cont-btns .btn.modificar {
   background-color: var(--primario-50);
 }
 
-.cont-grid-titulo-btns .cont-btns .icon {
+.cont-btns .icon {
   background-color: var(--blanco-50);
 }
 
