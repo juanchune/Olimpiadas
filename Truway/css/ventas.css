@@ -135,7 +135,7 @@ main {
 .informacion-principal .informacion{
     width: 100%;
     display: grid;
-    grid-template-columns: .4fr .4fr .6fr .4fr;
+    grid-template-columns: .4fr .4fr .5fr 1fr .6fr .4fr;
     align-items: center;
 
 }
@@ -147,5 +147,78 @@ main {
     padding: 0 .2rem;
     border-left: .5px solid var(--terciario-50);
     border-right: .5px solid var(--terciario-50);
+}
+
+/*FILTROS*/
+.form-filtros{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: .8rem;
+    border-bottom: 1px solid var(--terciario-50);
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
+.form-filtros .filtros{
+    width: auto;
+    display: flex;
+    gap: 2rem;
+}
+
+.form-filtros .select-filtro{
+    all:unset;
+    width: 15rem;
+    height: 1.5rem;
+    background-color: var(--blanco-50);
+    padding: .3rem .5rem;
+    border-radius: .9rem;
+    color: var(--negro-700);
+    font-size: .8rem;
+    display: flex;
+    align-items: center;
+    border:1px solid var(--terciario-50);
+}
+
+.form-filtros .barra-buscar{
+    width: 40rem;
+    height: 100%;
+    background-color: var(--blanco-50);
+    padding: .3rem .5rem;
+    border-radius: .9rem;
+    color: var(--negro-700);
+    font-size: .8rem;
+    display: flex;
+    gap: .3rem;
+    align-items: center;
+    border:1px solid var(--terciario-50);
+
+}
+
+.barra-buscar .input-buscar{
+    all: unset;
+    width: 100%;
+}
+
+.barra-buscar .icon{
+    color: var(--terciario-50);
+}
+
+.form-filtros .btn-filtrar{
+    all:unset;
+    width: 10rem;
+    background-color: var(--secundario-50);
+    color: var(--blanco-50);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: .9rem;
+    cursor: pointer;
+    transition: background-color .3s ease;
+}
+
+.form-filtros .btn-filtrar:hover{
+    background-color: var(--terciario-50);
 }
 

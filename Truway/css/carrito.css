@@ -287,7 +287,6 @@ main {
 }
 
 .resumen-pedido .cont-btns .btn.borrar {
-<<<<<<< Updated upstream
   background-color: var(--error-50);
 }
 
@@ -347,8 +346,6 @@ main {
 }
 
 .form-modificar .btn.cancelar{
-=======
->>>>>>> Stashed changes
   background-color: var(--error-50);
 }
 
