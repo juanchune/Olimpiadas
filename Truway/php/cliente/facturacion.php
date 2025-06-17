@@ -4,12 +4,11 @@ include('conexion.php');
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
 
-// mensaje para mostrar al usuario
 $mensaje = '';
 $id_usuario = $_SESSION['id'] ?? 0;
 
 // obtener productos del carrito del usuario
-$id_productos = [];
+$productos_cantidades = [];
 $carrito_total = 0;
 $fechas_reserva = [];
 if ($id_usuario) {
@@ -21,11 +20,14 @@ if ($id_usuario) {
     $id_carrito = null;
     while ($col = mysqli_fetch_assoc($res_carrito)) {
         $id_carrito = $col['id_carrito'];
-        for ($i = 0; $i < $col['cantidad']; $i++) {
-            $id_productos[] = $col['id_producto'];
-            if ($col['fecha_reserva']) {
-                $fechas_reserva[] = $col['fecha_reserva'];
-            }
+        $id_producto = $col['id_producto'];
+        $cantidad = $col['cantidad'];
+        if (!isset($productos_cantidades[$id_producto])) {
+            $productos_cantidades[$id_producto] = 0;
+        }
+        $productos_cantidades[$id_producto] += $cantidad;
+        if ($col['fecha_reserva']) {
+            $fechas_reserva[] = $col['fecha_reserva'];
         }
         $carrito_total += $col['precio_carrito'] * $col['cantidad'];
     }
@@ -40,37 +42,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $metodo_pago = 'Tarjeta_credito';
 
     // validar datos
-    if ($id_usuario && count($id_productos) > 0 && $nombre_titular && $numero_tarjeta && $vencimiento && $cvv) {
-        $cantidad = count($id_productos);
+    if ($id_usuario && count($productos_cantidades) > 0 && $nombre_titular && $numero_tarjeta && $vencimiento && $cvv) {
+        $cantidad_total = array_sum($productos_cantidades);
 
-        // obtener la fecha mas cercana a hoy 
+        // guardar la fecha de hoy
         $fecha = date('Y-m-d');
-        if (count($fechas_reserva) > 0) {
-            $hoy = strtotime(date('Y-m-d'));
-            $fecha_mas_cercana = null;
-            $diferencia_minima = null;
-            foreach ($fechas_reserva as $f) {
-                $diff = abs(strtotime($f) - $hoy);
-                if ($diferencia_minima === null || $diff < $diferencia_minima) {
-                    $diferencia_minima = $diff;
-                    $fecha_mas_cercana = $f;
-                }
-            }
-            if ($fecha_mas_cercana) {
-                $fecha = $fecha_mas_cercana;
-            }
-        }
 
         // crear pedido pendiente
         $sql = "INSERT INTO pedidos (id_usuario, fecha, precio_total, metodo_pago, cantidad) 
-                VALUES ($id_usuario, '$fecha', $carrito_total, '$metodo_pago', $cantidad)";
+                VALUES ($id_usuario, '$fecha', $carrito_total, '$metodo_pago', $cantidad_total)";
         if (mysqli_query($conexion, $sql)) {
             $id_pedido = mysqli_insert_id($conexion);
 
-            // guardar todos los productos del carrito en detalle_pedido
-            foreach ($id_productos as $id_prod) {
+            // guardar todos los productos del carrito en detalle_pedido (uno por producto, sumando cantidad)
+            foreach ($productos_cantidades as $id_prod => $cantidad) {
                 $id_prod = intval($id_prod);
-                mysqli_query($conexion, "INSERT INTO detalle_pedido (id_pedido, id_producto) VALUES ($id_pedido, $id_prod)");
+                $cantidad = intval($cantidad);
+                mysqli_query($conexion, "INSERT INTO detalle_pedido (id_pedido, id_producto, cantidad) VALUES ($id_pedido, $id_prod, $cantidad)");
             }
 
             // marcar pedido como pendiente
@@ -98,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h2>Datos de facturacion</h2>
         <?php if ($mensaje): ?>
             <p><?php echo htmlspecialchars($mensaje); ?></p>
-        <?php elseif (count($id_productos) === 0): ?>
+        <?php elseif (count($productos_cantidades) === 0): ?>
             <p>No hay productos en el carrito</p>
         <?php else: ?>
         <form method="post" class="form-facturacion">

@@ -5,7 +5,6 @@ include ('conexion.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
 
- 
     mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto");
     mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto");
     mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto");
@@ -15,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto");
     mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto");
 
- 
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
@@ -29,6 +27,10 @@ if (!empty($_GET['precio'])) {
 if (!empty($_GET['tipo_producto'])) {
     $tipo = mysqli_real_escape_string($conexion, $_GET['tipo_producto']);
     $where[] = "tipo_producto = '$tipo'";
+}
+if (!empty($_GET['buscar'])) {
+    $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
+    $where[] = "(nombre LIKE '%$buscar%' OR tipo_producto LIKE '%$buscar%' OR descripcion LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
@@ -46,7 +48,7 @@ $result = mysqli_query($conexion, $sql);
         <input type="hidden" name="tabla_seleccionada" value="<?= htmlspecialchars($tabla_seleccionada) ?>">
         <div class="filtros">
             <select class="select-filtro" name="tipo_producto">
-                <option value="" disabled selected>Seleccione un tipo de producto</option>
+                <option value="" <?= !isset($_GET['tipo_producto']) || $_GET['tipo_producto'] === '' ? 'selected' : '' ?>>Seleccione un tipo de producto</option>
                 <?php while ($row = mysqli_fetch_assoc($tiposResult)) { ?>
                     <option value="<?= htmlspecialchars($row['tipo_producto']) ?>" <?= (isset($_GET['tipo_producto']) && $_GET['tipo_producto'] == $row['tipo_producto']) ? 'selected' : '' ?>>
                         <?= htmlspecialchars($row['tipo_producto']) ?>
@@ -54,17 +56,17 @@ $result = mysqli_query($conexion, $sql);
                 <?php } ?>
             </select>
             <select class="select-filtro" name="precio">
-                <option value="" disabled selected>Seleccione un rango de precio</option>
+                <option value="" <?= !isset($_GET['precio']) || $_GET['precio'] === '' ? 'selected' : '' ?>>Seleccione un rango de precio</option>
                 <option value="50000" <?= (isset($_GET['precio']) && $_GET['precio'] == 50000) ? 'selected' : '' ?>>Hasta $50,000</option>
                 <option value="100000" <?= (isset($_GET['precio']) && $_GET['precio'] == 100000) ? 'selected' : '' ?>>Hasta $100,000</option>
                 <option value="150000" <?= (isset($_GET['precio']) && $_GET['precio'] == 150000) ? 'selected' : '' ?>>Hasta $150,000</option>
             </select>
-             <div class="barra-buscar">
+            <div class="barra-buscar">
                 <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0s.41-1.08 0-1.49zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5S14 7.01 14 9.5S11.99 14 9.5 14"/></svg>
-                <input type="search" name="buscar" class="input-buscar">
+                <input type="search" name="buscar" class="input-buscar" value="<?= isset($_GET['buscar']) ? htmlspecialchars($_GET['buscar']) : '' ?>">
             </div>
         </div>
-        <button class="btn-filtrar" name="filtrar">Filtrar</button>
+        <button class="btn-filtrar" name="filtrar" type="submit">Filtrar</button>
     </form>
 </div>
 
@@ -126,7 +128,16 @@ $result = mysqli_query($conexion, $sql);
             </div>
         </div>
     </article>
-<?php } ?>
+    <?php }
+    if (mysqli_num_rows($result) === 0) { ?>
+        <article class="producto">
+            <div class="informacion-principal">
+                <div class="informacion">
+                    <span class="lbl-informacion" colspan="6">No se encontraron resultados.</span>
+                </div>
+            </div>
+        </article>
+    <?php } ?>
 </section>
 <script>
     document.querySelectorAll('.btn-desplegable').forEach(btn => {
