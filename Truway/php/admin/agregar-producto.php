@@ -22,6 +22,7 @@
         $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']);
         $precio = floatval($_POST['precio-total']);
         $tipo = mysqli_real_escape_string($conexion, $_POST['tipo-producto']);
+        $codigo_producto = mysqli_real_escape_string($conexion, $_POST['codigo_producto']);
 
     
         $tipo_map = [
@@ -34,7 +35,7 @@
         $tipo_producto = isset($tipo_map[$tipo]) ? $tipo_map[$tipo] : $tipo;
 
         // Insertar en productos
-        mysqli_query($conexion, "INSERT INTO productos (nombre, descripcion, precio, tipo_producto) VALUES ('$nombre', '$descripcion', $precio, '$tipo_producto')");
+        mysqli_query($conexion, "INSERT INTO productos (nombre, descripcion, precio, tipo_producto, codigo_producto) VALUES ('$nombre', '$descripcion', $precio, '$tipo_producto', '$codigo_producto')");
         $id_producto = mysqli_insert_id($conexion);
 
         // Insertar en tabla específica
