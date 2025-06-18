@@ -1,15 +1,15 @@
 <?php
-
 include ('conexion.php');
 
+// Eliminar producto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
     mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto");
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
-$tabla_seleccionada = 'vehiculos';
-
+// Variables para filtros
+$tabla_seleccionada = 'alquiler_vehiculos';
 $capacidadResult = mysqli_query($conexion, "SELECT DISTINCT capacidad FROM vehiculos ORDER BY capacidad");
 $tipoResult = mysqli_query($conexion, "SELECT DISTINCT tipo FROM vehiculos ORDER BY tipo");
 
@@ -35,6 +35,7 @@ $sql = "SELECT v.*, p.descripcion
         $whereSQL
         ORDER BY v.id_vehiculo DESC";
 $result = mysqli_query($conexion, $sql);
+
 ?>
 
 <div class="cont-filtros">
@@ -125,7 +126,7 @@ $result = mysqli_query($conexion, $sql);
         <article class="producto">
             <div class="informacion-principal">
                 <div class="informacion">
-                    <span class="lbl-informacion" colspan="8">No se encontraron resultados.</span>
+                    <span class="lbl-informacion">No se encontraron resultados.</span>
                 </div>
             </div>
         </article>

@@ -22,7 +22,7 @@
         $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']);
         $precio = floatval($_POST['precio-total']);
         $tipo = mysqli_real_escape_string($conexion, $_POST['tipo-producto']);
-        $codigo_producto = mysqli_real_escape_string($conexion, $_POST['codigo_producto']);
+        $codigo_producto = mysqli_real_escape_string($conexion, $_POST['codigo-producto']);
 
     
         $tipo_map = [
