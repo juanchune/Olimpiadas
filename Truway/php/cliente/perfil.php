@@ -181,9 +181,9 @@ if ($resultado_usuario) {
                                     </button>
                                 </form>
 
-                                <form action="" method="POST">
+                                <form action="" method="POST" onsubmit="return confirmarEliminacion();"> 
                                     <input type="hidden" name="id_pedido" value=<?php echo $pedido['id_pedido']?>> 
-                                    <button class="btn borrar" name="btn-accion" value="borrar_pedido">
+                                    <button class="btn borrar" name="btn_accion" value="borrar_pedido">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zm2-4h2V8H9zm4 0h2V8h-2z"/></svg>
                                     </button>
                                 </form>
@@ -253,5 +253,11 @@ if ($resultado_usuario) {
             this.form.submit();
         });
     });
+</script>
+<script>
+
+function confirmarEliminacion() {
+    return confirm("¿Está seguro que quiere eliminar su pedido?");
+}
 </script>
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/footer.php'; ?>

@@ -36,7 +36,7 @@ $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
 $tiposResult = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto");
 
-$sql = "SELECT id_producto, nombre, tipo_producto, precio, descripcion
+$sql = "SELECT id_producto, nombre, tipo_producto, precio, descripcion, codigo_producto
         FROM productos
         $whereSQL
         ORDER BY id_producto DESC";

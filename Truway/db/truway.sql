@@ -29,6 +29,7 @@ CREATE TABLE `productos` (
   `descripcion` varchar(150) DEFAULT NULL,
   `precio` float(11,2) DEFAULT NULL,
   `tipo_producto` varchar(50) DEFAULT NULL,
+  `codigo_producto` varchar(12) DEFAULT NULL,
   PRIMARY KEY (`id_producto`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

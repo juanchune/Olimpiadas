@@ -27,6 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modificar_producto'])
     $nueva_cantidad = max(1, intval($_POST['nueva_cantidad']));
     $consulta = "UPDATE detalle_pedido SET cantidad = $nueva_cantidad WHERE id_detalle_pedido = $id_detalle_pedido";
     mysqli_query($conexion, $consulta);
+
+    $actualizarMonto= "UPDATE pedido SET precio_total = $precio_final WHERE id_pedido = $id_pedido";
+    mysqli_query($conexion, $actualizarMonto);
     header("Location: perfil.php");
     exit();
 }
@@ -40,13 +43,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_producto']))
     exit();
 }
 
-// vaciar pedido
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaciar_pedido'])) {
-    $consulta = "DELETE FROM detalle_pedido WHERE id_pedido = '$id_pedido'";
-    mysqli_query($conexion, $consulta);
-    header("Location: modificar-pedido.php?id_pedido=$id_pedido");
-    exit();
-}
+// // vaciar pedido
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaciar_pedido'])) {
+//     $consulta = "DELETE FROM detalle_pedido WHERE id_pedido = '$id_pedido'";
+//     mysqli_query($conexion, $consulta);
+//     header("Location: modificar-pedido.php?id_pedido=$id_pedido");
+//     exit();
+// }
 
 // calcular totales
 $cantidad_total = 0;
@@ -158,7 +161,8 @@ $precio_final = $subtotal;
           </div>
         </div>
         <form method="post" class="cont-btns">
-          <button class="btn borrar" name="vaciar_pedido" type="submit">Vaciar pedido</button>
+          <a class="btn siguiente" href="/Olimpiadas/Truway/php/cliente/facturacion.php">Confirmar</a>
+          <!-- <button class="btn borrar" name="vaciar_pedido" type="submit">Vaciar pedido</button> -->
         </form>
       </article>
     </div>
