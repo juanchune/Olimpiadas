@@ -26,9 +26,6 @@
             
         }
     }else{
-<<<<<<< Updated upstream
-=======
         $mensaje="uwu";
->>>>>>> Stashed changes
     }
 ?>
