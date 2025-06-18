@@ -168,7 +168,7 @@ CREATE TABLE `estado_facturacion` (
 CREATE TABLE `ventas` (
   `id_venta` int(11) NOT NULL AUTO_INCREMENT,
   `id_pedido` int(11) NOT NULL,
-  `fecha_venta` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_venta` date NOT NULL DEFAULT current_date(),
   `estado_facturacion` int(11) DEFAULT NULL,
   PRIMARY KEY (`id_venta`),
   KEY `estado_facturacion` (`estado_facturacion`),
@@ -214,6 +214,9 @@ CREATE TABLE `mails_automaticos` (
   PRIMARY KEY (`id_mail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE productos
+ADD COLUMN codigo_producto VARCHAR(12);
+ALTER TABLE `productos` ADD UNIQUE(`codigo_producto`);
 
 INSERT INTO `usuarios` (`nombre`, `apellido`, `email`, `contrasena`, `fecha_nacimiento`, `telefono`, `rol`) VALUES
 ('Joaquin', 'Roldan', 'roldanjoaquind42@gmail.com', 'b4b147bc522828731f1a016bfa72c073', '2006-09-26', '+542262540188', 'cliente'),

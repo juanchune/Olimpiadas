@@ -117,13 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($tipo_producto === 'paquete') {
         header("Location: consultar-producto.php?tabla_seleccionada=paquetes");
     } elseif ($tipo_producto === 'excursion' || $tipo_producto === 'excursión') {
-        header("Location: consultar-producto.php?tabla_seleccionada=excursioneshp");
+        header("Location: consultar-producto.php?tabla_seleccionada=excursiones");
     } elseif ($tipo_producto === 'estadia' || $tipo_producto === 'estadía') {
         header("Location: consultar-producto.php?tabla_seleccionada=estadias");
     } elseif ($tipo_producto === 'pasaje') {
         header("Location: consultar-producto.php?tabla_seleccionada=boletos_avion");
     } elseif ($tipo_producto === 'vehiculo' || $tipo_producto === 'vehículo' || $tipo_producto === 'alquiler de vehículo') {
-        header("Location: consultar-producto.php?tabla_seleccionada=vehiculos");
+        header("Location: consultar-producto.php?tabla_seleccionada=alquiler_vehiculos");
     } else {
         header("Location: consultar-producto.php?tabla_seleccionada=productos");
     }
