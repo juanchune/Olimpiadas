@@ -33,7 +33,7 @@ if(     // Verificar si los campos del formulario están definidos
             $resultado = mysqli_query($conexion, $insertar);
             // Verificar si la inserción fue exitosa
             if ($resultado) {
-                $mensaje = "Registro exitoso. <a href='../general/iniciar-sesion.php'>Inicia sesión</a>.";
+               header("Location: ../general/iniciar-sesion.php");
             } else {
                 $mensaje = "Error al registrar. Por favor intenta nuevamente.";
             }

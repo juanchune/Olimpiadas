@@ -5,6 +5,20 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administ
 }
 include ('conexion.php');
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
+    $id_producto = intval($_POST['eliminar_id']);
+
+    
+    $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto"); // obtener el id del paquete 
+    if ($row_paquete = mysqli_fetch_assoc($res_paquete)) { // si el producto pertenece a un paquete
+        $id_paquete = intval($row_paquete['id_paquete']); // eliminar el paquete y sus detalles
+        mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_paquete = $id_paquete");  // eliminar los detalles del paquete
+        mysqli_query($conexion, "DELETE FROM paquetes WHERE id_paquete = $id_paquete"); // eliminar el paquete
+    }
+
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar el producto
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
     $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
     mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto"); // eliminar detalle de paquete
@@ -16,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // 
     mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto"); // eliminar detalle de carrito
     mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto"); // eliminar detalle de pedido
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
+    
 }
 
 // variables para filtros

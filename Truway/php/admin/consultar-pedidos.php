@@ -9,7 +9,6 @@ include('conexion.php');
 ?>
 <?php
 
-include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
 $estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados'; // 'aprobados', 'pendientes' o 'rechazados'
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // manejo de aprobacion o rechazo de pedidos
@@ -34,12 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // manejo de aprobacion o rechazo 
 }
 ?>
 <main>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
     <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-pedidos.css">
     <div class="cont-titulo-btn">
         <h2 class="subtitulo">Consultar pedidos</h2>
     </div>
     <div class="seleccionar-tipo-pedido">
-        <a href="consultar-pedidos.php?estado_facturacion=aprobados" class="tipo-pedido entregados <?php echo ($estado_facturacion === 'aprobados') ? 'seleccionado' : ''; ?>">Entregados</a>
+        <a href="consultar-pedidos.php?estado_facturacion=aprobados" class="tipo-pedido entregados <?php echo ($estado_facturacion === 'aprobados') ? 'seleccionado' : ''; ?>">Aprobados</a>
         <a href="consultar-pedidos.php?estado_facturacion=pendientes" class="tipo-pedido pendientes <?php echo ($estado_facturacion === 'pendientes') ? 'seleccionado' : ''; ?>">Pendientes</a>
         <a href="consultar-pedidos.php?estado_facturacion=rechazados" class="tipo-pedido rechazados <?php echo ($estado_facturacion === 'rechazados') ? 'seleccionado' : ''; ?>">Rechazados</a>
     </div>

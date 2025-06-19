@@ -44,7 +44,7 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos'; // tabla por de
             $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
                     FROM productos p
                     JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
-            $filters = []; a
+            $filters = [];
 
            // filtros para la consult
             if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {

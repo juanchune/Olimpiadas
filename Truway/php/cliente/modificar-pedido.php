@@ -4,7 +4,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo client
         header('Location: /Olimpiadas/Truway/index.php');
     exit();
 }
-
+include('conexion.php');
 // si no hay id_pedido muestro mensaje y salgo
 if (!isset($_GET['id_pedido'])) {
     echo "<p>Pedido no especificado.</p>";

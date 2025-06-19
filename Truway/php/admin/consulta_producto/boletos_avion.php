@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // 
     $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
     mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto"); // eliminar producto
     mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
-
+}
 // variables para filtros
 $tabla_seleccionada = 'boletos_avion';
 $tipoPasajeResult = mysqli_query($conexion, "SELECT DISTINCT tipo_pasaje FROM pasajes ORDER BY tipo_pasaje");
@@ -30,6 +30,7 @@ if (!empty($_GET['buscar'])) { // filtrar por origen o destino del psaje
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(p.origen LIKE '%$buscar%' OR p.destino LIKE '%$buscar%')";
 }
+
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
 // consulta sql de productoa
@@ -131,4 +132,5 @@ $result = mysqli_query($conexion, $sql);
             </div>
         </article>
     <?php } ?>
+    
 </section>

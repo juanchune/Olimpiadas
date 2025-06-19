@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $vencimiento = $_POST['vencimiento'] ?? '';
     $cvv = $_POST['cvv'] ?? '';
     $tipo_tarjeta = $_POST['tipo_tarjeta'] ?? 'debito'; // 'debito' o 'credito'
-    $metodo_pago = ($tipo_tarjeta === 'credito') ? 'Tarjeta_credito' : 'Tarjeta_debito';
+    $metodo_pago = ($tipo_tarjeta === 'credito') ? 'Tarjeta credito' : 'Tarjeta debito';
 
     // validar datos
     if ($id_usuario && count($productos_cantidades) > 0 && $nombre_titular && $numero_tarjeta && $vencimiento && $cvv) {
@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mysqli_query($conexion, "DELETE FROM carrito WHERE id_carrito = $id_carrito");
             }
 
-            $mensaje = "Pedido realizado, su pedido está pendiente de entrega";
+            header("Location:perfil.php");
         } else {
             $mensaje = "Error al registrar el pedido, intente nuevamente";
         }
