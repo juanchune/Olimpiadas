@@ -10,7 +10,7 @@ if (!isset($_GET['id_pedido'])) {
 $id_pedido = intval($_GET['id_pedido']);
 
 // Obtener detalles del pedido
-$consulta_detalle = "SELECT dp.*, p.nombre, p.descripcion, p.precio, p.tipo_producto
+$consulta_detalle = "SELECT dp.*, p.nombre, p.descripcion, p.precio, p.tipo_producto, dp.fecha
     FROM detalle_pedido dp
     JOIN productos p ON dp.id_producto = p.id_producto
     WHERE dp.id_pedido = '$id_pedido'";
@@ -18,7 +18,7 @@ $resultado_detalle = mysqli_query($conexion, $consulta_detalle);
 
 $productos = [];
 while ($fila = mysqli_fetch_assoc($resultado_detalle)) {
-    $productos[] = $fila;
+  $productos[] = $fila;
 }
 
 // modificar producto 
@@ -27,9 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modificar_producto'])
     $nueva_cantidad = max(1, intval($_POST['nueva_cantidad']));
     $consulta = "UPDATE detalle_pedido SET cantidad = $nueva_cantidad WHERE id_detalle_pedido = $id_detalle_pedido";
     mysqli_query($conexion, $consulta);
-
-    $actualizarMonto= "UPDATE pedido SET precio_total = $precio_final WHERE id_pedido = $id_pedido";
-    mysqli_query($conexion, $actualizarMonto);
     header("Location: perfil.php");
     exit();
 }
@@ -69,6 +66,7 @@ foreach ($productos as $fila) {
     $resumen_tipos[$tipo]['subtotal'] += $fila['precio'] * $fila['cantidad'];
 }
 $precio_final = $subtotal;
+
 ?>
 <link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css">
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php'; ?>
@@ -132,6 +130,10 @@ $precio_final = $subtotal;
               <label>Cantidad: </label>
               <input class="input-modificar" type="number" name="nueva_cantidad" min="1" value="<?php echo $producto['cantidad']; ?>" required>
             </div>
+             <div class="cont-input">
+              <label>Fecha: </label>
+              <input class="input-modificar" type="date" name="nueva_fecha" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($producto['fecha']); ?>" required>
+            </div>
             <button type="submit" name="modificar_producto" class="btn guardar">Guardar</button>
             <button type="button" class="btn cancelar" onclick="document.getElementById('modificar-<?php echo $producto['id_detalle_pedido']; ?>').style.display='none';return false;">Cancelar</button>
           </div>
@@ -161,7 +163,7 @@ $precio_final = $subtotal;
           </div>
         </div>
         <form method="post" class="cont-btns">
-          <a class="btn siguiente" href="/Olimpiadas/Truway/php/cliente/facturacion.php">Confirmar</a>
+          <a class="btn siguiente" data-modificar-id="<?php echo $producto['id_pedido']; ?> href="/Olimpiadas/Truway/php/cliente/perfil.php">Confirmar</a>
           <!-- <button class="btn borrar" name="vaciar_pedido" type="submit">Vaciar pedido</button> -->
         </form>
       </article>
