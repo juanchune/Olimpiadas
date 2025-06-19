@@ -150,7 +150,7 @@ CREATE TABLE `detalle_pedido` (
   `id_pedido` int(11) NOT NULL,
   `id_producto` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL DEFAULT 1,
-  `fecha` date NOT NULL DEFAULT current_timestamp(),
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_detalle_pedido`),
   KEY `id_pedido` (`id_pedido`),
   KEY `id_producto` (`id_producto`),

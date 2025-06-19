@@ -1,9 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo clientes pueden acceder
-    header('Location: /Olimpiadas/Truway/index.php');
-    exit();
-}
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/general/tags.php';
 include('conexion.php');
@@ -43,16 +39,16 @@ include('conexion.php');
             </div>
         </div>
         <div class="productos-grid">
-            <?php  
-                $tipo_producto = isset($_GET['tipo_producto']) ? $_GET['tipo_producto'] : ""; // Obtener el tipo de producto seleccionado
+            <?php
+                $tipo_producto = isset($_GET['tipo_producto']) ? $_GET['tipo_producto'] : "";
 
-                if ($tipo_producto === "") { // Si no se ha seleccionado un tipo de producto, mostrar todos
+                if ($tipo_producto === "") {
                     $productos_query = "SELECT * FROM `productos`";
                 } else {
                     $productos_query = "SELECT * FROM `productos` WHERE tipo_producto='$tipo_producto'";
                 }
 
-                $productos_result = mysqli_query($conexion, $productos_query); // ejjcutar la consulta para obtener los productos
+                $productos_result = mysqli_query($conexion, $productos_query);
 
                 if (mysqli_num_rows($productos_result) > 0) {
 

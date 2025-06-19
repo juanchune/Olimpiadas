@@ -1,9 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo clientes pueden acceder
-        header('Location: /Olimpiadas/Truway/index.php');
-    exit();
-}
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/general/tags.php';
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/sistema/accion-pedido.php';
