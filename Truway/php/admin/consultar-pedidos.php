@@ -1,35 +1,34 @@
 <?php
 session_start();
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
-    header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
-    exit();
-}
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 ?>
+
 <?php
-
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';
-$estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados'; // 'aprobados', 'pendientes' o 'rechazados'
+$estado_facturacion = $_GET['estado_facturacion'] ?? 'aprobados';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // manejo de aprobacion o rechazo de pedidos
-    $id_pedido = intval($_POST['id_pedido'] ?? 0); // validar que id_pedido sea un entero
-    if (isset($_POST['aprobar'])) { // si se aprueba el pedido
-        mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido"); // eliminar de pedidos pendientes
-        mysqli_query($conexion, "INSERT IGNORE INTO pedidos_aprobados (id_pedido) VALUES ($id_pedido)"); // insertar en pedidos aprobados
 
-        $estado_result = mysqli_query($conexion, "SELECT id_estado FROM estado_facturacion WHERE estado = 'pendiente' LIMIT 1"); // obtener el id del estado 'pendiente'
-        $estado_row = mysqli_fetch_assoc($estado_result); // obtener el id del estado
-        $id_estado = $estado_row ? intval($estado_row['id_estado']) : 'NULL'; // si no existe, usar NULL
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_pedido = intval($_POST['id_pedido'] ?? 0);
 
-        $insert_ventas = "INSERT IGNORE INTO ventas (id_pedido, estado_facturacion) VALUES ($id_pedido, $id_estado)"; // insertar en ventas
+    if (isset($_POST['aprobar'])) {
+        mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido");
+        mysqli_query($conexion, "INSERT IGNORE INTO pedidos_aprobados (id_pedido) VALUES ($id_pedido)");
+
+
+        $estado_result = mysqli_query($conexion, "SELECT id_estado FROM estado_facturacion WHERE estado = 'pendiente' LIMIT 1");
+        $estado_row = mysqli_fetch_assoc($estado_result);
+        $id_estado = $estado_row ? intval($estado_row['id_estado']) : 'NULL';
+
+        $insert_ventas = "INSERT IGNORE INTO ventas (id_pedido, estado_facturacion) VALUES ($id_pedido, $id_estado)";
         mysqli_query($conexion, $insert_ventas);
     }
-    if (isset($_POST['rechazar'])) { // si se rechaza el pedido
-        mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido"); // eliminar de pedidos pendientes
-        mysqli_query($conexion, "INSERT IGNORE INTO pedidos_rechazados (id_pedido) VALUES ($id_pedido)"); // insertar en pedidos rechazados
+    if (isset($_POST['rechazar'])) {
+        mysqli_query($conexion, "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido");
+        mysqli_query($conexion, "INSERT IGNORE INTO pedidos_rechazados (id_pedido) VALUES ($id_pedido)");
     }
-    header("Location: consultar-pedidos.php"); // redirigir
+    header("Location: consultar-pedidos.php");
     exit();
 }
 ?>

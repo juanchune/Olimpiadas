@@ -1,45 +1,41 @@
 <?php
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
-    header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
-    exit();
-}
+
 include ('conexion.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
-    $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
-    mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto"); // eliminar detalle de paquete
-    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto"); // eliminar excursiones
-    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto"); // eliminar estadias
-    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto"); // eliminar vehiculos
-    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");   // eliminar pasajes
-    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto"); // eliminar paquetes
-    mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto"); // eliminar detalle de carrito
-    mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto"); // eliminar detalle de pedido
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
+    $id_producto = intval($_POST['eliminar_id']);
+
+    mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto");
+
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
-// variables para filtros
 $tabla_seleccionada = 'productos';
 
 $where = [];
-if (!empty($_GET['precio'])) { // filtrar por precio
+if (!empty($_GET['precio'])) {
     $precio = floatval($_GET['precio']);
     $where[] = "precio <= $precio";
 }
-if (!empty($_GET['tipo_producto'])) { // filtrar por tipo de producto
+if (!empty($_GET['tipo_producto'])) {
     $tipo = mysqli_real_escape_string($conexion, $_GET['tipo_producto']);
     $where[] = "tipo_producto = '$tipo'";
 }
-if (!empty($_GET['buscar'])) { // filtrar por nombre, tipo de producto o descripcion
+if (!empty($_GET['buscar'])) {
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(nombre LIKE '%$buscar%' OR tipo_producto LIKE '%$buscar%' OR descripcion LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-// obtener tipos de productos para el filtro
 $tiposResult = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto");
 
-// obtener productos
 $sql = "SELECT id_producto, nombre, tipo_producto, precio, descripcion, codigo_producto
         FROM productos
         $whereSQL

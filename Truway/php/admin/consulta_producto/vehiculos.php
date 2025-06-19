@@ -1,39 +1,34 @@
 <?php
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
-    header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
-    exit();
-}
 include ('conexion.php');
 
-// eliminar producto
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
-    $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
-    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto"); // eliminar vehiculo
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
+// Eliminar producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
+    $id_producto = intval($_POST['eliminar_id']);
+    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
 
-// variables para filtros
+// Variables para filtros
 $tabla_seleccionada = 'alquiler_vehiculos';
 $capacidadResult = mysqli_query($conexion, "SELECT DISTINCT capacidad FROM vehiculos ORDER BY capacidad");
 $tipoResult = mysqli_query($conexion, "SELECT DISTINCT tipo FROM vehiculos ORDER BY tipo");
 
-// filtros
+// Filtros
 $where = [];
-if (!empty($_GET['capacidad'])) { // filtrar por capacidad
+if (!empty($_GET['capacidad'])) {
     $capacidad = intval($_GET['capacidad']);
     $where[] = "v.capacidad = $capacidad";
 }
-if (!empty($_GET['tipo'])) { // filtrar por tipo
+if (!empty($_GET['tipo'])) {
     $tipo = mysqli_real_escape_string($conexion, $_GET['tipo']);
     $where[] = "v.tipo = '$tipo'";
 }
-if (!empty($_GET['buscar'])) { // filtrar por marca o modelo
+if (!empty($_GET['buscar'])) {
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(v.marca LIKE '%$buscar%' OR v.modelo LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-// consulta sql de vehiculos
 $sql = "SELECT v.*, p.descripcion 
         FROM vehiculos v
         JOIN productos p ON v.id_producto = p.id_producto

@@ -1,38 +1,34 @@
 <?php
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
-    header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
-    exit();
+include('conexion.php');
+
+// Eliminar producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
+    $id_producto = intval($_POST['eliminar_id']);
+    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
 }
-include('conexion.php'); 
 
-// eliminar producto
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
-    $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
-    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto"); // eliminar producto
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
-
-// variables para filtros
+// Variables para filtros
 $tabla_seleccionada = 'boletos_avion';
 $tipoPasajeResult = mysqli_query($conexion, "SELECT DISTINCT tipo_pasaje FROM pasajes ORDER BY tipo_pasaje");
 $aerolineaResult = mysqli_query($conexion, "SELECT DISTINCT aerolinea FROM pasajes ORDER BY aerolinea");
 
-// filtros
+// Filtros
 $where = [];
-if (!empty($_GET['tipo-pasaje'])) { // filtrar por tipo de pasaje
+if (!empty($_GET['tipo-pasaje'])) {
     $tipo_pasaje = mysqli_real_escape_string($conexion, $_GET['tipo-pasaje']);
     $where[] = "p.tipo_pasaje = '$tipo_pasaje'";
 }
-if (!empty($_GET['aereolinea'])) { // filtrar por aerolinea
+if (!empty($_GET['aereolinea'])) {
     $aerolinea = mysqli_real_escape_string($conexion, $_GET['aereolinea']);
     $where[] = "p.aerolinea = '$aerolinea'";
 }
-if (!empty($_GET['buscar'])) { // filtrar por origen o destino del psaje
+if (!empty($_GET['buscar'])) {
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(p.origen LIKE '%$buscar%' OR p.destino LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-// consulta sql de productoa
 $sql = "SELECT p.*, pr.descripcion 
         FROM pasajes p
         JOIN productos pr ON p.id_producto = pr.id_producto

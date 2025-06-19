@@ -1,9 +1,5 @@
 <?php
 session_start();
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo clientes pueden acceder
-    header('Location: /Olimpiadas/Truway/index.php');
-    exit();
-}
 include('conexion.php');
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 
@@ -93,7 +89,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mysqli_query($conexion, "DELETE FROM carrito WHERE id_carrito = $id_carrito");
             }
 
-            $mensaje = "Pedido realizado, su pedido está pendiente de entrega";
+            $mensaje = "Pedido realizado, su pedido está pendiente de entrega. Gracias por su compra.<br>
+                En este punto, se le envía un correo electrónico al cliente con los detalles del pedido y la confirmación de la compra.";
+            // require '../sistema/emails.php'; // enviar email de confirmación
         } else {
             $mensaje = "Error al registrar el pedido, intente nuevamente";
         }

@@ -1,23 +1,20 @@
 <?php
-session_start();
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo clientes pueden acceder
-    header('Location: /Olimpiadas/Truway/index.php');
-    exit();
-}
-?>
+  session_start(); 
+  ?>
+
   <link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css">
 
   <?php
   include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php'; 
   include('conexion.php'); 
 
-  $id_usuario = $_SESSION['id']; // obtener el id del usuario
-  $consulta_carrito = "SELECT * FROM carrito WHERE id_usuario = '$id_usuario'";  // obtener el carrito del usuario
-  $resultado_carrito = mysqli_query($conexion, $consulta_carrito);  // ejecutar la consulta
-  $carrito = mysqli_fetch_assoc($resultado_carrito); // obtener el carrito como un array asociativo
+  $id_usuario = $_SESSION['id'];
+  $consulta_carrito = "SELECT * FROM carrito WHERE id_usuario = '$id_usuario'";
+  $resultado_carrito = mysqli_query($conexion, $consulta_carrito);
+  $carrito = mysqli_fetch_assoc($resultado_carrito);
 
 
-  if (!$carrito) { // si no hay carrito mostrar mensaje
+  if (!$carrito) {
       ?>
       <main>
       <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php';?>
@@ -31,74 +28,69 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo client
       exit();
   }
 
-  
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_producto'])) { // eliminacion de productos del carrito
-      $id_detalle_carrito = intval($_POST['id_detalle_carrito']); // validar id_detalle_carrito
-      $consulta = "DELETE FROM detalle_carrito WHERE id_detalle_carrito = $id_detalle_carrito"; // consulta para eliminar el producto del carrito
-      mysqli_query($conexion, $consulta); 
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_producto'])) {
+      $id_detalle_carrito = intval($_POST['id_detalle_carrito']);
+      $consulta = "DELETE FROM detalle_carrito WHERE id_detalle_carrito = $id_detalle_carrito";
+      mysqli_query($conexion, $consulta);
       header('Location: carrito.php');
-      exit(); 
+      exit();
   }
 
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modificar_producto'])) { // modificacion de productos del carrito
-      $id_detalle_carrito = intval($_POST['id_detalle_carrito']); // validar id_detalle_carrito
-      $nueva_cantidad = max(1, intval($_POST['nueva_cantidad'])); // validar nueva_cantidad
-      $nueva_fecha = $_POST['nueva_fecha']; // validar nueva_fecha
-      $hoy = new DateTime(date('Y-m-d')); // fecha actual
-      $fecha_usuario = Date('Y-m-d', $nueva_fecha); // convertir la fecha del usuario a date
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modificar_producto'])) {
+      $id_detalle_carrito = intval($_POST['id_detalle_carrito']);
+      $nueva_cantidad = max(1, intval($_POST['nueva_cantidad']));
+      $nueva_fecha = $_POST['nueva_fecha'];
+      $hoy = new DateTime(date('Y-m-d'));
+      $fecha_usuario = DateTime::createFromFormat('Y-m-d', $nueva_fecha);
 
-      if ($fecha_usuario && $fecha_usuario >= $hoy) { // validar la fecha
-          $consulta = "UPDATE detalle_carrito SET cantidad = $nueva_cantidad, fecha_reserva = '$nueva_fecha' WHERE id_detalle_carrito = $id_detalle_carrito"; // consulta para modificar el producto del carrito
-          mysqli_query($conexion, $consulta); 
+      if ($fecha_usuario && $fecha_usuario >= $hoy) {
+          $consulta = "UPDATE detalle_carrito SET cantidad = $nueva_cantidad, fecha_reserva = '$nueva_fecha' WHERE id_detalle_carrito = $id_detalle_carrito";
+          mysqli_query($conexion, $consulta);
           header('Location: carrito.php');
           exit();
       } else {
-          $error_modificar = "La fecha seleccionada no puede ser anterior a hoy."; // mensaje de error
+          $error_modificar = "La fecha seleccionada no puede ser anterior a hoy.";
       }
   }
 
-  $id_carrito = $carrito['id_carrito']; // obtener el id del carrito
-  // consulta para obtener los detalles del carrito
-  $consulta_detalle = "SELECT dc.*, p.nombre, p.descripcion, p.precio, p.tipo_producto  
+  $id_carrito = $carrito['id_carrito'];
+  $consulta_detalle = "SELECT dc.*, p.nombre, p.descripcion, p.precio, p.tipo_producto
       FROM detalle_carrito dc
       JOIN productos p ON dc.id_producto = p.id_producto
       WHERE dc.id_carrito = '$id_carrito'";
   $resultado_detalle = mysqli_query($conexion, $consulta_detalle);
 
-  // variables para almacenar los detalles del carrito
   $productos = [];
   $cantidad_paquetes = 0;
   $subtotal = 0;
   $precio_final = 0;
   $resumen_tipos = [];
 
-  // recorrer los resultados de la consulta y almacenar los detalles del carrito
   while ($fila = mysqli_fetch_assoc($resultado_detalle)) {
-      $productos[] = $fila; // almacenar cada producto en el array
-      $cantidad_paquetes += $fila['cantidad']; // sumar la cantidad de paquetes
-      $subtotal += $fila['precio_carrito'] * $fila['cantidad']; // sumar el subtotal de cada producto
-      $tipo = $fila['tipo_producto']; // obtener el tipo de producto
-      if (!isset($resumen_tipos[$tipo])) { 
-          $resumen_tipos[$tipo] = [ 
+      $productos[] = $fila;
+      $cantidad_paquetes += $fila['cantidad'];
+      $subtotal += $fila['precio_carrito'] * $fila['cantidad'];
+      $tipo = $fila['tipo_producto'];
+      if (!isset($resumen_tipos[$tipo])) {
+          $resumen_tipos[$tipo] = [
               'cantidad' => 0,
               'subtotal' => 0
           ];
       }
-      $resumen_tipos[$tipo]['cantidad'] += $fila['cantidad']; // sumar la cantidad de productos por tipo
-      $resumen_tipos[$tipo]['subtotal'] += $fila['precio_carrito'] * $fila['cantidad']; // sumar el subtotal de productos por tipo
+      $resumen_tipos[$tipo]['cantidad'] += $fila['cantidad'];
+      $resumen_tipos[$tipo]['subtotal'] += $fila['precio_carrito'] * $fila['cantidad'];
   }
-  $precio_final = $subtotal; // calcular el precio final del carrito
+  $precio_final = $subtotal;
 
-  
-  function vaciar_carrito($conexion, $id_carrito) { // funcion para vaciar el carrito
-      $consulta = "DELETE FROM detalle_carrito WHERE id_carrito = '$id_carrito'"; // consulta para eliminar todos los productos del carrito
+  function vaciar_carrito($conexion, $id_carrito) {
+      $consulta = "DELETE FROM detalle_carrito WHERE id_carrito = '$id_carrito'";
       $resultado = mysqli_query($conexion, $consulta);
       if (!$resultado) {
           die("Error al vaciar el carrito: " . mysqli_error($conexion));
       }
   }
 
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaciar_carrito'])) { // vaciar el carrito
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaciar_carrito'])) {
       vaciar_carrito($conexion, $id_carrito);
       header('Location: carrito.php');
       exit();
