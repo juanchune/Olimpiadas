@@ -1,4 +1,8 @@
 <?php
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
+    header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
+    exit();
+}
 include('conexion.php');
 
 // Eliminar producto

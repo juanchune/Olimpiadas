@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
+    header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
+    exit();
+}
 include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
 include('conexion.php');
 

@@ -1,15 +1,20 @@
 <?php
 session_start();
-include('conexion.php');
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo clientes pueden acceder
+        header('Location: /Olimpiadas/Truway/index.php');
+    exit();
+}
 
+// si no hay id_pedido muestro mensaje y salgo
 if (!isset($_GET['id_pedido'])) {
     echo "<p>Pedido no especificado.</p>";
     exit();
 }
 
+// guardo el id del pedido
 $id_pedido = intval($_GET['id_pedido']);
 
-// Obtener detalles del pedido
+// traigo los productos del pedido
 $consulta_detalle = "SELECT dp.*, p.nombre, p.descripcion, p.precio, p.tipo_producto, dp.fecha
     FROM detalle_pedido dp
     JOIN productos p ON dp.id_producto = p.id_producto
@@ -21,34 +26,66 @@ while ($fila = mysqli_fetch_assoc($resultado_detalle)) {
   $productos[] = $fila;
 }
 
-// modificar producto 
+// si se envia el formulario para modificar producto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modificar_producto'])) {
     $id_detalle_pedido = intval($_POST['id_detalle_pedido']);
     $nueva_cantidad = max(1, intval($_POST['nueva_cantidad']));
-    $consulta = "UPDATE detalle_pedido SET cantidad = $nueva_cantidad WHERE id_detalle_pedido = $id_detalle_pedido";
-    mysqli_query($conexion, $consulta);
-    header("Location: perfil.php");
-    exit();
+    $nueva_fecha = $_POST['nueva_fecha'];
+    $hoy = date('Y-m-d');
+    if ($nueva_fecha >= $hoy) {
+        $consulta = "UPDATE detalle_pedido SET cantidad = $nueva_cantidad, fecha = '$nueva_fecha' WHERE id_detalle_pedido = $id_detalle_pedido";
+        mysqli_query($conexion, $consulta);
+        header("Location: modificar-pedido.php?id_pedido=$id_pedido");
+        exit();
+    } else {
+        $error_modificar = "La fecha seleccionada no puede ser anterior a hoy.";
+    }
 }
 
-// eliminar producto del pedido
+// si se envia el formulario para eliminar producto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_producto'])) {
     $id_detalle_pedido = intval($_POST['id_detalle_pedido']);
     $consulta = "DELETE FROM detalle_pedido WHERE id_detalle_pedido = $id_detalle_pedido";
     mysqli_query($conexion, $consulta);
-    header("Location: modificar-pedido.php?id_pedido=$id_pedido");
+
+    // reviso si ya no quedan productos en el pedido
+    $consulta_check = "SELECT COUNT(*) as total FROM detalle_pedido WHERE id_pedido = $id_pedido";
+    $res_check = mysqli_query($conexion, $consulta_check);
+    $row_check = mysqli_fetch_assoc($res_check);
+    if ($row_check['total'] == 0) {
+        // borro el pedido de pedidos_pendientes
+        $consulta_del_pend = "DELETE FROM pedidos_pendientes WHERE id_pedido = $id_pedido";
+        mysqli_query($conexion, $consulta_del_pend);
+        // borro el pedido de pedidos
+        $consulta_del_ped = "DELETE FROM pedidos WHERE id_pedido = $id_pedido";
+        mysqli_query($conexion, $consulta_del_ped);
+        // redirijo al perfil o donde quieras
+        header("Location: perfil.php");
+        exit();
+    } else {
+        // si quedan productos recargo la pagina
+        header("Location: modificar-pedido.php?id_pedido=$id_pedido");
+        exit();
+    }
+}
+
+// si se envia el formulario para confirmar el pedido
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['confirmar_pedido'])) {
+    $consulta_detalle = "SELECT cantidad, precio FROM detalle_pedido dp JOIN productos p ON dp.id_producto = p.id_producto WHERE dp.id_pedido = '$id_pedido'";
+    $resultado_detalle = mysqli_query($conexion, $consulta_detalle);
+    $cantidad_total = 0;
+    $precio_total = 0;
+    while ($fila = mysqli_fetch_assoc($resultado_detalle)) {
+        $cantidad_total += $fila['cantidad'];
+        $precio_total += $fila['cantidad'] * $fila['precio'];
+    }
+    $consulta_update = "UPDATE pedidos SET cantidad = $cantidad_total, precio_total = $precio_total WHERE id_pedido = $id_pedido";
+    mysqli_query($conexion, $consulta_update);
+    header("Location: perfil.php");
     exit();
 }
 
-// // vaciar pedido
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vaciar_pedido'])) {
-//     $consulta = "DELETE FROM detalle_pedido WHERE id_pedido = '$id_pedido'";
-//     mysqli_query($conexion, $consulta);
-//     header("Location: modificar-pedido.php?id_pedido=$id_pedido");
-//     exit();
-// }
-
-// calcular totales
+// calculo los totales para mostrar en el resumen
 $cantidad_total = 0;
 $subtotal = 0;
 $resumen_tipos = [];
@@ -66,7 +103,6 @@ foreach ($productos as $fila) {
     $resumen_tipos[$tipo]['subtotal'] += $fila['precio'] * $fila['cantidad'];
 }
 $precio_final = $subtotal;
-
 ?>
 <link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css">
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php'; ?>
@@ -95,11 +131,9 @@ $precio_final = $subtotal;
           <div class="cont-grid-titulo-btns"> 
             <h3><?php echo htmlspecialchars($producto['nombre']); ?></h3>
             <div class="cont-btns">
-              <!-- boton para modificar producto -->
               <button class="btn modificar" type="button" data-modificar-id="<?php echo $producto['id_detalle_pedido']; ?>">
                  <svg xmlns="http://www.w3.org/2000/svg" class="svg-icon" viewBox="0 0 24 24"><path class="icon" fill="currentColor" d="M20.71 7.04c-.34.34-.67.67-.68 1c-.03.32.31.65.63.96c.48.5.95.95.93 1.44s-.53 1-1.04 1.5l-4.13 4.14L15 14.66l4.25-4.24l-.96-.96l-1.42 1.41l-3.75-3.75l3.84-3.83c.39-.39 1.04-.39 1.41 0l2.34 2.34c.39.37.39 1.02 0 1.41M3 17.25l9.56-9.57l3.75 3.75L6.75 21H3z"/></svg>
               </button>
-              <!-- formulario para eliminar producto -->
               <form method="post">
                 <input type="hidden" name="id_detalle_pedido" value="<?php echo $producto['id_detalle_pedido']; ?>">
                   <button class="btn borrar" name="eliminar_producto" type="submit" title="Eliminar">
@@ -117,12 +151,17 @@ $precio_final = $subtotal;
             <div class="cont-informacion">
               <span class="informacion personas"><?php echo $producto['cantidad']; ?></span>
             </div>
+            <div class="cont-lbls">
+              <span class="lbl-nombre">Fecha:</span>
+            </div>
+            <div class="cont-informacion">
+              <span class="informacion fecha"><?php echo htmlspecialchars($producto['fecha']); ?></span>
+            </div>
           </div>
           <div class="cont-importe">
             <span class="importe">$<?php echo number_format($producto['precio'], 2, ',', '.'); ?></span>
           </div>
         </div>
-        <!-- formulario modificar -->
         <form class="form-modificar" id="modificar-<?php echo $producto['id_detalle_pedido']; ?>" method="post" style="display:none;">
           <input type="hidden" name="id_detalle_pedido" value="<?php echo $producto['id_detalle_pedido']; ?>">
           <div class="cont-inputs-modificar">
@@ -130,13 +169,14 @@ $precio_final = $subtotal;
               <label>Cantidad: </label>
               <input class="input-modificar" type="number" name="nueva_cantidad" min="1" value="<?php echo $producto['cantidad']; ?>" required>
             </div>
-             <div class="cont-input">
+            <div class="cont-input">
               <label>Fecha: </label>
               <input class="input-modificar" type="date" name="nueva_fecha" min="<?php echo date('Y-m-d'); ?>" value="<?php echo htmlspecialchars($producto['fecha']); ?>" required>
             </div>
             <button type="submit" name="modificar_producto" class="btn guardar">Guardar</button>
             <button type="button" class="btn cancelar" onclick="document.getElementById('modificar-<?php echo $producto['id_detalle_pedido']; ?>').style.display='none';return false;">Cancelar</button>
           </div>
+          <?php if (isset($error_modificar) && isset($_POST['id_detalle_pedido']) && $_POST['id_detalle_pedido'] == $producto['id_detalle_pedido']) echo '<p style="color:red;">' . htmlspecialchars($error_modificar) . '</p>'; ?>
         </form>
       </article>
       <?php endforeach; ?>
@@ -163,8 +203,7 @@ $precio_final = $subtotal;
           </div>
         </div>
         <form method="post" class="cont-btns">
-          <a class="btn siguiente" data-modificar-id="<?php echo $producto['id_pedido']; ?> href="/Olimpiadas/Truway/php/cliente/perfil.php">Confirmar</a>
-          <!-- <button class="btn borrar" name="vaciar_pedido" type="submit">Vaciar pedido</button> -->
+          <button class="btn siguiente" name="confirmar_pedido" type="submit">Confirmar</button>
         </form>
       </article>
     </div>

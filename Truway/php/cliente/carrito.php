@@ -1,7 +1,10 @@
 <?php
-  session_start(); 
-  ?>
-
+session_start();
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'cliente') { // solo clientes pueden acceder
+    header('Location: /Olimpiadas/Truway/index.php');
+    exit();
+}
+?>
   <link rel="stylesheet" href="/Olimpiadas/Truway/css/carrito.css">
 
   <?php
