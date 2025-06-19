@@ -8,36 +8,39 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
 include('conexion.php');
 
 
-$fecha_actual = date('Y-m-d');
-$sql_ventas = "SELECT v.id_venta, v.id_pedido 
+// actualizar estado de ventas
+$fecha_actual = date('Y-m-d');  // obtener fecha actual
+
+// obtener todas las ventas
+$sql_ventas = "SELECT v.id_venta, v.id_pedido  
                FROM ventas v 
                WHERE v.estado_facturacion = 2 OR v.estado_facturacion = 1";
 $resultado_ventas = mysqli_query($conexion, $sql_ventas);
 
+// recorrer cada venta
 while ($venta = mysqli_fetch_assoc($resultado_ventas)) {
-    $idVenta = $venta['id_venta'];
-    $idPedido = $venta['id_pedido'];
+    $idVenta = $venta['id_venta']; // obtener el id de la venta
+    $idPedido = $venta['id_pedido']; // obtener el id del pedido asociado a la venta
 
+    $fechaMasCercana = null; //variable para la fecha mas cercana
+    $diferenciaMinima = null; // variable para la diferencia minima
+    $timestampActual = strtotime($fecha_actual); // convertir la fecha actual a timestamp
 
-    $fechaMasCercana = null;
-    $diferenciaMinima = null;
-    $timestampActual = strtotime($fecha_actual);
-
-    $sqlFechasDetalle = "SELECT fecha FROM detalle_pedido WHERE id_pedido = $idPedido";
-    $resultadoFechas = mysqli_query($conexion, $sqlFechasDetalle);
-    while ($detalle = mysqli_fetch_assoc($resultadoFechas)) {
-        $fechaDetalle = $detalle['fecha'];
-        $timestampDetalle = strtotime($fechaDetalle);
-        $diferencia = abs($timestampDetalle - $timestampActual);
+    $sqlFechasDetalle = "SELECT fecha FROM detalle_pedido WHERE id_pedido = $idPedido"; // obtener las fechas del detalle del pedidodela venta
+    $resultadoFechas = mysqli_query($conexion, $sqlFechasDetalle); // obtener las fechas del detalle del pedido
+    while ($detalle = mysqli_fetch_assoc($resultadoFechas)) { // recorrer cada detalle del pedido
+        $fechaDetalle = $detalle['fecha']; // obtener la fecha del detalle del pedido
+        $timestampDetalle = strtotime($fechaDetalle); // convertir la fecha del detalle a timestamp
+        $diferencia = abs($timestampDetalle - $timestampActual); // calcular la diferencia en segundos entre la fecha del detalle y la fecha actual
         if ($diferenciaMinima === null || $diferencia < $diferenciaMinima) {
             $diferenciaMinima = $diferencia;
-            $fechaMasCercana = $fechaDetalle;
+            $fechaMasCercana = $fechaDetalle; 
         }
     }
 
-    if ($fechaMasCercana) {
-        $unDiaAntes = date('Y-m-d', strtotime($fechaMasCercana . ' -1 day'));
-        if ($fecha_actual >= $unDiaAntes) {
+    if ($fechaMasCercana) { // si se encontró una fecha más cercana
+        $unDiaAntes = date('Y-m-d', strtotime($fechaMasCercana . ' -1 day')); // calcular la fecha un daa antes de la fecha más cercana
+        if ($fecha_actual >= $unDiaAntes) { 
             // Marcar como paga
             mysqli_query($conexion, "UPDATE ventas SET estado_facturacion = 1 WHERE id_venta = $idVenta");
         } else {
@@ -78,7 +81,7 @@ while ($venta = mysqli_fetch_assoc($resultado_ventas)) {
         $where .= " AND v.fecha_venta = '$fechaVentaEsc'";
     }
 
-    // Obtener fechas únicas para el filtro
+    // Obtener fechas unicas para el filtro
     $fechasQuery = "SELECT DISTINCT v.fecha_venta FROM ventas v ORDER BY v.fecha_venta DESC";
     $fechasResult = mysqli_query($conexion, $fechasQuery);
 

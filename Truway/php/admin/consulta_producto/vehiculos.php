@@ -5,34 +5,35 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administ
 }
 include ('conexion.php');
 
-// Eliminar producto
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
-    $id_producto = intval($_POST['eliminar_id']);
-    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto");
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
+// eliminar producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
+    $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
+    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto"); // eliminar vehiculo
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
 }
 
-// Variables para filtros
+// variables para filtros
 $tabla_seleccionada = 'alquiler_vehiculos';
 $capacidadResult = mysqli_query($conexion, "SELECT DISTINCT capacidad FROM vehiculos ORDER BY capacidad");
 $tipoResult = mysqli_query($conexion, "SELECT DISTINCT tipo FROM vehiculos ORDER BY tipo");
 
-// Filtros
+// filtros
 $where = [];
-if (!empty($_GET['capacidad'])) {
+if (!empty($_GET['capacidad'])) { // filtrar por capacidad
     $capacidad = intval($_GET['capacidad']);
     $where[] = "v.capacidad = $capacidad";
 }
-if (!empty($_GET['tipo'])) {
+if (!empty($_GET['tipo'])) { // filtrar por tipo
     $tipo = mysqli_real_escape_string($conexion, $_GET['tipo']);
     $where[] = "v.tipo = '$tipo'";
 }
-if (!empty($_GET['buscar'])) {
+if (!empty($_GET['buscar'])) { // filtrar por marca o modelo
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(v.marca LIKE '%$buscar%' OR v.modelo LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
+// consulta sql de vehiculos
 $sql = "SELECT v.*, p.descripcion 
         FROM vehiculos v
         JOIN productos p ON v.id_producto = p.id_producto

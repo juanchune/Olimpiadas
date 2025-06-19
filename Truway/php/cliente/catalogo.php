@@ -43,16 +43,16 @@ include('conexion.php');
             </div>
         </div>
         <div class="productos-grid">
-            <?php
-                $tipo_producto = isset($_GET['tipo_producto']) ? $_GET['tipo_producto'] : "";
+            <?php  
+                $tipo_producto = isset($_GET['tipo_producto']) ? $_GET['tipo_producto'] : ""; // Obtener el tipo de producto seleccionado
 
-                if ($tipo_producto === "") {
+                if ($tipo_producto === "") { // Si no se ha seleccionado un tipo de producto, mostrar todos
                     $productos_query = "SELECT * FROM `productos`";
                 } else {
                     $productos_query = "SELECT * FROM `productos` WHERE tipo_producto='$tipo_producto'";
                 }
 
-                $productos_result = mysqli_query($conexion, $productos_query);
+                $productos_result = mysqli_query($conexion, $productos_query); // ejjcutar la consulta para obtener los productos
 
                 if (mysqli_num_rows($productos_result) > 0) {
 

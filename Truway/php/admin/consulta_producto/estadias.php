@@ -5,36 +5,38 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administ
 }
 include('conexion.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
-    $id_producto = intval($_POST['eliminar_id']);
-    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto");
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
+// eliminar producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
+    $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
+    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto"); // eliminar estadia
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
 }
 
-
+// variables para filtros
 $categoriaResult = mysqli_query($conexion, "SELECT DISTINCT categoria FROM estadias WHERE categoria IS NOT NULL AND categoria <> '' ORDER BY categoria");
 $localidadResult = mysqli_query($conexion, "SELECT DISTINCT localidad FROM estadias WHERE localidad IS NOT NULL AND localidad <> '' ORDER BY localidad");
 
-// Filtros
+// filtros
 $where = [];
-if (!empty($_GET['categoria'])) {
+if (!empty($_GET['categoria'])) { // filtrar por categoria
     $categoria = mysqli_real_escape_string($conexion, $_GET['categoria']);
     $where[] = "e.categoria = '$categoria'";
 }
-if (!empty($_GET['localidad'])) {
+if (!empty($_GET['localidad'])) { // filtrar por localidad
     $localidad = mysqli_real_escape_string($conexion, $_GET['localidad']);
     $where[] = "e.localidad = '$localidad'";
 }
-if (!empty($_GET['buscar'])) {
+if (!empty($_GET['buscar'])) { // filtrar por busqueda
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(e.localidad LIKE '%$buscar%' OR e.nombre_hotel LIKE '%$buscar%' OR e.servicios LIKE '%$buscar%' OR e.categoria LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
+// consulta sql de estadias
 $sql = "SELECT e.*, p.descripcion
         FROM estadias e
         JOIN productos p ON e.id_producto = p.id_producto
-        $whereSQL
+        $whereSQL 
         ORDER BY e.id_estadia DESC";
 $result = mysqli_query($conexion, $sql);
 ?>

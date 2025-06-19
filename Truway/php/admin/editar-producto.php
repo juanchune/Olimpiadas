@@ -8,127 +8,146 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
 include('conexion.php');
 
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id_producto = isset($_POST['id_producto']) ? intval($_POST['id_producto']) : 0;
-} else {
-    $id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// verificar si se envio el id del producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { // si se envio por POST
+    $id_producto = isset($_POST['id_producto']) ? intval($_POST['id_producto']) : 0;  // obtener id del producto
+} else { // si se envio por GET
+    $id_producto = isset($_GET['id']) ? intval($_GET['id']) : 0; // obtener id del producto
 }
-if ($id_producto <= 0) {
-    echo "<p>ID de producto inválido.</p>";
-    exit;
+if ($id_producto <= 0) { // si no se envio el id del producto
+    echo "<p>ID de producto inválido.</p>"; // mostrar mensaje de error
+    exit; 
 }
 
 
-$sql = "SELECT * FROM productos WHERE id_producto = $id_producto";
-$res = mysqli_query($conexion, $sql);
-$producto = mysqli_fetch_assoc($res);
+$sql = "SELECT * FROM productos WHERE id_producto = $id_producto"; // consulta para obtener el producto
+$res = mysqli_query($conexion, $sql); // ejecutar consulta
+$producto = mysqli_fetch_assoc($res); // obtener producto
 
+// si no se encontro el producto
 if (!$producto) {
-    echo "<p>Producto no encontrado.</p>";
+    echo "<p>Producto no encontrado.</p>"; // mostrar mensaje de error
     exit;
 }
 
-$tipo_producto = strtolower($producto['tipo_producto']);
+// obtener tipo de producto
+$tipo_producto = strtolower($producto['tipo_producto']); 
 $msg = "";
 
 
-$tipos = [];
-$resTipos = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto");
-while ($row = mysqli_fetch_assoc($resTipos)) {
-    $tipos[] = $row['tipo_producto'];
+// si el tipo de producto no es valido
+$tipos = []; // inicializar array de tipos
+$resTipos = mysqli_query($conexion, "SELECT DISTINCT tipo_producto FROM productos WHERE tipo_producto IS NOT NULL ORDER BY tipo_producto"); // obtener tipos de productos
+while ($row = mysqli_fetch_assoc($resTipos)) { // recorrer resultados
+    $tipos[] = $row['tipo_producto']; // agregar tipo al array
 }
 
-
-$productos_incluidos = [];
-$productos_disponibles = [];
-if ($tipo_producto === 'paquete') {
-    $respaq = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
-    $paq = mysqli_fetch_assoc($respaq);
-    $id_paquete = $paq['id_paquete'];
-    $resIncluidos = mysqli_query($conexion, "SELECT id_producto FROM detalle_paquete WHERE id_paquete = $id_paquete");
-    while ($row = mysqli_fetch_assoc($resIncluidos)) {
-        $productos_incluidos[] = $row['id_producto'];
+$productos_incluidos = []; // inicializar array de productos incluidos
+$productos_disponibles = []; // inicializar array de productos disponibles
+if ($tipo_producto === 'paquete') { // si el tipo de producto es paquete
+    $respaq = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto"); // obtener id del paquete
+    $paq = mysqli_fetch_assoc($respaq); // obtener datos del paquete
+    $id_paquete = $paq['id_paquete']; // obtener id del paquete
+    $resIncluidos = mysqli_query($conexion, "SELECT id_producto FROM detalle_paquete WHERE id_paquete = $id_paquete"); // obtener productos del paquete
+    while ($row = mysqli_fetch_assoc($resIncluidos)) { // recorrer productos incluidos
+        $productos_incluidos[] = $row['id_producto']; // agregar id del producto incluido al array
     }
-
-    $resTodos = mysqli_query($conexion, "SELECT id_producto, nombre, tipo_producto FROM productos WHERE tipo_producto != 'paquete' AND id_producto != $id_producto");
-    while ($row = mysqli_fetch_assoc($resTodos)) {
-        $productos_disponibles[] = $row;
+    // obtener productos disponibles
+    $resTodos = mysqli_query($conexion, "SELECT id_producto, nombre, tipo_producto FROM productos WHERE tipo_producto != 'paquete' AND id_producto != $id_producto"); // obtener todos los productos excepto el paquete actual
+    while ($row = mysqli_fetch_assoc($resTodos)) { 
+        $productos_disponibles[] = $row; // agregar producto al array de productos disponibles
     }
 }
 
+// si el tipo de producto es excursion, estadia, pasaje o vehiculo
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {  // si se envio el formulario
+    $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']); // obtener nombre del producto
+    $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']); // obtener descripcion del producto
+    $precio = floatval($_POST['precio']); // obtener precio del producto
+    $tipo_producto_post = mysqli_real_escape_string($conexion, $_POST['tipo_producto']); // obtener tipo de producto del formulario
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = mysqli_real_escape_string($conexion, $_POST['nombre']);
-    $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']);
-    $precio = floatval($_POST['precio']);
-    $tipo_producto_post = mysqli_real_escape_string($conexion, $_POST['tipo_producto']);
-
+    // validar tipo de producto
     $update = "UPDATE productos SET 
         nombre = '$nombre',
         descripcion = '$descripcion',
         precio = $precio,
         tipo_producto = '$tipo_producto_post'
         WHERE id_producto = $id_producto";
-    mysqli_query($conexion, $update);
+    mysqli_query($conexion, $update); // ejecutar consulta de actualizacion
 
 
     if ($tipo_producto === 'excursion' || $tipo_producto === 'excursión') { //Excursion
-        $ubicacion = mysqli_real_escape_string($conexion, $_POST['ubicacion_salida']);
-        $duracion = intval($_POST['duracion']);
-        $guia = isset($_POST['guia']) ? 1 : 0;
-        $dificultad = mysqli_real_escape_string($conexion, $_POST['dificultad']);
-        mysqli_query($conexion, "UPDATE excursiones SET ubicacion_salida='$ubicacion', duracion=$duracion, guia=$guia, dificultad='$dificultad' WHERE id_producto=$id_producto");
+
+        $ubicacion = mysqli_real_escape_string($conexion, $_POST['ubicacion_salida']); // obtener ubicacion de salida
+        $duracion = intval($_POST['duracion']); // obtener duracion
+        $guia = isset($_POST['guia']) ? 1 : 0; // obtener guia
+        $dificultad = mysqli_real_escape_string($conexion, $_POST['dificultad']); // obtener dificultad
+
+        mysqli_query($conexion, "UPDATE excursiones SET ubicacion_salida='$ubicacion', duracion=$duracion, guia=$guia, dificultad='$dificultad' WHERE id_producto=$id_producto"); // ejecutar consulta de actualizacion
     }
     if ($tipo_producto === 'estadia' || $tipo_producto === 'estadía') { // Estadia
-        $localidad = mysqli_real_escape_string($conexion, $_POST['localidad']);
-        $nombre_hotel = mysqli_real_escape_string($conexion, $_POST['nombre_hotel']);
-        $servicios = mysqli_real_escape_string($conexion, $_POST['servicios']);
-        $categoria = mysqli_real_escape_string($conexion, $_POST['categoria']);
-        mysqli_query($conexion, "UPDATE estadias SET localidad='$localidad', nombre_hotel='$nombre_hotel', servicios='$servicios', categoria='$categoria' WHERE id_producto=$id_producto");
+
+        $localidad = mysqli_real_escape_string($conexion, $_POST['localidad']); // obtener localidad
+        $nombre_hotel = mysqli_real_escape_string($conexion, $_POST['nombre_hotel']); // obtener nombre del hotel
+        $servicios = mysqli_real_escape_string($conexion, $_POST['servicios']);     // obtener servicios
+        $categoria = mysqli_real_escape_string($conexion, $_POST['categoria']); // obtener categoria
+
+        mysqli_query($conexion, "UPDATE estadias SET localidad='$localidad', nombre_hotel='$nombre_hotel', servicios='$servicios', categoria='$categoria' WHERE id_producto=$id_producto"); // ejecutar consulta 
     }
     if ($tipo_producto === 'pasaje') { // Pasaje
-        $origen = mysqli_real_escape_string($conexion, $_POST['origen']);
-        $destino = mysqli_real_escape_string($conexion, $_POST['destino']);
-        $aerolinea = mysqli_real_escape_string($conexion, $_POST['aerolinea']);
-        $tipo_pasaje = mysqli_real_escape_string($conexion, $_POST['tipo_pasaje']);
-        mysqli_query($conexion, "UPDATE pasajes SET origen='$origen', destino='$destino', aerolinea='$aerolinea', tipo_pasaje='$tipo_pasaje' WHERE id_producto=$id_producto");
+
+        $origen = mysqli_real_escape_string($conexion, $_POST['origen']); // obtener origen
+        $destino = mysqli_real_escape_string($conexion, $_POST['destino']); // obtener destino
+        $aerolinea = mysqli_real_escape_string($conexion, $_POST['aerolinea']); // obtener aerolinea
+        $tipo_pasaje = mysqli_real_escape_string($conexion, $_POST['tipo_pasaje']); // obtener tipo de pasaje
+
+        mysqli_query($conexion, "UPDATE pasajes SET origen='$origen', destino='$destino', aerolinea='$aerolinea', tipo_pasaje='$tipo_pasaje' WHERE id_producto=$id_producto"); // ejecutar consulta 
     }
     if ($tipo_producto === 'vehiculo' || $tipo_producto === 'vehículo' || $tipo_producto === 'alquiler de vehículo') { // Vehiculo
-        $marca = mysqli_real_escape_string($conexion, $_POST['marca']);
-        $modelo = mysqli_real_escape_string($conexion, $_POST['modelo']);
-        $capacidad = intval($_POST['capacidad']);
-        $empresa = mysqli_real_escape_string($conexion, $_POST['empresa_rentadora']);
-        $tipo = mysqli_real_escape_string($conexion, $_POST['tipo']);
-        mysqli_query($conexion, "UPDATE vehiculos SET marca='$marca', modelo='$modelo', capacidad=$capacidad, empresa_rentadora='$empresa', tipo='$tipo' WHERE id_producto=$id_producto");
+
+        $marca = mysqli_real_escape_string($conexion, $_POST['marca']); // obtener marca
+        $modelo = mysqli_real_escape_string($conexion, $_POST['modelo']); // obtener modelo
+        $capacidad = intval($_POST['capacidad']); // obtener capacidad
+        $empresa = mysqli_real_escape_string($conexion, $_POST['empresa_rentadora']); // obtener empresa rentadora
+        $tipo = mysqli_real_escape_string($conexion, $_POST['tipo']); // obtener tipo
+
+
+        mysqli_query($conexion, "UPDATE vehiculos SET marca='$marca', modelo='$modelo', capacidad=$capacidad, empresa_rentadora='$empresa', tipo='$tipo' WHERE id_producto=$id_producto"); // ejecutar consulta
     }
     if ($tipo_producto === 'paquete') { // Paquete
-        $respaq = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto");
-        $paq = mysqli_fetch_assoc($respaq);
-        $id_paquete = $paq['id_paquete'];
-        mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_paquete = $id_paquete");
-        $ids = [];
-        if (!empty($_POST['excursion'])) $ids[] = intval($_POST['excursion']);
-        if (!empty($_POST['pasaje'])) $ids[] = intval($_POST['pasaje']);
-        if (!empty($_POST['estadia'])) $ids[] = intval($_POST['estadia']);
-        if (!empty($_POST['vehiculo'])) $ids[] = intval($_POST['vehiculo']);
-        foreach ($ids as $id_prod) {
-            mysqli_query($conexion, "INSERT INTO detalle_paquete (id_paquete, id_producto) VALUES ($id_paquete, $id_prod)");
+
+        $respaq = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto"); // obtener id del paquete
+        $paq = mysqli_fetch_assoc($respaq); // obtener datos del paquete
+        $id_paquete = $paq['id_paquete']; // obtener id del paquete
+        mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_paquete = $id_paquete"); // eliminar productos del paquete
+
+        $ids = []; // inicializar array de ids de productos
+        if (!empty($_POST['excursion'])) $ids[] = intval($_POST['excursion']); // agregar id de excursion
+        if (!empty($_POST['pasaje'])) $ids[] = intval($_POST['pasaje']); // agregar id de pasaje
+        if (!empty($_POST['estadia'])) $ids[] = intval($_POST['estadia']); // agregar id de estadia
+        if (!empty($_POST['vehiculo'])) $ids[] = intval($_POST['vehiculo']); // agregar id de vehiculo
+        foreach ($ids as $id_prod) {  // recorrer ids de productos
+            mysqli_query($conexion, "INSERT INTO detalle_paquete (id_paquete, id_producto) VALUES ($id_paquete, $id_prod)"); // insertar producto en paquete
         }
     }
 
 
-    if ($tipo_producto === 'paquete') {
-        header("Location: consultar-producto.php?tabla_seleccionada=paquetes");
-    } elseif ($tipo_producto === 'excursion' || $tipo_producto === 'excursión') {
-        header("Location: consultar-producto.php?tabla_seleccionada=excursiones");
-    } elseif ($tipo_producto === 'estadia' || $tipo_producto === 'estadía') {
-        header("Location: consultar-producto.php?tabla_seleccionada=estadias");
-    } elseif ($tipo_producto === 'pasaje') {
-        header("Location: consultar-producto.php?tabla_seleccionada=boletos_avion");
-    } elseif ($tipo_producto === 'vehiculo' || $tipo_producto === 'vehículo' || $tipo_producto === 'alquiler de vehículo') {
-        header("Location: consultar-producto.php?tabla_seleccionada=alquiler_vehiculos");
-    } else {
+    if ($tipo_producto === 'paquete') { // si el tipo de producto es paquete
+        header("Location: consultar-producto.php?tabla_seleccionada=paquetes"); // redirigir a consultar paquetes
+
+    } elseif ($tipo_producto === 'excursion' || $tipo_producto === 'excursión') { // si el tipo de producto es excursion
+        header("Location: consultar-producto.php?tabla_seleccionada=excursiones"); // redirigir a consultar excursiones
+
+    } elseif ($tipo_producto === 'estadia' || $tipo_producto === 'estadía') { // si el tipo de producto es estadia
+        header("Location: consultar-producto.php?tabla_seleccionada=estadias"); // redirigir a consultar estadias
+
+    } elseif ($tipo_producto === 'pasaje') { // si el tipo de producto es pasaje
+        header("Location: consultar-producto.php?tabla_seleccionada=boletos_avion"); // redirigir a consultar boletos de avion
+
+    } elseif ($tipo_producto === 'vehiculo' || $tipo_producto === 'vehículo' || $tipo_producto === 'alquiler de vehículo') { // si el tipo de producto es vehiculo
+        header("Location: consultar-producto.php?tabla_seleccionada=alquiler_vehiculos"); // redirigir a consultar vehiculos
+
+    } else { 
         header("Location: consultar-producto.php?tabla_seleccionada=productos");
     }
     exit;

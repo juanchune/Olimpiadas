@@ -5,26 +5,29 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administ
 }
 include('conexion.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
-    $id_producto = intval($_POST['eliminar_id']);
-    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto");
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
+// eliminar producto
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // si se envia el formulario
+    $id_producto = intval($_POST['eliminar_id']); // obtener el id del producto a eliminar
+    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto"); // eliminar la excursion
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar el producto
 }
 
+// variables para filtros
 $tabla_seleccionada = 'excursiones';
 
-// Filtros
+// filtros
 $where = [];
-if (!empty($_GET['dificultad'])) {
+if (!empty($_GET['dificultad'])) { // filtrar por dificultad
     $dificultad = mysqli_real_escape_string($conexion, $_GET['dificultad']);
     $where[] = "e.dificultad = '$dificultad'";
 }
-if (!empty($_GET['buscar'])) {
+if (!empty($_GET['buscar'])) { // filtrar por busqueda
     $buscar = mysqli_real_escape_string($conexion, $_GET['buscar']);
     $where[] = "(e.ubicacion_salida LIKE '%$buscar%' OR e.duracion LIKE '%$buscar%' OR e.dificultad LIKE '%$buscar%')";
 }
 $whereSQL = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
+// consulta sql de excursiones
 $sql = "SELECT e.*, p.descripcion
         FROM excursiones e
         JOIN productos p ON e.id_producto = p.id_producto

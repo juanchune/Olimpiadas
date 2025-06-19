@@ -28,12 +28,12 @@ while ($fila = mysqli_fetch_assoc($resultado_detalle)) {
 
 // si se envia el formulario para modificar producto
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['modificar_producto'])) {
-    $id_detalle_pedido = intval($_POST['id_detalle_pedido']);
-    $nueva_cantidad = max(1, intval($_POST['nueva_cantidad']));
-    $nueva_fecha = $_POST['nueva_fecha'];
-    $hoy = date('Y-m-d');
-    if ($nueva_fecha >= $hoy) {
-        $consulta = "UPDATE detalle_pedido SET cantidad = $nueva_cantidad, fecha = '$nueva_fecha' WHERE id_detalle_pedido = $id_detalle_pedido";
+    $id_detalle_pedido = intval($_POST['id_detalle_pedido']); // obtener id del detalle del pedido
+    $nueva_cantidad = max(1, intval($_POST['nueva_cantidad'])); // obtener nueva cantidad
+    $nueva_fecha = $_POST['nueva_fecha']; // obtener nueva fecha
+    $hoy = date('Y-m-d'); // obtener fecha actual
+    if ($nueva_fecha >= $hoy) { // verificar que la nueva fecha no sea anterior a hoy
+        $consulta = "UPDATE detalle_pedido SET cantidad = $nueva_cantidad, fecha = '$nueva_fecha' WHERE id_detalle_pedido = $id_detalle_pedido"; // actualizar el detalle del pedido
         mysqli_query($conexion, $consulta);
         header("Location: modificar-pedido.php?id_pedido=$id_pedido");
         exit();

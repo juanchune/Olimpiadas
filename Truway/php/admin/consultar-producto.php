@@ -9,7 +9,7 @@ include('conexion.php');
 ?>
 
 <?php include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/navegador.php'; 
-$tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
+$tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos'; // tabla por defecto
 ?>
 <main>
     <link rel="stylesheet" href="/Olimpiadas/Truway/css/consultar-productos.css">
@@ -36,17 +36,17 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
 
     <?php
 
-    if (isset($_GET['tabla_seleccionada'])) {
-    $tabla_seleccionada = $_GET['tabla_seleccionada'];
-      switch ($tabla_seleccionada) {
-        case('productos'):
-           
+    if (isset($_GET['tabla_seleccionada'])) { // si se seleccionó una tabla
+    $tabla_seleccionada = $_GET['tabla_seleccionada']; // obtener el nombre de la tabla seleccionada
+      switch ($tabla_seleccionada) {  // determinar la taba
+        case('productos'): 
+           // consulta para obtener productos
             $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
                     FROM productos p
                     JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
-            $filters = [];
+            $filters = []; a
 
-           
+           // filtros para la consult
             if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {
                 $filters[] = "tp.tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo-producto']) . "'";
             }
@@ -60,25 +60,27 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
-           
+           // obtener los tipos de productos 
             $tipoProductoQuery = "SELECT DISTINCT tipo FROM tipo_producto ORDER BY tipo ASC";
             $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
-
+            
+            // obtener los precios para los filtros
             $precioQuery = "SELECT DISTINCT precio FROM productos ORDER BY precio ASC";
             $precioResult = mysqli_query($conexion, $precioQuery);
 
-            include 'consulta_producto/productos.php';
+            include 'consulta_producto/productos.php'; // incluir la vista de productos
             break;
-        case('paquetes'):
-           
+        case('paquetes'): 
+           // consulta para obtener paquetes
             $query = "SELECT p.id_producto, p.id_paquete, pr.nombre, pr.descripcion, pr.precio 
                     FROM paquetes p
                     JOIN productos pr ON p.id_producto = pr.id_producto";
             $filters = [];
 
-           
+           // filtros para la consulta
             if (isset($_GET['pais']) && $_GET['pais'] !== '') {
                 $filters[] = "pr.descripcion LIKE '%" . mysqli_real_escape_string($conexion, $_GET['pais']) . "%'";
             }
@@ -91,18 +93,20 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
             
-            include 'consulta_producto/paquetes.php';
+            include 'consulta_producto/paquetes.php'; // incluir la vista de paquetes
             break;
 
         case('excursiones'):
            
+            // consulta para obtener excursiones
             $query = "SELECT * FROM excursiones";
             $filters = [];
 
-           
+           // filtros para la consulta
             if (isset($_GET['dificultad']) && $_GET['dificultad'] !== '') {
                 $filters[] = "dificultad = '" . mysqli_real_escape_string($conexion, $_GET['dificultad']) . "'";
             }
@@ -112,18 +116,20 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
             
-            include 'consulta_producto/excursiones.php';
+            include 'consulta_producto/excursiones.php'; // incluir la vista de excursiones
             break;
 
         case('alquiler_vehiculos'):
           
+            // consulta para obtener alquiler de vehiculos
             $query = "SELECT * FROM vehiculos";
             $filters = [];
 
-     
+            // filtros para la consulta
             if (isset($_GET['capacidad']) && $_GET['capacidad'] !== '') {
                 $filters[] = "capacidad = " . intval($_GET['capacidad']);
             }
@@ -136,25 +142,29 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
         
+            // obtener las capacidades 
             $capacidadQuery = "SELECT DISTINCT capacidad FROM vehiculos ORDER BY capacidad ASC";
             $capacidadResult = mysqli_query($conexion, $capacidadQuery);
 
+            // obtener los tipos de vehiculos
             $tipoQuery = "SELECT DISTINCT tipo FROM vehiculos ORDER BY tipo ASC";
             $tipoResult = mysqli_query($conexion, $tipoQuery);
 
             
-            include 'consulta_producto/vehiculos.php';
+            include 'consulta_producto/vehiculos.php'; // incluir la vista de vehiculos
             break;
         
         case('estadias'):
        
+            // consulta para obtener estadias
             $query = "SELECT * FROM estadias";
             $filters = [];
 
- 
+            // filtros para la consulta
             if (isset($_GET['categoria']) && $_GET['categoria'] !== '') {
                 $filters[] = "categoria = '" . mysqli_real_escape_string($conexion, $_GET['categoria']) . "'";
             }
@@ -167,25 +177,29 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
   
+            // obtener las categorias 
             $categoriaQuery = "SELECT DISTINCT categoria FROM estadias ORDER BY categoria ASC";
             $categoriaResult = mysqli_query($conexion, $categoriaQuery);
 
+            // obtener las localidades
             $localidadQuery = "SELECT DISTINCT localidad FROM estadias ORDER BY localidad ASC";
             $localidadResult = mysqli_query($conexion, $localidadQuery);
 
             
-            include 'consulta_producto/estadias.php';
+            include 'consulta_producto/estadias.php'; // incluir la vista de estadias
             break;
 
         case('boletos_avion'):
            
+            // consulta para obtener boletos de avion
             $query = "SELECT * FROM pasajes";
             $filters = [];
 
-
+            // filtros para la consulta
             if (isset($_GET['tipo-pasaje']) && $_GET['tipo-pasaje'] !== '') {
                 $filters[] = "tipo_pasaje = '" . mysqli_real_escape_string($conexion, $_GET['tipo-pasaje']) . "'";
             }
@@ -198,29 +212,32 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
    
+            // obtener los tipos de boletos
             $tipoPasajeQuery = "SELECT DISTINCT tipo_pasaje FROM pasajes ORDER BY tipo_pasaje ASC";
             $tipoPasajeResult = mysqli_query($conexion, $tipoPasajeQuery);
 
+            // obtener las aerolineas
             $aerolineaQuery = "SELECT DISTINCT aerolinea FROM pasajes ORDER BY aerolinea ASC";
             $aerolineaResult = mysqli_query($conexion, $aerolineaQuery);
 
             
-            include 'consulta_producto/boletos_avion.php';
+            include 'consulta_producto/boletos_avion.php'; // incluir la vista de boletos de avion
             break;
 
         }
     
     }else{
-    
+            // consulta por defecto para obtener todos los productos
             $query = "SELECT p.id_producto, p.nombre, p.descripcion, p.precio, tp.tipo 
                     FROM productos p
                     JOIN tipo_producto tp ON p.tipo_producto = tp.id_tipo";
             $filters = [];
 
-     
+            // filtros para la consulta
             if (isset($_GET['tipo-producto']) && $_GET['tipo-producto'] !== '') {
                 $filters[] = "tp.tipo = '" . mysqli_real_escape_string($conexion, $_GET['tipo-producto']) . "'";
             }
@@ -234,20 +251,20 @@ $tabla_seleccionada= $_GET['tabla_seleccionada'] ?? 'productos';
                 $query .= " WHERE " . implode(" AND ", $filters);
             }
 
+            // ejecutar la consulta
             $result = mysqli_query($conexion, $query);
 
-        
+            // obtener los tipos de productos
             $tipoProductoQuery = "SELECT DISTINCT tipo FROM tipo_producto ORDER BY tipo ASC";
             $tipoProductoResult = mysqli_query($conexion, $tipoProductoQuery);
 
+            // obtener los precios para los filtros
             $precioQuery = "SELECT DISTINCT precio FROM productos ORDER BY precio ASC";
             $precioResult = mysqli_query($conexion, $precioQuery);
 
-            include 'consulta_producto/productos.php';
+            include 'consulta_producto/productos.php'; // incluir la vista de productos
     }?>
  
 </main>
-
-
 </body>
 </html>

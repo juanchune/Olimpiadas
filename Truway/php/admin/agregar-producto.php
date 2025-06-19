@@ -7,41 +7,40 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administ
     include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.php';
     include('conexion.php');
 
-    // Obtener productos por tipo para paquetes
-    function getProductosPorTipo($conexion, $tipo) {
-        $arr = [];
-        $res = mysqli_query($conexion, "SELECT id_producto, nombre FROM productos WHERE tipo_producto = '$tipo'");
-        while ($row = mysqli_fetch_assoc($res)) $arr[] = $row;
-        return $arr;
+    // obtener productos por tipo
+    function getProductosPorTipo($conexion, $tipo) { 
+        $arr = []; // inicializar el array
+        $res = mysqli_query($conexion, "SELECT id_producto, nombre FROM productos WHERE tipo_producto = '$tipo'"); // consulta
+        while ($row = mysqli_fetch_assoc($res)) $arr[] = $row; // recorrer los resultados y agregarlos al array
+        return $arr; // devolver el array
     }
-    $excursiones = getProductosPorTipo($conexion, 'Excursión');
-    $estadias = getProductosPorTipo($conexion, 'Estadía');
-    $boletos = getProductosPorTipo($conexion, 'Pasaje');
-    $vehiculos = getProductosPorTipo($conexion, 'Alquiler de Vehículo');
+    $excursiones = getProductosPorTipo($conexion, 'Excursión'); // llamar a la funcion
+    $estadias = getProductosPorTipo($conexion, 'Estadía'); // llamar a la funcion
+    $boletos = getProductosPorTipo($conexion, 'Pasaje'); // llamar a la funcion
+    $vehiculos = getProductosPorTipo($conexion, 'Alquiler de Vehículo'); // llamar a la funcion
 
-    // Procesar formulario
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $nombre = mysqli_real_escape_string($conexion, $_POST['nombre-producto']);
-        $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']);
-        $precio = floatval($_POST['precio-total']);
-        $tipo = mysqli_real_escape_string($conexion, $_POST['tipo-producto']);
-        $codigo_producto = mysqli_real_escape_string($conexion, $_POST['codigo-producto']);
+    // verificar envio de formulario
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') { // si se envio el formulario
+        $nombre = mysqli_real_escape_string($conexion, $_POST['nombre-producto']); //nombre
+        $descripcion = mysqli_real_escape_string($conexion, $_POST['descripcion']); //descripcion
+        $precio = floatval($_POST['precio-total']); //precio
+        $tipo = mysqli_real_escape_string($conexion, $_POST['tipo-producto']); //tipo
+        $codigo_producto = mysqli_real_escape_string($conexion, $_POST['codigo-producto']); // codigo del producto
 
-    
-        $tipo_map = [
+        $tipo_map = [ // mapa de tipos
             'excursion' => 'Excursión',
             'hotel' => 'Estadía',
             'vuelo' => 'Pasaje',
             'vehiculo' => 'Alquiler de Vehículo',
             'paquete' => 'Paquete'
         ];
-        $tipo_producto = isset($tipo_map[$tipo]) ? $tipo_map[$tipo] : $tipo;
+        $tipo_producto = isset($tipo_map[$tipo]) ? $tipo_map[$tipo] : $tipo; // asignar el tipo de producto
 
-        // Insertar en productos
+        // insertar en tabla productodss
         mysqli_query($conexion, "INSERT INTO productos (nombre, descripcion, precio, tipo_producto, codigo_producto) VALUES ('$nombre', '$descripcion', $precio, '$tipo_producto', '$codigo_producto')");
         $id_producto = mysqli_insert_id($conexion);
 
-        // Insertar en tabla específica
+        // insertar en tabla especifica
         if ($tipo === 'excursion') {
             $ubicacion = mysqli_real_escape_string($conexion, $_POST['ubicacion-producto']);
             $duracion = intval($_POST['duracion']);
@@ -68,21 +67,21 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administ
             $tipo_vehiculo = mysqli_real_escape_string($conexion, $_POST['tipo-vehiculo']);
             mysqli_query($conexion, "INSERT INTO vehiculos (id_producto, marca, modelo, capacidad, empresa_rentadora, tipo) VALUES ($id_producto, '$marca', '$modelo', $capacidad, '$empresa', '$tipo_vehiculo')");
         } elseif ($tipo === 'paquete') {
-            // Insertar en paquetes
+            // insertar en tabla paquetes
             mysqli_query($conexion, "INSERT INTO paquetes (id_producto) VALUES ($id_producto)");
             $id_paquete = mysqli_insert_id($conexion);
 
-            // Insertar productos incluidos en detalle_paquete
+            // insertar en detalle_paquete
             $productos_incluidos = [];
-            if (!empty($_POST['excursion'])) $productos_incluidos[] = intval($_POST['excursion']);
-            if (!empty($_POST['estadias'])) $productos_incluidos[] = intval($_POST['estadias']);
-            if (!empty($_POST['boletos'])) $productos_incluidos[] = intval($_POST['boletos']);
-            if (!empty($_POST['vehiculo'])) $productos_incluidos[] = intval($_POST['vehiculo']);
-            foreach ($productos_incluidos as $id_prod) {
-                mysqli_query($conexion, "INSERT INTO detalle_paquete (id_paquete, id_producto) VALUES ($id_paquete, $id_prod)");
+            if (!empty($_POST['excursion'])) $productos_incluidos[] = intval($_POST['excursion']); // excursion
+            if (!empty($_POST['estadias'])) $productos_incluidos[] = intval($_POST['estadias']); // estadias
+            if (!empty($_POST['boletos'])) $productos_incluidos[] = intval($_POST['boletos']); // boletos
+            if (!empty($_POST['vehiculo'])) $productos_incluidos[] = intval($_POST['vehiculo']); // vehiculo
+            foreach ($productos_incluidos as $id_prod) { // recorrer los productos incluidos
+                mysqli_query($conexion, "INSERT INTO detalle_paquete (id_paquete, id_producto) VALUES ($id_paquete, $id_prod)"); // insertar en detalle_paquete
             }
         }
-        echo "<script>alert('Producto agregado correctamente');window.location.href='agregar-producto.php';</script>";
+        echo "<script>alert('Producto agregado correctamente');window.location.href='agregar-producto.php';</script>"; // mostrar mensaje de exito
         exit;
     }
 ?>
