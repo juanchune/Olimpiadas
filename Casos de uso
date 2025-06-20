@@ -1,0 +1,34 @@
+Casos de uso:
+Cliente:
+-Registrarse
+-Iniciar sesion
+-Ver detalle producto
+-Ver lista de productos
+-Filtar lista de productos 
+-Agregar producto al carrito
+-Editar producto del carrito
+-Eliminar producto del carrito
+-Vaciar carrito
+-Preparar pedido
+-Realizar pedido
+-Ver lista de pedidos
+-Filtrar pedido
+-Borrar pedido pendientes
+-Modificar pedidos pendientes
+-Modificar productos de pedido pendiente
+-Cerrar sesion
+
+
+Admin:
+-Iniciar sesion 
+-Consultar productos
+-Filtrar listas de productos
+-Modificar productos
+-Borrar productos
+-Agregar productos
+-Consultar pedidos
+-Aprobar pedidos pendientes
+-Rechazar pedidos pendientes
+-Consultar ventas
+-Filtar ventas
+-Cerrar sesion
