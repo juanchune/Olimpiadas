@@ -39,8 +39,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/Olimpiadas/truway/php/componentes/header.p
                 <h3>Navegacion Rapida</h3>
                 <div class="info-nav">
                     <a href="/Olimpiadas/Truway/index.php">Inicio</a>
-                    <a href=#SobreNosotros>Sobre nosostros</a>
-                    <a href=#Porductos>Productos</a>
+                    <a href="#SobreNosotros">Sobre nosostros</a>
+                    <a href="/Olimpiadas/Truway/php/cliente/catalogo.php">Productos</a>
                 </div>
             </div>
         </div>
