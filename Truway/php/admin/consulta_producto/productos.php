@@ -1,5 +1,5 @@
 <?php
-if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') { // solo administradores pueden acceder
+if (!isset($_SESSION['rol']) || $_SESSION['rol'] !== 'admin') {
     header('Location: /Olimpiadas/Truway/php/cliente/perfil.php');
     exit();
 }
@@ -8,29 +8,69 @@ include ('conexion.php');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) {
     $id_producto = intval($_POST['eliminar_id']);
 
-    
-    $res_paquete = mysqli_query($conexion, "SELECT id_paquete FROM paquetes WHERE id_producto = $id_producto"); // obtener el id del paquete 
-    if ($row_paquete = mysqli_fetch_assoc($res_paquete)) { // si el producto pertenece a un paquete
-        $id_paquete = intval($row_paquete['id_paquete']); // eliminar el paquete y sus detalles
-        mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_paquete = $id_paquete");  // eliminar los detalles del paquete
-        mysqli_query($conexion, "DELETE FROM paquetes WHERE id_paquete = $id_paquete"); // eliminar el paquete
+    // buscar todos los paquetes donde el producto es principal o detalle
+    $paquetes_a_eliminar = [];
+
+    // paquetes donde el producto es principal
+    $res_paquete = mysqli_query($conexion, "SELECT id_paquete, id_producto FROM paquetes WHERE id_producto = $id_producto");
+    while ($row = mysqli_fetch_assoc($res_paquete)) {
+        $paquetes_a_eliminar[] = [
+            'id_paquete' => intval($row['id_paquete']),
+            'id_producto' => intval($row['id_producto'])
+        ];
     }
 
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar el producto
-}
+    // paquetes donde el producto esta como detalle
+    $res_detalle = mysqli_query($conexion, "SELECT id_paquete FROM detalle_paquete WHERE id_producto = $id_producto");
+    while ($row = mysqli_fetch_assoc($res_detalle)) {
+        $id_paquete = intval($row['id_paquete']);
+        $res_principal = mysqli_query($conexion, "SELECT id_producto FROM paquetes WHERE id_paquete = $id_paquete");
+        $id_producto_principal = null;
+        if ($row_principal = mysqli_fetch_assoc($res_principal)) {
+            $id_producto_principal = intval($row_principal['id_producto']);
+        }
+        $paquetes_a_eliminar[] = [
+            'id_paquete' => $id_paquete,
+            'id_producto' => $id_producto_principal
+        ];
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar_id'])) { // eliminar producto
-    $id_producto = intval($_POST['eliminar_id']); // obtener id del producto
-    mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto"); // eliminar detalle de paquete
-    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto"); // eliminar excursiones
-    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto"); // eliminar estadias
-    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto"); // eliminar vehiculos
-    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");   // eliminar pasajes
-    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto"); // eliminar paquetes
-    mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto"); // eliminar detalle de carrito
-    mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto"); // eliminar detalle de pedido
-    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto"); // eliminar producto
-    
+    // eliminar duplicados por id_paquete
+    $paquetes_unicos = [];
+    foreach ($paquetes_a_eliminar as $p) {
+        $paquetes_unicos[$p['id_paquete']] = $p['id_producto'];
+    }
+
+    // eliminar todos los detalles y paquetes relacionados
+    foreach ($paquetes_unicos as $id_paquete => $id_prod_principal) {
+        mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_paquete = $id_paquete");
+        mysqli_query($conexion, "DELETE FROM paquetes WHERE id_paquete = $id_paquete");
+        if ($id_prod_principal !== null) {
+            mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_prod_principal");
+        }
+    }
+
+    // eliminar el producto de detalle_paquete 
+    mysqli_query($conexion, "DELETE FROM detalle_paquete WHERE id_producto = $id_producto");
+
+    // eliminar de tablas hijas
+    mysqli_query($conexion, "DELETE FROM excursiones WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM estadias WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM vehiculos WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM pasajes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM paquetes WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM detalle_carrito WHERE id_producto = $id_producto");
+    mysqli_query($conexion, "DELETE FROM detalle_pedido WHERE id_producto = $id_producto");
+
+    // eliminar el producto
+    mysqli_query($conexion, "DELETE FROM productos WHERE id_producto = $id_producto");
+
+    // redirigir  
+    echo "<script>
+        alert('Producto eliminado correctamente.');
+        window.location.href = '/Olimpiadas/Truway/php/admin/consultar-producto.php?tabla_seleccionada=productos';
+        </script>";
+    exit();
 }
 
 // variables para filtros
