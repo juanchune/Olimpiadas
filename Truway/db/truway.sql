@@ -21,6 +21,8 @@ SET time_zone = "+00:00";
 -- Base de datos: `truway`
 --
 
+CREATE DATABASE IF NOT EXISTS `if0_39268523_truway` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `if0_39268523_truway`;
 -- --------------------------------------------------------
 
 --
@@ -233,7 +235,7 @@ CREATE TABLE `pedidos` (
   `id_usuario` int(11) NOT NULL,
   `fecha` date NOT NULL,
   `precio_total` float(11,2) NOT NULL,
-  `metodo_pago` enum('Tarjeta_debito','Tarjeta_credito','Debito','Transferencia_bancaria') DEFAULT NULL,
+  `metodo_pago` enum('Tarjeta debito','Tarjeta credito') DEFAULT NULL,
   `cantidad` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
